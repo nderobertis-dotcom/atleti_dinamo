@@ -40,7 +40,7 @@
           <input type="number" id="numeroMaglia" placeholder="Numero maglia" min="1" max="99">
         </div>
         <textarea id="note" placeholder="Note aggiuntive"></textarea>
-        <button type="button" id="aggiungi-btn">Aggiungi Atleta</button>
+        <button type="button" id="aggiungi-btn" onclick="aggiungiAtleta()">Aggiungi Atleta</button>
         <button type="button" id="annulla-btn" style="display:none;">Annulla Modifica</button>
       </form>
     </div>
@@ -57,4 +57,23 @@
           <span class="stat-label">Età Media</span>
         </div>
         <div class="stat-card">
+          <span class="stat-number" id="altezza-media">-</span>
+          <span class="stat-label">Altezza Media</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="lista-section">
+      <h2>Lista Atleti</h2>
+      <div id="lista-atleti"></div>
+      <div id="lista-vuota" style="display:none;">
+        <p>Nessun atleta inserito. Aggiungi il primo atleta usando il modulo sopra!</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
+
           <span class="stat-number" id="altezza-media">-</span>
