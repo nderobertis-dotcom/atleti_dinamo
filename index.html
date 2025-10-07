@@ -16,6 +16,17 @@
     <div class="stats-section">
       <h2>Statistiche Squadra</h2>
       <div class="stats-grid">
+        <!-- LOGO A SINISTRA (PRIMO) -->
+        <div class="stat-card logo-card">
+          <div class="logo-container">
+            <img src="logo-dinamo.png" alt="Dinamo Volley" id="logo-dinamo" onerror="this.style.display='none'; document.getElementById('logo-placeholder').style.display='flex';">
+            <div id="logo-placeholder" class="logo-placeholder">
+              <div class="logo-text">DINAMO</div>
+              <div class="logo-subtext">VOLLEY</div>
+            </div>
+          </div>
+        </div>
+        <!-- POI LE ALTRE STATISTICHE -->
         <div class="stat-card">
           <span class="stat-number" id="total-atleti">0</span>
           <span class="stat-label">Atleti Totali</span>
@@ -27,15 +38,6 @@
         <div class="stat-card">
           <span class="stat-number" id="altezza-media">-</span>
           <span class="stat-label">Altezza Media</span>
-        </div>
-        <div class="stat-card logo-card">
-          <div class="logo-container">
-            <img src="logo-dinamo.png" alt="Dinamo Volley" id="logo-dinamo" onerror="this.style.display='none'; document.getElementById('logo-placeholder').style.display='flex';">
-            <div id="logo-placeholder" class="logo-placeholder">
-              <div class="logo-text">DINAMO</div>
-              <div class="logo-subtext">VOLLEY</div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
