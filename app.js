@@ -36,9 +36,15 @@ function aggiornaStatistiche() {
   if (atleti.length === 0) {
     document.getElementById('eta-media').textContent = '-';
     document.getElementById('altezza-media').textContent = '-';
+    document.getElementById('num-maschi').textContent = '0';
+    document.getElementById('num-femmine').textContent = '0';
+    document.getElementById('num-seriedm').textContent = '0';
+    document.getElementById('num-1divf').textContent = '0';
+    document.getElementById('num-1divm').textContent = '0';
     return;
   }
   
+  // Età media
   const atletiConEta = atleti.filter(a => a.dataNascita);
   if (atletiConEta.length > 0) {
     const sommaEta = atletiConEta.reduce((sum, a) => {
@@ -51,6 +57,7 @@ function aggiornaStatistiche() {
     document.getElementById('eta-media').textContent = '-';
   }
   
+  // Altezza media
   const atletiConAltezza = atleti.filter(a => a.altezza && !isNaN(a.altezza));
   if (atletiConAltezza.length > 0) {
     const sommaAltezza = atletiConAltezza.reduce((sum, a) => sum + parseInt(a.altezza), 0);
@@ -59,6 +66,20 @@ function aggiornaStatistiche() {
   } else {
     document.getElementById('altezza-media').textContent = '-';
   }
+  
+  // Conteggi per sesso
+  const numMaschi = atleti.filter(a => a.sesso === 'M').length;
+  const numFemmine = atleti.filter(a => a.sesso === 'F').length;
+  document.getElementById('num-maschi').textContent = numMaschi;
+  document.getElementById('num-femmine').textContent = numFemmine;
+  
+  // Conteggi per campionato
+  document.getElementById('num-seriedm').textContent = 
+    atleti.filter(a => a.campionato === 'SERIE D MASCHILE').length;
+  document.getElementById('num-1divf').textContent = 
+    atleti.filter(a => a.campionato === '1° DIV. FEMMINILE').length;
+  document.getElementById('num-1divm').textContent = 
+    atleti.filter(a => a.campionato === '1° DIVISIONE MASCHILE').length;
 }
 
 function calcolaEta(dataNascita) {
@@ -93,6 +114,8 @@ function mostraCardAtleta(i) {
       </div>
       <div class="atleta-ruolo">${a.ruolo || '-'}</div>
       <div class="atleta-dettagli">
+        ${a.sesso ? `<div><strong>Sesso:</strong> ${a.sesso === 'M' ? 'Maschile' : 'Femminile'}</div>` : ''}
+        ${a.campionato ? `<div><strong>Campionato:</strong> ${a.campionato}</div>` : ''}
         ${eta ? `<div><strong>Età:</strong> ${eta} anni</div>` : ''}
         ${a.dataNascita ? `<div><strong>Data nascita:</strong> ${new Date(a.dataNascita).toLocaleDateString('it-IT')}</div>` : ''}
         ${a.luogoNascita ? `<div><strong>Luogo nascita:</strong> ${a.luogoNascita}</div>` : ''}
@@ -129,6 +152,11 @@ function modificaAtleta(i) {
       <label class="input-file-label">Foto:<input type="file" id="foto-edit-input" accept="image/*"></label>
       <input type="text" class="input-card" id="nome" value="${a.nome || ''}" placeholder="Nome *">
       <input type="text" class="input-card" id="cognome" value="${a.cognome || ''}" placeholder="Cognome *">
+      <select class="select-card" id="sesso">
+        <option value="">Sesso</option>
+        <option value="M" ${a.sesso === 'M' ? 'selected' : ''}>Maschile</option>
+        <option value="F" ${a.sesso === 'F' ? 'selected' : ''}>Femminile</option>
+      </select>
       <input type="number" class="input-card" id="numeroMaglia" value="${a.numeroMaglia || ''}" placeholder="Numero maglia (1-99)" min="1" max="99">
       <select class="select-card" id="ruolo">
         <option value="">Ruolo</option>
@@ -137,6 +165,12 @@ function modificaAtleta(i) {
         <option value="Schiacciatore" ${a.ruolo === 'Schiacciatore' ? 'selected' : ''}>Schiacciatore</option>
         <option value="Centrale" ${a.ruolo === 'Centrale' ? 'selected' : ''}>Centrale</option>
         <option value="Opposto" ${a.ruolo === 'Opposto' ? 'selected' : ''}>Opposto</option>
+      </select>
+      <select class="select-card" id="campionato">
+        <option value="">Campionato</option>
+        <option value="SERIE D MASCHILE" ${a.campionato === 'SERIE D MASCHILE' ? 'selected' : ''}>SERIE D MASCHILE</option>
+        <option value="1° DIV. FEMMINILE" ${a.campionato === '1° DIV. FEMMINILE' ? 'selected' : ''}>1° DIV. FEMMINILE</option>
+        <option value="1° DIVISIONE MASCHILE" ${a.campionato === '1° DIVISIONE MASCHILE' ? 'selected' : ''}>1° DIVISIONE MASCHILE</option>
       </select>
       <input type="date" class="input-card" id="dataNascita" value="${a.dataNascita || ''}">
       <input type="text" class="input-card" id="luogoNascita" value="${a.luogoNascita || ''}" placeholder="Luogo di nascita">
@@ -188,8 +222,10 @@ function salvaModifica(i) {
     foto: foto,
     nome: nome,
     cognome: cognome,
+    sesso: document.getElementById('sesso').value,
     numeroMaglia: document.getElementById('numeroMaglia').value,
     ruolo: document.getElementById('ruolo').value,
+    campionato: document.getElementById('campionato').value,
     dataNascita: document.getElementById('dataNascita').value,
     luogoNascita: document.getElementById('luogoNascita').value,
     provNascita: document.getElementById('provNascita').value,
@@ -250,6 +286,11 @@ function mostraCardAggiungi() {
       <label class="input-file-label">Foto:<input type="file" id="foto-input" accept="image/*"></label>
       <input type="text" class="input-card" id="nome" placeholder="Nome *">
       <input type="text" class="input-card" id="cognome" placeholder="Cognome *">
+      <select class="select-card" id="sesso">
+        <option value="">Sesso</option>
+        <option value="M">Maschile</option>
+        <option value="F">Femminile</option>
+      </select>
       <input type="number" class="input-card" id="numeroMaglia" placeholder="Numero maglia (1-99)" min="1" max="99">
       <select class="select-card" id="ruolo">
         <option value="">Ruolo</option>
@@ -258,6 +299,12 @@ function mostraCardAggiungi() {
         <option value="Schiacciatore">Schiacciatore</option>
         <option value="Centrale">Centrale</option>
         <option value="Opposto">Opposto</option>
+      </select>
+      <select class="select-card" id="campionato">
+        <option value="">Campionato</option>
+        <option value="SERIE D MASCHILE">SERIE D MASCHILE</option>
+        <option value="1° DIV. FEMMINILE">1° DIV. FEMMINILE</option>
+        <option value="1° DIVISIONE MASCHILE">1° DIVISIONE MASCHILE</option>
       </select>
       <input type="date" class="input-card" id="dataNascita">
       <input type="text" class="input-card" id="luogoNascita" placeholder="Luogo di nascita">
@@ -309,8 +356,10 @@ function salvaNuovoAtleta() {
     foto: foto,
     nome: nome,
     cognome: cognome,
+    sesso: document.getElementById('sesso').value,
     numeroMaglia: document.getElementById('numeroMaglia').value,
     ruolo: document.getElementById('ruolo').value,
+    campionato: document.getElementById('campionato').value,
     dataNascita: document.getElementById('dataNascita').value,
     luogoNascita: document.getElementById('luogoNascita').value,
     provNascita: document.getElementById('provNascita').value,
@@ -339,7 +388,7 @@ function esportaAtleti() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'atleti_dinamo_backup.json';
+    a.download = 'atleti_dinamo_molfetta_backup.json';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
