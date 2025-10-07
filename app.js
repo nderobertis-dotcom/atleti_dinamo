@@ -137,6 +137,58 @@ function salvaAtleti() {
   localStorage.setItem('atleti-dinamo', JSON.stringify(atleti));
 }
 
+function mostraCardAggiungi() {
+  const div = document.getElementById('card-atleta');
+  div.innerHTML = `
+    <div class="atleta" style="background: #f9f9f9; border-color: #4CAF50;">
+      <input type="text" class="input-card" id="nome" placeholder="Nome *">
+      <input type="text" class="input-card" id="cognome" placeholder="Cognome *">
+      <input type="number" class="input-card" id="numeroMaglia" placeholder="Numero maglia (1-99)" min="1" max="99">
+      <select class="select-card" id="ruolo">
+        <option value="">Ruolo</option>
+        <option value="Palleggiatore">Palleggiatore</option>
+        <option value="Libero">Libero</option>
+        <option value="Schiacciatore">Schiacciatore</option>
+        <option value="Centrale">Centrale</option>
+        <option value="Opposto">Opposto</option>
+      </select>
+      <input type="date" class="input-card" id="dataNascita">
+      <input type="number" class="input-card" id="altezza" placeholder="Altezza (cm)" min="150" max="220">
+      <input type="number" class="input-card" id="peso" placeholder="Peso (kg)" min="40" max="150">
+      <input type="email" class="input-card" id="email" placeholder="Email">
+      <input type="text" class="input-card" id="note" placeholder="Note aggiuntive">
+      <div style="margin-top: 18px;">
+        <button onclick="salvaNuovoAtleta()">SALVA</button>
+        <button onclick="annullaEdit()">ANNULLA</button>
+      </div>
+    </div>
+  `;
+}
+
+function salvaNuovoAtleta() {
+  const nome = document.getElementById('nome').value.trim();
+  const cognome = document.getElementById('cognome').value.trim();
+  if (!nome || !cognome) { alert('Nome e Cognome sono obbligatori'); return; }
+  atleti.push({
+    nome,
+    cognome,
+    numeroMaglia: document.getElementById('numeroMaglia').value,
+    ruolo: document.getElementById('ruolo').value,
+    dataNascita: document.getElementById('dataNascita').value,
+    altezza: document.getElementById('altezza').value,
+    peso: document.getElementById('peso').value,
+    email: document.getElementById('email').value,
+    note: document.getElementById('note').value,
+    dataCreazione: new Date().toISOString()
+  });
+  salvaAtleti();
+  mostraLista();
+  clearCardAtleta();
+}
+
 window.addEventListener('DOMContentLoaded', function() {
   mostraLista();
+  document.getElementById('btn-aggiungi-bottom').onclick = function() {
+    mostraCardAggiungi();
+  };
 });
