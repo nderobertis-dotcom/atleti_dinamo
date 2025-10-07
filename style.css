@@ -80,7 +80,7 @@ header p { font-size: 1.1rem; opacity: .9;}
   height: 38px;
   border-radius: 50%;
   object-fit: cover;
-  object-position: top center;
+  object-position: top;
   background: #f1f1f1;
   border: 2px solid #667eea;
   margin-right: 10px;
