@@ -67,12 +67,18 @@ function mostraCardAtleta(i) {
       <div class="atleta-ruolo">${a.ruolo || '-'}</div>
       <div class="atleta-dettagli">
         ${eta ? `<div><strong>Età:</strong> ${eta} anni</div>` : ''}
-        ${a.dataNascita ? `<div><strong>Nascita:</strong> ${new Date(a.dataNascita).toLocaleDateString('it-IT')}</div>` : ''}
+        ${a.dataNascita ? `<div><strong>Data nascita:</strong> ${new Date(a.dataNascita).toLocaleDateString('it-IT')}</div>` : ''}
+        ${a.luogoNascita ? `<div><strong>Luogo nascita:</strong> ${a.luogoNascita}</div>` : ''}
+        ${a.provNascita ? `<div><strong>Provincia nascita:</strong> ${a.provNascita}</div>` : ''}
         ${a.codiceFiscale ? `<div><strong>Codice fiscale:</strong> ${a.codiceFiscale}</div>` : ''}
         ${a.altezza ? `<div><strong>Altezza:</strong> ${a.altezza} cm</div>` : ''}
         ${a.peso ? `<div><strong>Peso:</strong> ${a.peso} kg</div>` : ''}
         ${a.email ? `<div><strong>Email:</strong> ${a.email}</div>` : ''}
         ${a.cellulare ? `<div><strong>Cellulare:</strong> ${a.cellulare}</div>` : ''}
+        ${(a.viaResidenza || a.cittaResidenza || a.provResidenza) ? `<div><strong>Residenza:</strong> 
+          ${a.viaResidenza ? a.viaResidenza : ''} 
+          ${a.cittaResidenza ? '(' + a.cittaResidenza + ')' : ''} 
+          ${a.provResidenza ? a.provResidenza : ''}</div>` : ''}
         ${a.note ? `<div><strong>Note:</strong> ${a.note}</div>` : ''}
       </div>
       <div class="atleta-azioni">
@@ -105,11 +111,16 @@ function modificaAtleta(i) {
         <option value="Opposto" ${a.ruolo === 'Opposto' ? 'selected' : ''}>Opposto</option>
       </select>
       <input type="date" class="input-card" id="dataNascita" value="${a.dataNascita || ''}">
+      <input type="text" class="input-card" id="luogoNascita" value="${a.luogoNascita || ''}" placeholder="Luogo di nascita">
+      <input type="text" class="input-card" id="provNascita" value="${a.provNascita || ''}" placeholder="Provincia di nascita">
       <input type="text" class="input-card" id="codiceFiscale" value="${a.codiceFiscale || ''}" placeholder="Codice fiscale">
       <input type="number" class="input-card" id="altezza" value="${a.altezza || ''}" placeholder="Altezza (cm)" min="150" max="220">
       <input type="number" class="input-card" id="peso" value="${a.peso || ''}" placeholder="Peso (kg)" min="40" max="150">
       <input type="email" class="input-card" id="email" value="${a.email || ''}" placeholder="Email">
       <input type="text" class="input-card" id="cellulare" value="${a.cellulare || ''}" placeholder="Cellulare">
+      <input type="text" class="input-card" id="viaResidenza" value="${a.viaResidenza || ''}" placeholder="Residenza: Via/Piazza">
+      <input type="text" class="input-card" id="cittaResidenza" value="${a.cittaResidenza || ''}" placeholder="Residenza: Città">
+      <input type="text" class="input-card" id="provResidenza" value="${a.provResidenza || ''}" placeholder="Residenza: Provincia">
       <input type="text" class="input-card" id="note" value="${a.note || ''}" placeholder="Note aggiuntive">
       <div style="margin-top: 16px;">
         <button onclick="salvaModifica(${i})">SALVA</button>
@@ -141,11 +152,16 @@ function salvaModifica(i) {
     numeroMaglia: document.getElementById('numeroMaglia').value,
     ruolo: document.getElementById('ruolo').value,
     dataNascita: document.getElementById('dataNascita').value,
+    luogoNascita: document.getElementById('luogoNascita').value,
+    provNascita: document.getElementById('provNascita').value,
     codiceFiscale: document.getElementById('codiceFiscale').value,
     altezza: document.getElementById('altezza').value,
     peso: document.getElementById('peso').value,
     email: document.getElementById('email').value,
     cellulare: document.getElementById('cellulare').value,
+    viaResidenza: document.getElementById('viaResidenza').value,
+    cittaResidenza: document.getElementById('cittaResidenza').value,
+    provResidenza: document.getElementById('provResidenza').value,
     note: document.getElementById('note').value,
     dataCreazione: atleti[i].dataCreazione || new Date().toISOString()
   };
@@ -187,11 +203,16 @@ function mostraCardAggiungi() {
         <option value="Opposto">Opposto</option>
       </select>
       <input type="date" class="input-card" id="dataNascita">
+      <input type="text" class="input-card" id="luogoNascita" placeholder="Luogo di nascita">
+      <input type="text" class="input-card" id="provNascita" placeholder="Provincia di nascita">
       <input type="text" class="input-card" id="codiceFiscale" placeholder="Codice fiscale">
       <input type="number" class="input-card" id="altezza" placeholder="Altezza (cm)" min="150" max="220">
       <input type="number" class="input-card" id="peso" placeholder="Peso (kg)" min="40" max="150">
       <input type="email" class="input-card" id="email" placeholder="Email">
       <input type="text" class="input-card" id="cellulare" placeholder="Cellulare">
+      <input type="text" class="input-card" id="viaResidenza" placeholder="Residenza: Via/Piazza">
+      <input type="text" class="input-card" id="cittaResidenza" placeholder="Residenza: Città">
+      <input type="text" class="input-card" id="provResidenza" placeholder="Residenza: Provincia">
       <input type="text" class="input-card" id="note" placeholder="Note aggiuntive">
       <div style="margin-top: 16px;">
         <button onclick="salvaNuovoAtleta()">SALVA</button>
@@ -223,11 +244,16 @@ function salvaNuovoAtleta() {
     numeroMaglia: document.getElementById('numeroMaglia').value,
     ruolo: document.getElementById('ruolo').value,
     dataNascita: document.getElementById('dataNascita').value,
+    luogoNascita: document.getElementById('luogoNascita').value,
+    provNascita: document.getElementById('provNascita').value,
     codiceFiscale: document.getElementById('codiceFiscale').value,
     altezza: document.getElementById('altezza').value,
     peso: document.getElementById('peso').value,
     email: document.getElementById('email').value,
     cellulare: document.getElementById('cellulare').value,
+    viaResidenza: document.getElementById('viaResidenza').value,
+    cittaResidenza: document.getElementById('cittaResidenza').value,
+    provResidenza: document.getElementById('provResidenza').value,
     note: document.getElementById('note').value,
     dataCreazione: new Date().toISOString()
   });
