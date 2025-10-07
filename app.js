@@ -199,33 +199,3 @@ function aggiornaStatistiche() {
   const atletiConEta = atleti.filter(a => a.dataNascita);
   if (atletiConEta.length > 0) {
     const sommaEta = atletiConEta.reduce((sum, a) => sum + calcolaEta(a.dataNascita), 0);
-    etaMedia.textContent = Math.round(sommaEta / atletiConEta.length) + ' anni';
-  } else {
-    etaMedia.textContent = '-';
-  }
-  
-  // Calcola altezza media (solo per atleti con altezza)
-  const atletiConAltezza = atleti.filter(a => a.altezza);
-  if (atletiConAltezza.length > 0) {
-    const sommaAltezza = atletiConAltezza.reduce((sum, a) => sum + a.altezza, 0);
-    altezzaMedia.textContent = Math.round(sommaAltezza / atletiConAltezza.length) + ' cm';
-  } else {
-    altezzaMedia.textContent = '-';
-  }
-}
-
-function salvaAtleti() {
-  localStorage.setItem('atleti-dinamo', JSON.stringify(atleti));
-}
-
-// Inizializzazione quando la pagina è caricata
-window.addEventListener('DOMContentLoaded', function() {
-  document.getElementById('btn-aggiungi-bottom').onclick = () => {
-    editIndex = null;
-    nuovaCard = true;
-    mostraLista();
-  };
-  
-  mostraLista();
-  aggiornaStatistiche();
-});
