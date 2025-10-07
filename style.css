@@ -1,19 +1,265 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
   padding: 20px;
-  background: #f2f2f2;
+  color: #333;
 }
-#form input {
-  margin: 5px;
-  padding: 5px;
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
 }
+
+header {
+  text-align: center;
+  color: white;
+  margin-bottom: 30px;
+}
+
+header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+header p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+.form-section, .stats-section, .lista-section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 25px;
+  margin-bottom: 25px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
+
+.form-section h2, .stats-section h2, .lista-section h2 {
+  margin-bottom: 20px;
+  color: #667eea;
+  font-size: 1.5rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+input, select, textarea {
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+  font-family: inherit;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+textarea {
+  grid-column: 1 / -1;
+  min-height: 80px;
+  resize: vertical;
+}
+
+button {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-right: 10px;
+}
+
+#aggiungi-btn {
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  color: white;
+}
+
+#aggiungi-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+#annulla-btn {
+  background: #ff6b6b;
+  color: white;
+}
+
+#annulla-btn:hover {
+  background: #ff5252;
+  transform: translateY(-2px);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  color: white;
+  box-shadow: 0 4px 15px rgba(255, 154, 158, 0.3);
+}
+
+.stat-number {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
 #lista-atleti {
-  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
 }
+
 .atleta {
-  background: #fff;
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+  position: relative;
+}
+
+.atleta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.atleta-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.atleta-nome {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.numero-maglia {
+  background: #667eea;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 50%;
+  font-weight: bold;
+  min-width: 35px;
+  text-align: center;
+}
+
+.atleta-ruolo {
+  background: rgba(255, 255, 255, 0.7);
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  margin: 8px 0;
+  display: inline-block;
+  font-weight: 500;
+}
+
+.atleta-dettagli {
   margin: 10px 0;
-  padding: 10px;
-  border-radius: 7px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.07);
+  line-height: 1.6;
+}
+
+.atleta-dettagli strong {
+  color: #667eea;
+}
+
+.atleta-azioni {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+}
+
+.btn-modifica, .btn-elimina {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.btn-modifica {
+  background: #4CAF50;
+  color: white;
+}
+
+.btn-modifica:hover {
+  background: #45a049;
+  transform: scale(1.05);
+}
+
+.btn-elimina {
+  background: #f44336;
+  color: white;
+}
+
+.btn-elimina:hover {
+  background: #da190b;
+  transform: scale(1.05);
+}
+
+#lista-vuota {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  padding: 40px;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  header h1 {
+    font-size: 2rem;
+  }
+  
+  #lista-atleti {
+    grid-template-columns: 1fr;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  }
+  
+  .atleta-header {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
 }
