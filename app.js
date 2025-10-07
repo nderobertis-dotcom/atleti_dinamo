@@ -16,7 +16,7 @@ function mostraLista() {
     );
     div.innerHTML = atletiOrdinati.map((a, i) => `
       <div class="atleta-list-item">
-        ${a.foto ? `<img src="${a.foto}" class="foto-atleta-mini">` : ''}
+        ${a.foto ? `<img src="${a.foto}" class="foto-atleta-mini" alt="foto">` : ''}
         <div style="flex:1; font-size: 1.2em;">${a.nome} ${a.cognome}</div>
         <button class="btn-entra" onclick="entraAtleta(${atleti.indexOf(a)})">ENTRA</button>
       </div>
@@ -33,11 +33,9 @@ function aggiornaStatistiche() {
     document.getElementById('altezza-media').textContent = '-';
     return;
   }
-  // Età media
   let etaArr = atleti.map(a => calcolaEta(a.dataNascita)).filter(e => e !== null && !isNaN(e));
   document.getElementById('eta-media').textContent =
     etaArr.length ? (Math.round(etaArr.reduce((x,y)=>x+y,0)/etaArr.length) + " anni") : '-';
-  // Altezza media
   let altArr = atleti.map(a => Number(a.altezza)).filter(e => e);
   document.getElementById('altezza-media').textContent =
     altArr.length ? (Math.round(altArr.reduce((x,y)=>x+y,0)/altArr.length) + " cm") : '-';
@@ -94,7 +92,7 @@ function modificaAtleta(i) {
   div.innerHTML = `
     <div class="atleta" style="background: #f9f9f9; border-color: #4CAF50;">
       ${a.foto ? `<img src="${a.foto}" class="foto-atleta-big" id="foto-preview-edit"><br>` : `<img src="" class="foto-atleta-big" id="foto-preview-edit" style="display:none;"><br>`}
-      <label class="input-file-label">Foto (immagine locale): <input type="file" id="foto-edit-input" accept="image/*"></label>
+      <label class="input-file-label">Foto (immagine locale):<input type="file" id="foto-edit-input" accept="image/*"></label>
       <input type="text" class="input-card" id="nome" value="${a.nome || ''}" placeholder="Nome *">
       <input type="text" class="input-card" id="cognome" value="${a.cognome || ''}" placeholder="Cognome *">
       <input type="number" class="input-card" id="numeroMaglia" value="${a.numeroMaglia || ''}" placeholder="Numero maglia (1-99)" min="1" max="99">
@@ -113,14 +111,12 @@ function modificaAtleta(i) {
       <input type="email" class="input-card" id="email" value="${a.email || ''}" placeholder="Email">
       <input type="text" class="input-card" id="cellulare" value="${a.cellulare || ''}" placeholder="Cellulare">
       <input type="text" class="input-card" id="note" value="${a.note || ''}" placeholder="Note aggiuntive">
-      <div style="margin-top: 18px;">
+      <div style="margin-top: 16px;">
         <button onclick="salvaModifica(${i})">SALVA</button>
         <button onclick="annullaEdit()">ANNULLA</button>
       </div>
     </div>
   `;
-
-  // Preview foto in modifica
   document.getElementById('foto-edit-input').addEventListener('change', function(evt){
     const file = evt.target.files[0];
     if(!file) return;
@@ -132,7 +128,6 @@ function modificaAtleta(i) {
     reader.readAsDataURL(file);
   });
 }
-
 function salvaModifica(i) {
   const nome = document.getElementById('nome').value.trim();
   const cognome = document.getElementById('cognome').value.trim();
@@ -179,7 +174,7 @@ function mostraCardAggiungi() {
   div.innerHTML = `
     <div class="atleta" style="background: #f9f9f9; border-color: #4CAF50;">
       <img class="foto-atleta-big" id="foto-preview-add" style="display:none;"><br>
-      <label class="input-file-label">Foto (immagine locale): <input type="file" id="foto-input" accept="image/*"></label>
+      <label class="input-file-label">Foto (immagine locale):<input type="file" id="foto-input" accept="image/*"></label>
       <input type="text" class="input-card" id="nome" placeholder="Nome *">
       <input type="text" class="input-card" id="cognome" placeholder="Cognome *">
       <input type="number" class="input-card" id="numeroMaglia" placeholder="Numero maglia (1-99)" min="1" max="99">
@@ -198,7 +193,7 @@ function mostraCardAggiungi() {
       <input type="email" class="input-card" id="email" placeholder="Email">
       <input type="text" class="input-card" id="cellulare" placeholder="Cellulare">
       <input type="text" class="input-card" id="note" placeholder="Note aggiuntive">
-      <div style="margin-top: 18px;">
+      <div style="margin-top: 16px;">
         <button onclick="salvaNuovoAtleta()">SALVA</button>
         <button onclick="annullaEdit()">ANNULLA</button>
       </div>
