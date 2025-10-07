@@ -113,7 +113,7 @@ header p { font-size: 1.1rem; opacity: .9;}
   border-radius: 50%;
   border: 3px solid #667eea;
   object-fit: cover;
-  object-position: top center;
+  object-position: top;
   display: block;
   margin: 0 auto 11px auto;
   background: #f5f5f5;
@@ -204,6 +204,19 @@ header p { font-size: 1.1rem; opacity: .9;}
   background: rgba(255, 255, 255, 0.5);
   border-radius: 10px; border: 2px dashed #ccc;
 }
+.btn-backup {
+  background: linear-gradient(45deg, #45a049, #667eea);
+  color: white;
+  border: none;
+  border-radius: 18px;
+  padding: 8px 24px;
+  font-size: 1em;
+  font-weight: 500;
+  margin: 0 8px;
+  cursor: pointer;
+  transition: background .15s;
+}
+.btn-backup:hover { background: #764ba2; }
 @media (max-width: 900px) {
   .container { max-width:97vw;}
   .stats-grid { grid-template-columns: 1fr 1fr; }
