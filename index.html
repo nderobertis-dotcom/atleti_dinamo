@@ -3,23 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestione Atleti - Dinamo Molfetta</title>
+  <title>Gestione Atleti - Dinamo Volley</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>🏐 Gestione Atleti - Dinamo Molfetta</h1>
+      <h1>🏐 Gestione Atleti - Dinamo Volley</h1>
       <p>Sistema di gestione schede atleti della squadra</p>
     </header>
 
     <div class="stats-section">
       <h2>Dashboard Squadra</h2>
       <div class="stats-grid">
-        <!-- LOGO DINAMO -->
         <div class="stat-card logo-card">
           <div class="logo-container">
-            <img src="logo-dinamo.png" alt="Dinamo Volley" id="logo-dinamo" 
+            <img src="logo-dinamo.png" alt="Dinamo Volley" id="logo-dinamo"
                  onerror="this.style.display='none'; document.getElementById('logo-placeholder').style.display='flex';">
             <div id="logo-placeholder" class="logo-placeholder">
               <div class="logo-text">DINAMO</div>
@@ -27,20 +26,14 @@
             </div>
           </div>
         </div>
-        
-        <!-- NUMERO ATLETI -->
         <div class="stat-card atleti-card">
           <span class="stat-number" id="total-atleti">0</span>
           <span class="stat-label">Atleti Totali</span>
         </div>
-        
-        <!-- ETÀ MEDIA -->
         <div class="stat-card eta-card">
           <span class="stat-number" id="eta-media">-</span>
           <span class="stat-label">Età Media</span>
         </div>
-        
-        <!-- ALTEZZA MEDIA -->
         <div class="stat-card altezza-card">
           <span class="stat-number" id="altezza-media">-</span>
           <span class="stat-label">Altezza Media</span>
@@ -62,8 +55,8 @@
         ➕ Aggiungi Nuovo Atleta
       </button>
     </div>
-  </div>
 
-  <script src="app.js"></script>
+    <script src="app.js"></script>
+  </div>
 </body>
 </html>
