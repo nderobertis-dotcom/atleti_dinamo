@@ -22,3 +22,5 @@
   <script src="app.js"></script>
 </body>
 </html>
+<input type="email" id="email" placeholder="Email">
+<input type="text" id="note" placeholder="Note">
