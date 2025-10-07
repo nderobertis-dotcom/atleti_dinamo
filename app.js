@@ -1,94 +1,67 @@
 let atleti = JSON.parse(localStorage.getItem('atleti-dinamo')) || [];
 let editIndex = null;
-let nuovaCard = false;
 let atletaSelezionato = null;
 
 function mostraLista() {
   const div = document.getElementById('lista-atleti');
   const listaVuota = document.getElementById('lista-vuota');
-  
-  if (atleti.length === 0 && !nuovaCard) {
+  if (atleti.length === 0) {
     div.style.display = 'none';
     listaVuota.style.display = 'block';
   } else {
     div.style.display = 'block';
     listaVuota.style.display = 'none';
-
-    // Ordina atleti alfabeticamente per cognome
     const atletiOrdinati = [...atleti].sort((a, b) =>
       (a.cognome || '').localeCompare(b.cognome || '')
     );
-
     div.innerHTML = atletiOrdinati.map((a, i) => `
       <div class="atleta-list-item">
+        ${a.foto ? `<img src="${a.foto}" class="foto-atleta-mini">` : ''}
         <div style="flex:1; font-size: 1.2em;">${a.nome} ${a.cognome}</div>
         <button class="btn-entra" onclick="entraAtleta(${atleti.indexOf(a)})">ENTRA</button>
       </div>
     `).join('');
   }
-  
   clearCardAtleta();
   aggiornaStatistiche();
 }
 
 function aggiornaStatistiche() {
-  // NUMERO ATLETI TOTALI
   document.getElementById('total-atleti').textContent = atleti.length;
-  
-  if (atleti.length === 0) {
+  if(atleti.length === 0){
     document.getElementById('eta-media').textContent = '-';
     document.getElementById('altezza-media').textContent = '-';
     return;
   }
-  
-  // ETÀ MEDIA (calcolo preciso)
-  const atletiConEta = atleti.filter(a => a.dataNascita);
-  if (atletiConEta.length > 0) {
-    const sommaEta = atletiConEta.reduce((sum, a) => {
-      const eta = calcolaEta(a.dataNascita);
-      return sum + (eta || 0);
-    }, 0);
-    const mediaEta = Math.round(sommaEta / atletiConEta.length);
-    document.getElementById('eta-media').textContent = mediaEta + ' anni';
-  } else {
-    document.getElementById('eta-media').textContent = '-';
-  }
-  
-  // ALTEZZA MEDIA (calcolo preciso)
-  const atletiConAltezza = atleti.filter(a => a.altezza && !isNaN(a.altezza));
-  if (atletiConAltezza.length > 0) {
-    const sommaAltezza = atletiConAltezza.reduce((sum, a) => sum + parseInt(a.altezza), 0);
-    const mediaAltezza = Math.round(sommaAltezza / atletiConAltezza.length);
-    document.getElementById('altezza-media').textContent = mediaAltezza + ' cm';
-  } else {
-    document.getElementById('altezza-media').textContent = '-';
-  }
+  // Età media
+  let etaArr = atleti.map(a => calcolaEta(a.dataNascita)).filter(e => e !== null && !isNaN(e));
+  document.getElementById('eta-media').textContent =
+    etaArr.length ? (Math.round(etaArr.reduce((x,y)=>x+y,0)/etaArr.length) + " anni") : '-';
+  // Altezza media
+  let altArr = atleti.map(a => Number(a.altezza)).filter(e => e);
+  document.getElementById('altezza-media').textContent =
+    altArr.length ? (Math.round(altArr.reduce((x,y)=>x+y,0)/altArr.length) + " cm") : '-';
 }
-
 function calcolaEta(dataNascita) {
   if (!dataNascita) return null;
-  const oggi = new Date();
-  const nascita = new Date(dataNascita);
-  let eta = oggi.getFullYear() - nascita.getFullYear();
-  const mesiDiff = oggi.getMonth() - nascita.getMonth();
-  
-  if (mesiDiff < 0 || (mesiDiff === 0 && oggi.getDate() < nascita.getDate())) {
-    eta--;
-  }
-  return eta > 0 ? eta : null;
+  let oggi = new Date();
+  let nascita = new Date(dataNascita);
+  let anni = oggi.getFullYear() - nascita.getFullYear();
+  let m = oggi.getMonth() - nascita.getMonth();
+  if (m < 0 || (m === 0 && oggi.getDate() < nascita.getDate())) anni--;
+  return anni;
 }
-
 function entraAtleta(i) {
   atletaSelezionato = i;
   mostraCardAtleta(i);
 }
-
 function mostraCardAtleta(i) {
   const a = atleti[i];
   const eta = calcolaEta(a.dataNascita);
   const div = document.getElementById('card-atleta');
   div.innerHTML = `
     <div class="atleta">
+      ${a.foto ? `<img src="${a.foto}" class="foto-atleta-big" alt="Foto atleta">` : ''}
       <div class="atleta-header">
         <div class="atleta-nome">${a.nome} ${a.cognome}</div>
         ${a.numeroMaglia ? `<div class="numero-maglia">${a.numeroMaglia}</div>` : ''}
@@ -97,9 +70,11 @@ function mostraCardAtleta(i) {
       <div class="atleta-dettagli">
         ${eta ? `<div><strong>Età:</strong> ${eta} anni</div>` : ''}
         ${a.dataNascita ? `<div><strong>Nascita:</strong> ${new Date(a.dataNascita).toLocaleDateString('it-IT')}</div>` : ''}
+        ${a.codiceFiscale ? `<div><strong>Codice fiscale:</strong> ${a.codiceFiscale}</div>` : ''}
         ${a.altezza ? `<div><strong>Altezza:</strong> ${a.altezza} cm</div>` : ''}
         ${a.peso ? `<div><strong>Peso:</strong> ${a.peso} kg</div>` : ''}
         ${a.email ? `<div><strong>Email:</strong> ${a.email}</div>` : ''}
+        ${a.cellulare ? `<div><strong>Cellulare:</strong> ${a.cellulare}</div>` : ''}
         ${a.note ? `<div><strong>Note:</strong> ${a.note}</div>` : ''}
       </div>
       <div class="atleta-azioni">
@@ -109,22 +84,17 @@ function mostraCardAtleta(i) {
     </div>
   `;
 }
-
 function clearCardAtleta() {
   document.getElementById('card-atleta').innerHTML = '';
   atletaSelezionato = null;
 }
-
 function modificaAtleta(i) {
-  editIndex = i;
-  mostraCardModifica(i);
-}
-
-function mostraCardModifica(i) {
   const a = atleti[i];
   const div = document.getElementById('card-atleta');
   div.innerHTML = `
     <div class="atleta" style="background: #f9f9f9; border-color: #4CAF50;">
+      ${a.foto ? `<img src="${a.foto}" class="foto-atleta-big" id="foto-preview-edit"><br>` : `<img src="" class="foto-atleta-big" id="foto-preview-edit" style="display:none;"><br>`}
+      <label class="input-file-label">Foto (immagine locale): <input type="file" id="foto-edit-input" accept="image/*"></label>
       <input type="text" class="input-card" id="nome" value="${a.nome || ''}" placeholder="Nome *">
       <input type="text" class="input-card" id="cognome" value="${a.cognome || ''}" placeholder="Cognome *">
       <input type="number" class="input-card" id="numeroMaglia" value="${a.numeroMaglia || ''}" placeholder="Numero maglia (1-99)" min="1" max="99">
@@ -137,9 +107,11 @@ function mostraCardModifica(i) {
         <option value="Opposto" ${a.ruolo === 'Opposto' ? 'selected' : ''}>Opposto</option>
       </select>
       <input type="date" class="input-card" id="dataNascita" value="${a.dataNascita || ''}">
+      <input type="text" class="input-card" id="codiceFiscale" value="${a.codiceFiscale || ''}" placeholder="Codice fiscale">
       <input type="number" class="input-card" id="altezza" value="${a.altezza || ''}" placeholder="Altezza (cm)" min="150" max="220">
       <input type="number" class="input-card" id="peso" value="${a.peso || ''}" placeholder="Peso (kg)" min="40" max="150">
       <input type="email" class="input-card" id="email" value="${a.email || ''}" placeholder="Email">
+      <input type="text" class="input-card" id="cellulare" value="${a.cellulare || ''}" placeholder="Cellulare">
       <input type="text" class="input-card" id="note" value="${a.note || ''}" placeholder="Note aggiuntive">
       <div style="margin-top: 18px;">
         <button onclick="salvaModifica(${i})">SALVA</button>
@@ -147,61 +119,67 @@ function mostraCardModifica(i) {
       </div>
     </div>
   `;
+
+  // Preview foto in modifica
+  document.getElementById('foto-edit-input').addEventListener('change', function(evt){
+    const file = evt.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      document.getElementById('foto-preview-edit').src = ev.target.result;
+      document.getElementById('foto-preview-edit').style.display = 'block';
+    }
+    reader.readAsDataURL(file);
+  });
 }
 
 function salvaModifica(i) {
   const nome = document.getElementById('nome').value.trim();
   const cognome = document.getElementById('cognome').value.trim();
-  if (!nome || !cognome) { 
-    alert('Nome e Cognome sono obbligatori'); 
-    return; 
-  }
-  
+  if (!nome || !cognome) { alert('Nome e Cognome sono obbligatori'); return; }
+  let foto = document.getElementById('foto-preview-edit').src;
+  if (!foto || foto.startsWith('data:') === false) foto = atleti[i].foto || "";
   atleti[i] = {
+    foto,
     nome,
     cognome,
     numeroMaglia: document.getElementById('numeroMaglia').value,
     ruolo: document.getElementById('ruolo').value,
     dataNascita: document.getElementById('dataNascita').value,
+    codiceFiscale: document.getElementById('codiceFiscale').value,
     altezza: document.getElementById('altezza').value,
     peso: document.getElementById('peso').value,
     email: document.getElementById('email').value,
+    cellulare: document.getElementById('cellulare').value,
     note: document.getElementById('note').value,
     dataCreazione: atleti[i].dataCreazione || new Date().toISOString()
   };
-  
   salvaAtleti();
   mostraLista();
   mostraCardAtleta(i);
 }
-
 function annullaEdit() {
   mostraLista();
-  if (atletaSelezionato !== null) {
-    mostraCardAtleta(atletaSelezionato);
-  } else {
-    clearCardAtleta();
-  }
+  if (atletaSelezionato !== null) mostraCardAtleta(atletaSelezionato);
+  else clearCardAtleta();
 }
-
 function eliminaAtleta(i) {
-  const atleta = atleti[i];
-  if (confirm(`Eliminare ${atleta.nome} ${atleta.cognome}?`)) {
+  if (confirm('Eliminare questo atleta?')) {
     atleti.splice(i, 1);
     salvaAtleti();
+    annullaEdit();
     mostraLista();
-    clearCardAtleta();
   }
 }
-
 function salvaAtleti() {
   localStorage.setItem('atleti-dinamo', JSON.stringify(atleti));
 }
-
 function mostraCardAggiungi() {
   const div = document.getElementById('card-atleta');
   div.innerHTML = `
     <div class="atleta" style="background: #f9f9f9; border-color: #4CAF50;">
+      <img class="foto-atleta-big" id="foto-preview-add" style="display:none;"><br>
+      <label class="input-file-label">Foto (immagine locale): <input type="file" id="foto-input" accept="image/*"></label>
       <input type="text" class="input-card" id="nome" placeholder="Nome *">
       <input type="text" class="input-card" id="cognome" placeholder="Cognome *">
       <input type="number" class="input-card" id="numeroMaglia" placeholder="Numero maglia (1-99)" min="1" max="99">
@@ -214,9 +192,11 @@ function mostraCardAggiungi() {
         <option value="Opposto">Opposto</option>
       </select>
       <input type="date" class="input-card" id="dataNascita">
+      <input type="text" class="input-card" id="codiceFiscale" placeholder="Codice fiscale">
       <input type="number" class="input-card" id="altezza" placeholder="Altezza (cm)" min="150" max="220">
       <input type="number" class="input-card" id="peso" placeholder="Peso (kg)" min="40" max="150">
       <input type="email" class="input-card" id="email" placeholder="Email">
+      <input type="text" class="input-card" id="cellulare" placeholder="Cellulare">
       <input type="text" class="input-card" id="note" placeholder="Note aggiuntive">
       <div style="margin-top: 18px;">
         <button onclick="salvaNuovoAtleta()">SALVA</button>
@@ -224,35 +204,42 @@ function mostraCardAggiungi() {
       </div>
     </div>
   `;
+  document.getElementById('foto-input').addEventListener('change', function(evt){
+    const file = evt.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      document.getElementById('foto-preview-add').src = ev.target.result;
+      document.getElementById('foto-preview-add').style.display = 'block';
+    }
+    reader.readAsDataURL(file);
+  });
 }
-
 function salvaNuovoAtleta() {
   const nome = document.getElementById('nome').value.trim();
   const cognome = document.getElementById('cognome').value.trim();
-  if (!nome || !cognome) { 
-    alert('Nome e Cognome sono obbligatori'); 
-    return; 
-  }
-  
+  if (!nome || !cognome) { alert('Nome e Cognome sono obbligatori'); return; }
+  let foto = document.getElementById('foto-preview-add').src;
+  if (!foto || foto.startsWith('data:') === false) foto = "";
   atleti.push({
+    foto,
     nome,
     cognome,
     numeroMaglia: document.getElementById('numeroMaglia').value,
     ruolo: document.getElementById('ruolo').value,
     dataNascita: document.getElementById('dataNascita').value,
+    codiceFiscale: document.getElementById('codiceFiscale').value,
     altezza: document.getElementById('altezza').value,
     peso: document.getElementById('peso').value,
     email: document.getElementById('email').value,
+    cellulare: document.getElementById('cellulare').value,
     note: document.getElementById('note').value,
     dataCreazione: new Date().toISOString()
   });
-  
   salvaAtleti();
   mostraLista();
   clearCardAtleta();
 }
-
-// INIZIALIZZAZIONE
 window.addEventListener('DOMContentLoaded', function() {
   mostraLista();
   document.getElementById('btn-aggiungi-bottom').onclick = function() {
