@@ -3,22 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Scheda Atleti - Volley</title>
+  <title>Gestione Atleti - Dinamo Volley</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Scheda Atleti - Squadra Volley</h1>
-  <div id="form">
-    <input type="text" id="nome" placeholder="Nome">
-    <input type="text" id="cognome" placeholder="Cognome">
-    <input type="date" id="dataNascita" placeholder="Data di nascita">
-    <input type="number" id="altezza" placeholder="Altezza (cm)">
-    <input type="number" id="peso" placeholder="Peso (kg)">
-    <input type="text" id="ruolo" placeholder="Ruolo">
-    <button id="aggiungi-btn" type="button">Aggiungi Atleta</button>
-  </div>
-  <hr>
-  <div id="lista-atleti"></div>
-  <script src="app.js"></script>
-</body>
-</html>
+  <div class="container">
+    <header>
+      <h1>🏐 Gestione Atleti - Dinamo Volley</h1>
+      <p>Sistema di gestione schede atleti della squadra</p>
+    </header>
+
+    <div class="form-section">
+      <h2>Inserisci/Modifica Atleta</h2>
+      <form id="form">
+        <div class="form-row">
+          <input type="text" id="nome" placeholder="Nome" required>
+          <input type="text" id="cognome" placeholder="Cognome" required>
+        </div>
+        <div class="form-row">
+          <input type="date" id="dataNascita" placeholder="Data di nascita">
+          <input type="email" id="email" placeholder="Email">
+        </div>
+        <div class="form-row">
+          <input type="number" id="altezza" placeholder="Altezza (cm)" min="150" max="220">
+          <input type="number" id="peso" placeholder="Peso (kg)" min="40" max="150">
+        </div>
+        <div class="form-row">
+          <select id="ruolo" required>
+            <option value="">Seleziona ruolo</option>
+            <option value="Palleggiatore">Palleggiatore</option>
+            <option value="Libero">Libero</option>
+            <option value="Schiacciatore">Schiacciatore</option>
+            <option value="Centrale">Centrale</option>
+            <option value="Opposto">Opposto</option>
+          </select>
+          <input type="number" id="numeroMaglia" placeholder="Numero maglia" min="1" max="99">
+        </div>
+        <textarea id="note" placeholder="Note aggiuntive"></textarea>
+        <button type="button" id="aggiungi-btn">Aggiungi Atleta</button>
+        <button type="button" id="annulla-btn" style="display:none;">Annulla Modifica</button>
+      </form>
+    </div>
+
+    <div class="stats-section">
+      <h2>Statistiche Squadra</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-number" id="total-atleti">0</span>
+          <span class="stat-label">Atleti Totali</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" id="eta-media">-</span>
+          <span class="stat-label">Età Media</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" id="altezza-media">-</span>
