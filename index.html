@@ -9,9 +9,39 @@
 <body>
   <div class="container">
     <header>
-      <h1>🏐 Gestione Atleti - DINAMO MOLFETTA</h1>
-      <p>Sistema di gestione schede atleti</p>
+      <h1>🏐 Gestione Atleti - Dinamo Volley</h1>
+      <p>Sistema di gestione schede atleti della squadra</p>
     </header>
+
+    <div class="stats-section">
+      <h2>Statistiche Squadra</h2>
+      <div class="stats-grid">
+        <!-- Logo Dinamo come prima card -->
+        <div class="stat-card logo-card">
+          <div class="logo-container">
+            <img src="logo-dinamo.png" alt="Dinamo Volley" id="logo-dinamo"
+                 onerror="this.style.display='none'; document.getElementById('logo-placeholder').style.display='flex';">
+            <div id="logo-placeholder" class="logo-placeholder">
+              <div class="logo-text">DINAMO</div>
+              <div class="logo-subtext">VOLLEY</div>
+            </div>
+          </div>
+        </div>
+        <!-- Statistiche -->
+        <div class="stat-card">
+          <span class="stat-number" id="total-atleti">0</span>
+          <span class="stat-label">Atleti Totali</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" id="eta-media">-</span>
+          <span class="stat-label">Età Media</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" id="altezza-media">-</span>
+          <span class="stat-label">Altezza Media</span>
+        </div>
+      </div>
+    </div>
 
     <div class="lista-section">
       <h2>Lista Atleti</h2>
