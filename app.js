@@ -2,6 +2,38 @@ let atleti = JSON.parse(localStorage.getItem('atleti-dinamo')) || [];
 let editIndex = null;
 let atletaSelezionato = null;
 
+function calcolaSvmStatus(dataSvm) {
+  if (!dataSvm) return null;
+  
+  const oggi = new Date();
+  const svm = new Date(dataSvm);
+  const diffTime = svm.getTime() - oggi.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  if (diffDays < 0) {
+    return 'scaduta';
+  } else if (diffDays <= 30) {
+    return 'in_scadenza';
+  }
+  return 'valida';
+}
+
+function formatSvmDisplay(dataSvm) {
+  if (!dataSvm) return '';
+  
+  const status = calcolaSvmStatus(dataSvm);
+  const dataFormatted = new Date(dataSvm).toLocaleDateString('it-IT');
+  
+  switch(status) {
+    case 'scaduta':
+      return `<span class="svm-scaduta">SVM: ${dataFormatted} (SCADUTA)</span>`;
+    case 'in_scadenza':
+      return `<span class="svm-in-scadenza">SVM: ${dataFormatted} (scade presto)</span>`;
+    default:
+      return `SVM: ${dataFormatted}`;
+  }
+}
+
 function mostraLista() {
   const div = document.getElementById('lista-atleti');
   const listaVuota = document.getElementById('lista-vuota');
@@ -19,8 +51,17 @@ function mostraLista() {
     
     div.innerHTML = atletiOrdinati.map((a, i) => `
       <div class="atleta-list-item">
-        ${a.foto ? `<img src="${a.foto}" class="foto-atleta-mini" alt="foto">` : ''}
-        <div style="flex:1; font-size: 1.2em;">${a.nome} ${a.cognome}</div>
+        <div class="atleta-info">
+          ${a.foto ? `<img src="${a.foto}" class="foto-atleta-mini" alt="foto">` : ''}
+          <div>
+            <div style="font-size: 1.1em; font-weight: 600;">${a.nome} ${a.cognome}</div>
+            <div class="atleta-dettagli-lista">
+              ${a.numeroMaglia ? `#${a.numeroMaglia}` : ''} 
+              ${a.ruolo ? `• ${a.ruolo}` : ''}<br>
+              ${a.svm ? formatSvmDisplay(a.svm) : ''}
+            </div>
+          </div>
+        </div>
         <button class="btn-entra" onclick="entraAtleta(${atleti.indexOf(a)})">ENTRA</button>
       </div>
     `).join('');
@@ -127,6 +168,7 @@ function mostraCardAtleta(i) {
         ${a.cellulare ? `<div><strong>Cellulare:</strong> ${a.cellulare}</div>` : ''}
         ${(a.viaResidenza || a.cittaResidenza || a.provResidenza) ? `<div><strong>Residenza:</strong> 
           ${a.viaResidenza || ''} ${a.cittaResidenza ? '(' + a.cittaResidenza + ')' : ''} ${a.provResidenza || ''}</div>` : ''}
+        ${a.svm ? `<div><strong>Scad. Visita Medica:</strong> ${formatSvmDisplay(a.svm)}</div>` : ''}
         ${a.note ? `<div><strong>Note:</strong> ${a.note}</div>` : ''}
       </div>
       <div class="atleta-azioni">
@@ -183,6 +225,8 @@ function modificaAtleta(i) {
       <input type="text" class="input-card" id="viaResidenza" value="${a.viaResidenza || ''}" placeholder="Via/Piazza">
       <input type="text" class="input-card" id="cittaResidenza" value="${a.cittaResidenza || ''}" placeholder="Città">
       <input type="text" class="input-card" id="provResidenza" value="${a.provResidenza || ''}" placeholder="Provincia">
+      <input type="date" class="input-card" id="svm" value="${a.svm || ''}" placeholder="Scadenza Visita Medica">
+      <label for="svm" style="font-size: 0.9em; color: #666; margin: -5px 0 10px 8px;">Scadenza Visita Medica (SVM)</label>
       <input type="text" class="input-card" id="note" value="${a.note || ''}" placeholder="Note">
       <div style="margin-top: 16px;">
         <button onclick="salvaModifica(${i})">SALVA</button>
@@ -237,6 +281,7 @@ function salvaModifica(i) {
     viaResidenza: document.getElementById('viaResidenza').value,
     cittaResidenza: document.getElementById('cittaResidenza').value,
     provResidenza: document.getElementById('provResidenza').value,
+    svm: document.getElementById('svm').value,
     note: document.getElementById('note').value,
     dataCreazione: atleti[i].dataCreazione || new Date().toISOString()
   };
@@ -317,6 +362,8 @@ function mostraCardAggiungi() {
       <input type="text" class="input-card" id="viaResidenza" placeholder="Via/Piazza">
       <input type="text" class="input-card" id="cittaResidenza" placeholder="Città">
       <input type="text" class="input-card" id="provResidenza" placeholder="Provincia">
+      <input type="date" class="input-card" id="svm" placeholder="Scadenza Visita Medica">
+      <label for="svm" style="font-size: 0.9em; color: #666; margin: -5px 0 10px 8px;">Scadenza Visita Medica (SVM)</label>
       <input type="text" class="input-card" id="note" placeholder="Note">
       <div style="margin-top: 16px;">
         <button onclick="salvaNuovoAtleta()">SALVA</button>
@@ -371,6 +418,7 @@ function salvaNuovoAtleta() {
     viaResidenza: document.getElementById('viaResidenza').value,
     cittaResidenza: document.getElementById('cittaResidenza').value,
     provResidenza: document.getElementById('provResidenza').value,
+    svm: document.getElementById('svm').value,
     note: document.getElementById('note').value,
     dataCreazione: new Date().toISOString()
   };
