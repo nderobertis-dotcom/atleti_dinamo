@@ -100,8 +100,7 @@ header p { font-size: 1.1rem; opacity: .9;}
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   padding: 14px 18px;
   margin-bottom: 13px;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
+  display: flex;
   align-items: center;
   gap: 16px;
 }
@@ -109,6 +108,7 @@ header p { font-size: 1.1rem; opacity: .9;}
   display: flex;
   align-items: center;
   gap: 14px;
+  flex: 1;
 }
 .atleta-dettagli-lista {
   font-size: 0.9em;
@@ -135,6 +135,8 @@ header p { font-size: 1.1rem; opacity: .9;}
   font-weight: 600;
   cursor: pointer;
   transition: background .2s;
+  min-width: 80px;
+  flex-shrink: 0;
 }
 .btn-entra:hover { background: #4CAF50; }
 
@@ -284,6 +286,7 @@ header p { font-size: 1.1rem; opacity: .9;}
   .atleta { padding: 12px;}
   .foto-atleta-big { width:55px; height:55px;}
   .foto-atleta-mini { width: 32px; height: 32px;}
-  .atleta-list-item { grid-template-columns: 1fr auto; padding: 12px;}
+  .atleta-list-item { padding: 12px;}
   .atleta-dettagli-lista { font-size: 0.8em;}
+  .btn-entra { min-width: 70px; padding: 6px 12px;}
 }
