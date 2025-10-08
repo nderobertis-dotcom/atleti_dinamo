@@ -1,54 +1,63 @@
 let atleti = JSON.parse(localStorage.getItem('atleti-dinamo')) || [];
 let editIndex = null;
 let atletaSelezionato = null;
+let filtroAttivo = null;
+
+// funzione filtro chiamata dalle card
+function filtraAtleti(filtro) {
+  filtroAttivo = filtro;
+  // Evidenzia la card attiva
+  Array.from(document.querySelectorAll('.stat-card')).forEach(card => card.classList.remove('filtro-attivo'));
+  if (!filtro) {
+    document.querySelector('.logo-card').classList.add('filtro-attivo');
+    document.querySelector('.atleti-card').classList.add('filtro-attivo');
+  }
+  if (filtro === 'M') document.querySelector('.sesso-m-card').classList.add('filtro-attivo');
+  if (filtro === 'F') document.querySelector('.sesso-f-card').classList.add('filtro-attivo');
+  if (filtro === 'SERIE D MASCHILE') document.querySelector('.camp-seriedm-card').classList.add('filtro-attivo');
+  if (filtro === '1° DIV. FEMMINILE') document.querySelector('.camp-1divf-card').classList.add('filtro-attivo');
+  if (filtro === '1° DIVISIONE MASCHILE') document.querySelector('.camp-1divm-card').classList.add('filtro-attivo');
+  mostraLista();
+}
 
 function calcolaSvmStatus(dataSvm) {
   if (!dataSvm) return null;
-  
   const oggi = new Date();
   const svm = new Date(dataSvm);
   const diffTime = svm.getTime() - oggi.getTime();
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  
-  if (diffDays < 0) {
-    return 'scaduta';
-  } else if (diffDays <= 30) {
-    return 'in_scadenza';
-  }
+  if (diffDays < 0) return 'scaduta';
+  if (diffDays <= 30) return 'in_scadenza';
   return 'valida';
 }
-
 function formatSvmDisplay(dataSvm) {
   if (!dataSvm) return '';
-  
   const status = calcolaSvmStatus(dataSvm);
   const dataFormatted = new Date(dataSvm).toLocaleDateString('it-IT');
-  
   switch(status) {
-    case 'scaduta':
-      return `<span class="svm-scaduta">SVM: ${dataFormatted} (SCADUTA)</span>`;
-    case 'in_scadenza':
-      return `<span class="svm-in-scadenza">SVM: ${dataFormatted} (scade presto)</span>`;
-    default:
-      return `SVM: ${dataFormatted}`;
+    case 'scaduta': return `<span class="svm-scaduta">SVM: ${dataFormatted} (SCADUTA)</span>`;
+    case 'in_scadenza': return `<span class="svm-in-scadenza">SVM: ${dataFormatted} (scade presto)</span>`;
+    default: return `SVM: ${dataFormatted}`;
   }
 }
-
 function mostraLista() {
   const div = document.getElementById('lista-atleti');
   const listaVuota = document.getElementById('lista-vuota');
-  
-  if (atleti.length === 0) {
+  let listaFiltrata = [...atleti];
+  if (filtroAttivo === 'M' || filtroAttivo === 'F') {
+    listaFiltrata = atleti.filter(a => a.sesso === filtroAttivo);
+  } else if (['SERIE D MASCHILE', "1° DIV. FEMMINILE", "1° DIVISIONE MASCHILE"].includes(filtroAttivo)) {
+    listaFiltrata = atleti.filter(a => a.campionato === filtroAttivo);
+  }
+  if (listaFiltrata.length === 0) {
     div.style.display = 'none';
     listaVuota.style.display = 'block';
   } else {
     div.style.display = 'block';
     listaVuota.style.display = 'none';
-    
-    const atletiOrdinati = [...atleti].sort((a, b) =>
+    const atletiOrdinati = [...listaFiltrata].sort((a, b) =>
       (a.cognome || '').localeCompare(b.cognome || '')
     );
-    
     div.innerHTML = atletiOrdinati.map((a, i) => `
       <div class="atleta-list-item">
         <div class="atleta-info">
@@ -66,14 +75,11 @@ function mostraLista() {
       </div>
     `).join('');
   }
-  
   clearCardAtleta();
   aggiornaStatistiche();
 }
-
 function aggiornaStatistiche() {
   document.getElementById('total-atleti').textContent = atleti.length;
-  
   if (atleti.length === 0) {
     document.getElementById('eta-media').textContent = '-';
     document.getElementById('altezza-media').textContent = '-';
@@ -84,7 +90,6 @@ function aggiornaStatistiche() {
     document.getElementById('num-1divm').textContent = '0';
     return;
   }
-  
   // Età media
   const atletiConEta = atleti.filter(a => a.dataNascita);
   if (atletiConEta.length > 0) {
@@ -97,7 +102,6 @@ function aggiornaStatistiche() {
   } else {
     document.getElementById('eta-media').textContent = '-';
   }
-  
   // Altezza media
   const atletiConAltezza = atleti.filter(a => a.altezza && !isNaN(a.altezza));
   if (atletiConAltezza.length > 0) {
@@ -107,13 +111,11 @@ function aggiornaStatistiche() {
   } else {
     document.getElementById('altezza-media').textContent = '-';
   }
-  
   // Conteggi per sesso
   const numMaschi = atleti.filter(a => a.sesso === 'M').length;
   const numFemmine = atleti.filter(a => a.sesso === 'F').length;
   document.getElementById('num-maschi').textContent = numMaschi;
   document.getElementById('num-femmine').textContent = numFemmine;
-  
   // Conteggi per campionato
   document.getElementById('num-seriedm').textContent = 
     atleti.filter(a => a.campionato === 'SERIE D MASCHILE').length;
@@ -122,30 +124,25 @@ function aggiornaStatistiche() {
   document.getElementById('num-1divm').textContent = 
     atleti.filter(a => a.campionato === '1° DIVISIONE MASCHILE').length;
 }
-
 function calcolaEta(dataNascita) {
   if (!dataNascita) return null;
   const oggi = new Date();
   const nascita = new Date(dataNascita);
   let eta = oggi.getFullYear() - nascita.getFullYear();
   const mesiDiff = oggi.getMonth() - nascita.getMonth();
-  
   if (mesiDiff < 0 || (mesiDiff === 0 && oggi.getDate() < nascita.getDate())) {
     eta--;
   }
   return eta > 0 ? eta : null;
 }
-
 function entraAtleta(i) {
   atletaSelezionato = i;
   mostraCardAtleta(i);
 }
-
 function mostraCardAtleta(i) {
   const a = atleti[i];
   const eta = calcolaEta(a.dataNascita);
   const div = document.getElementById('card-atleta');
-  
   div.innerHTML = `
     <div class="atleta">
       ${a.foto ? `<img src="${a.foto}" class="foto-atleta-big" alt="Foto atleta">` : ''}
@@ -178,16 +175,13 @@ function mostraCardAtleta(i) {
     </div>
   `;
 }
-
 function clearCardAtleta() {
   document.getElementById('card-atleta').innerHTML = '';
   atletaSelezionato = null;
 }
-
 function modificaAtleta(i) {
   const a = atleti[i];
   const div = document.getElementById('card-atleta');
-  
   div.innerHTML = `
     <div class="atleta" style="background: #f9f9f9; border-color: #4CAF50;">
       ${a.foto ? `<img src="${a.foto}" class="foto-atleta-big" id="foto-preview-edit">` : `<img src="" class="foto-atleta-big" id="foto-preview-edit" style="display:none;">`}
@@ -234,11 +228,9 @@ function modificaAtleta(i) {
       </div>
     </div>
   `;
-  
   document.getElementById('foto-edit-input').addEventListener('change', function(evt) {
     const file = evt.target.files[0];
     if (!file) return;
-    
     const reader = new FileReader();
     reader.onload = function(ev) {
       document.getElementById('foto-preview-edit').src = ev.target.result;
@@ -247,21 +239,15 @@ function modificaAtleta(i) {
     reader.readAsDataURL(file);
   });
 }
-
 function salvaModifica(i) {
   const nome = document.getElementById('nome').value.trim();
   const cognome = document.getElementById('cognome').value.trim();
-  
   if (!nome || !cognome) {
     alert('Nome e Cognome sono obbligatori');
     return;
   }
-  
   let foto = document.getElementById('foto-preview-edit').src;
-  if (!foto || !foto.startsWith('data:')) {
-    foto = atleti[i].foto || "";
-  }
-  
+  if (!foto || !foto.startsWith('data:')) foto = atleti[i].foto || "";
   atleti[i] = {
     foto: foto,
     nome: nome,
@@ -285,21 +271,15 @@ function salvaModifica(i) {
     note: document.getElementById('note').value,
     dataCreazione: atleti[i].dataCreazione || new Date().toISOString()
   };
-  
   salvaAtleti();
   mostraLista();
   mostraCardAtleta(i);
 }
-
 function annullaEdit() {
   mostraLista();
-  if (atletaSelezionato !== null) {
-    mostraCardAtleta(atletaSelezionato);
-  } else {
-    clearCardAtleta();
-  }
+  if (atletaSelezionato !== null) mostraCardAtleta(atletaSelezionato);
+  else clearCardAtleta();
 }
-
 function eliminaAtleta(i) {
   const atleta = atleti[i];
   if (confirm(`Eliminare ${atleta.nome} ${atleta.cognome}?`)) {
@@ -309,7 +289,6 @@ function eliminaAtleta(i) {
     clearCardAtleta();
   }
 }
-
 function salvaAtleti() {
   try {
     localStorage.setItem('atleti-dinamo', JSON.stringify(atleti));
@@ -321,10 +300,8 @@ function salvaAtleti() {
     }
   }
 }
-
 function mostraCardAggiungi() {
   const div = document.getElementById('card-atleta');
-  
   div.innerHTML = `
     <div class="atleta" style="background: #f9f9f9; border-color: #4CAF50;">
       <img class="foto-atleta-big" id="foto-preview-add" style="display:none;">
@@ -371,11 +348,9 @@ function mostraCardAggiungi() {
       </div>
     </div>
   `;
-  
   document.getElementById('foto-input').addEventListener('change', function(evt) {
     const file = evt.target.files[0];
     if (!file) return;
-    
     const reader = new FileReader();
     reader.onload = function(ev) {
       document.getElementById('foto-preview-add').src = ev.target.result;
@@ -384,21 +359,15 @@ function mostraCardAggiungi() {
     reader.readAsDataURL(file);
   });
 }
-
 function salvaNuovoAtleta() {
   const nome = document.getElementById('nome').value.trim();
   const cognome = document.getElementById('cognome').value.trim();
-  
   if (!nome || !cognome) {
     alert('Nome e Cognome sono obbligatori');
     return;
   }
-  
   let foto = document.getElementById('foto-preview-add').src;
-  if (!foto || !foto.startsWith('data:')) {
-    foto = "";
-  }
-  
+  if (!foto || !foto.startsWith('data:')) foto = "";
   const nuovoAtleta = {
     foto: foto,
     nome: nome,
@@ -422,13 +391,11 @@ function salvaNuovoAtleta() {
     note: document.getElementById('note').value,
     dataCreazione: new Date().toISOString()
   };
-  
   atleti.push(nuovoAtleta);
   salvaAtleti();
   mostraLista();
   clearCardAtleta();
 }
-
 function esportaAtleti() {
   try {
     const data = JSON.stringify(atleti, null, 2);
@@ -445,19 +412,14 @@ function esportaAtleti() {
     alert('Errore durante l\'esportazione: ' + e.message);
   }
 }
-
-// Inizializzazione al caricamento della pagina
 window.addEventListener('DOMContentLoaded', function() {
   mostraLista();
-  
   document.getElementById('btn-aggiungi-bottom').onclick = function() {
     mostraCardAggiungi();
   };
-  
   document.getElementById('file-import').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (!file) return;
-    
     const reader = new FileReader();
     reader.onload = function(evt) {
       try {
