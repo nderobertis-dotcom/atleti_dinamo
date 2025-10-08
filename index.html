@@ -3,91 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestione Atleti - Dinamo Molfetta</title>
+  <title>Test Ripristino Dashboard</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-
-    <header>
-      <h1 onclick="filtraAtleti(null)" style="cursor:pointer;">🏐 Gestione Atleti - Dinamo Molfetta</h1>
-      <p>Sistema di gestione schede atleti della squadra</p>
-    </header>
-
-    <div class="stats-section">
-      <h2>Dashboard Squadra</h2>
-      <div class="stats-grid">
-        <div class="stat-card logo-card" onclick="filtraAtleti(null)">
-          <div class="logo-container">
-            <img src="logo-dinamo.png" alt="Dinamo Molfetta" id="logo-dinamo"
-                 onerror="this.style.display='none'; document.getElementById('logo-placeholder').style.display='flex';">
-            <div id="logo-placeholder" class="logo-placeholder">
-              <div class="logo-text">DINAMO</div>
-              <div class="logo-subtext">MOLFETTA</div>
-            </div>
-          </div>
-        </div>
-        <div class="stat-card atleti-card" onclick="filtraAtleti(null)">
-          <span class="stat-number" id="total-atleti">0</span>
-          <span class="stat-label">Atleti Totali</span>
-        </div>
-        <div class="stat-card eta-card">
-          <span class="stat-number" id="eta-media">-</span>
-          <span class="stat-label">Età Media</span>
-        </div>
-        <div class="stat-card altezza-card">
-          <span class="stat-number" id="altezza-media">-</span>
-          <span class="stat-label">Altezza Media</span>
-        </div>
-        <div class="stat-card sesso-m-card" onclick="filtraAtleti('M')">
-          <span class="stat-number" id="num-maschi">0</span>
-          <span class="stat-label">Atleti M</span>
-        </div>
-        <div class="stat-card sesso-f-card" onclick="filtraAtleti('F')">
-          <span class="stat-number" id="num-femmine">0</span>
-          <span class="stat-label">Atlete F</span>
-        </div>
-        <div class="stat-card camp-seriedm-card" onclick="filtraAtleti('SERIE D MASCHILE')">
-          <span class="stat-number" id="num-seriedm">0</span>
-          <span class="stat-label">Serie D Maschile</span>
-        </div>
-        <div class="stat-card camp-1divf-card" onclick="filtraAtleti('1° DIV. FEMMINILE')">
-          <span class="stat-number" id="num-1divf">0</span>
-          <span class="stat-label">1° Div. Femminile</span>
-        </div>
-        <div class="stat-card camp-1divm-card" onclick="filtraAtleti('1° DIVISIONE MASCHILE')">
-          <span class="stat-number" id="num-1divm">0</span>
-          <span class="stat-label">1° Div. Maschile</span>
-        </div>
-        <div class="stat-card complete-card">
-          <span class="stat-number" id="percent-complete">0%</span>
-          <span class="stat-label">Completamento dati</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="lista-section">
-      <h2>Lista Atleti</h2>
-      <div id="lista-atleti"></div>
-      <div id="card-atleta" style="margin-top: 30px;"></div>
-      <div id="lista-vuota" style="display:none;">
-        <p>Nessun atleta inserito. Usa il bottone "Aggiungi Atleta" qui sotto per iniziare!</p>
-      </div>
-    </div>
-
-    <div class="backup-section" style="text-align:center; margin:24px 0;">
-      <button onclick="esportaAtleti()" class="btn-backup">📤 Esporta elenco</button>
-      <input type="file" id="file-import" style="display:none;">
-      <button onclick="document.getElementById('file-import').click()" class="btn-backup">📥 Importa elenco</button>
-    </div>
-
-    <div class="inserisci-bottom">
-      <button id="btn-aggiungi-bottom" class="btn-aggiungi-principale">
-        ➕ Aggiungi Nuovo Atleta
-      </button>
-    </div>
-
+<div class="container">
+  <div class="backup-section" style="text-align:center; margin:24px 0;">
+    <button onclick="esportaAtleti()" class="btn-backup">📤 Esporta elenco</button>
+    <input type="file" id="file-import" style="display:none;">
+    <button onclick="document.getElementById('file-import').click()" class="btn-backup">📥 Importa elenco</button>
   </div>
-  <script src="app.js"></script>
+  <div id="lista-atleti"></div>
+  <div class="inserisci-bottom">
+    <button id="btn-aggiungi-bottom" class="btn-aggiungi-principale">
+      ➕ Aggiungi Nuovo Atleta
+    </button>
+  </div>
+  <div id="card-atleta"></div>
+</div>
+<script src="app.js"></script>
 </body>
 </html>
