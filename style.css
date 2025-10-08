@@ -98,21 +98,32 @@ header p { font-size: 1.1rem; opacity: .9;}
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  padding: 12px 16px;
+  padding: 14px 18px;
   margin-bottom: 13px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+}
+.atleta-info {
   display: flex;
   align-items: center;
   gap: 14px;
 }
+.atleta-dettagli-lista {
+  font-size: 0.9em;
+  color: #666;
+  margin-top: 4px;
+  line-height: 1.4;
+}
 .foto-atleta-mini {
-  width: 38px;
-  height: 38px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   object-fit: cover;
   object-position: top;
   background: #f1f1f1;
   border: 2px solid #667eea;
-  margin-right: 10px;
 }
 .btn-entra {
   background: linear-gradient(45deg, #667eea, #764ba2);
@@ -126,6 +137,23 @@ header p { font-size: 1.1rem; opacity: .9;}
   transition: background .2s;
 }
 .btn-entra:hover { background: #4CAF50; }
+
+/* SVM STYLING */
+.svm-scaduta { 
+  color: #f44336 !important;
+  font-weight: bold;
+  background: rgba(244, 67, 54, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.svm-in-scadenza {
+  color: #ff9800 !important;
+  font-weight: bold;
+  background: rgba(255, 152, 0, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
 .atleta {
   box-shadow: 0 4px 16px rgba(0,0,0,0.07);
   border-radius: 14px;
@@ -255,5 +283,7 @@ header p { font-size: 1.1rem; opacity: .9;}
   .stats-grid { grid-template-columns: 1fr 1fr; }
   .atleta { padding: 12px;}
   .foto-atleta-big { width:55px; height:55px;}
-  .foto-atleta-mini { width: 25px; height: 25px;}
+  .foto-atleta-mini { width: 32px; height: 32px;}
+  .atleta-list-item { grid-template-columns: 1fr auto; padding: 12px;}
+  .atleta-dettagli-lista { font-size: 0.8em;}
 }
