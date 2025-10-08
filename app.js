@@ -3,10 +3,28 @@ let editIndex = null;
 let atletaSelezionato = null;
 let filtroAttivo = null;
 
-// funzione filtro chiamata dalle card
+// Calcolo percentuale completamento dati atleti
+function percentualeCompletamento() {
+  if (!atleti.length) return 0;
+  const campi = [
+    'foto','nome','cognome','sesso','numeroMaglia','ruolo',
+    'campionato','dataNascita','luogoNascita','provNascita','codiceFiscale',
+    'altezza','peso','email','cellulare','viaResidenza','cittaResidenza',
+    'provResidenza','svm'
+  ];
+  let completati = 0, totali = campi.length * atleti.length;
+  atleti.forEach(atleta => {
+    campi.forEach(campo => {
+      if (campo === 'foto' && atleta[campo] && atleta[campo].length > 10) completati++;
+      else if (atleta[campo] && atleta[campo].toString().trim()) completati++;
+    });
+  });
+  return Math.round((completati / totali) * 100);
+}
+
+// Dashboard filtro
 function filtraAtleti(filtro) {
   filtroAttivo = filtro;
-  // Evidenzia la card attiva
   Array.from(document.querySelectorAll('.stat-card')).forEach(card => card.classList.remove('filtro-attivo'));
   if (!filtro) {
     document.querySelector('.logo-card').classList.add('filtro-attivo');
@@ -20,6 +38,7 @@ function filtraAtleti(filtro) {
   mostraLista();
 }
 
+// SVM: Verifica e colorazione
 function calcolaSvmStatus(dataSvm) {
   if (!dataSvm) return null;
   const oggi = new Date();
@@ -40,15 +59,16 @@ function formatSvmDisplay(dataSvm) {
     default: return `SVM: ${dataFormatted}`;
   }
 }
+
+// Lista atleti (con filtro)
 function mostraLista() {
   const div = document.getElementById('lista-atleti');
   const listaVuota = document.getElementById('lista-vuota');
   let listaFiltrata = [...atleti];
-  if (filtroAttivo === 'M' || filtroAttivo === 'F') {
-    listaFiltrata = atleti.filter(a => a.sesso === filtroAttivo);
-  } else if (['SERIE D MASCHILE', "1° DIV. FEMMINILE", "1° DIVISIONE MASCHILE"].includes(filtroAttivo)) {
+  if (filtroAttivo === 'M' || filtroAttivo === 'F') listaFiltrata = atleti.filter(a => a.sesso === filtroAttivo);
+  else if (['SERIE D MASCHILE', "1° DIV. FEMMINILE", "1° DIVISIONE MASCHILE"].includes(filtroAttivo))
     listaFiltrata = atleti.filter(a => a.campionato === filtroAttivo);
-  }
+
   if (listaFiltrata.length === 0) {
     div.style.display = 'none';
     listaVuota.style.display = 'block';
@@ -78,18 +98,11 @@ function mostraLista() {
   clearCardAtleta();
   aggiornaStatistiche();
 }
+
 function aggiornaStatistiche() {
   document.getElementById('total-atleti').textContent = atleti.length;
-  if (atleti.length === 0) {
-    document.getElementById('eta-media').textContent = '-';
-    document.getElementById('altezza-media').textContent = '-';
-    document.getElementById('num-maschi').textContent = '0';
-    document.getElementById('num-femmine').textContent = '0';
-    document.getElementById('num-seriedm').textContent = '0';
-    document.getElementById('num-1divf').textContent = '0';
-    document.getElementById('num-1divm').textContent = '0';
-    return;
-  }
+  // Percentuale completamento
+  document.getElementById('percent-complete').textContent = percentualeCompletamento() + '%';
   // Età media
   const atletiConEta = atleti.filter(a => a.dataNascita);
   if (atletiConEta.length > 0) {
@@ -124,21 +137,22 @@ function aggiornaStatistiche() {
   document.getElementById('num-1divm').textContent = 
     atleti.filter(a => a.campionato === '1° DIVISIONE MASCHILE').length;
 }
+
 function calcolaEta(dataNascita) {
   if (!dataNascita) return null;
   const oggi = new Date();
   const nascita = new Date(dataNascita);
   let eta = oggi.getFullYear() - nascita.getFullYear();
   const mesiDiff = oggi.getMonth() - nascita.getMonth();
-  if (mesiDiff < 0 || (mesiDiff === 0 && oggi.getDate() < nascita.getDate())) {
-    eta--;
-  }
+  if (mesiDiff < 0 || (mesiDiff === 0 && oggi.getDate() < nascita.getDate())) eta--;
   return eta > 0 ? eta : null;
 }
+
 function entraAtleta(i) {
   atletaSelezionato = i;
   mostraCardAtleta(i);
 }
+
 function mostraCardAtleta(i) {
   const a = atleti[i];
   const eta = calcolaEta(a.dataNascita);
@@ -175,10 +189,12 @@ function mostraCardAtleta(i) {
     </div>
   `;
 }
+
 function clearCardAtleta() {
   document.getElementById('card-atleta').innerHTML = '';
   atletaSelezionato = null;
 }
+
 function modificaAtleta(i) {
   const a = atleti[i];
   const div = document.getElementById('card-atleta');
