@@ -6,7 +6,7 @@ let filtroAttivo = null;
 function percentualeCompletamento() {
   if (!atleti.length) return 0;
   const campi = [
-    'foto','nome','cognome','sesso','numeroMaglia','ruolo',
+    'foto','pdfVisita','nome','cognome','sesso','numeroMaglia','ruolo',
     'campionato','dataNascita','luogoNascita','provNascita','codiceFiscale',
     'altezza','peso','email','cellulare','viaResidenza','cittaResidenza',
     'provResidenza','svm'
@@ -15,6 +15,7 @@ function percentualeCompletamento() {
   atleti.forEach(atleta => {
     campi.forEach(campo => {
       if (campo === 'foto' && atleta[campo] && atleta[campo].length > 10) completati++;
+      else if (campo === 'pdfVisita' && atleta[campo] && atleta[campo].startsWith("data:application/pdf")) completati++;
       else if (atleta[campo] && atleta[campo].toString().trim()) completati++;
     });
   });
@@ -190,6 +191,7 @@ function mostraCardAtleta(i) {
         ${(a.viaResidenza || a.cittaResidenza || a.provResidenza) ? `<div><strong>Residenza:</strong> 
           ${a.viaResidenza || ''} ${a.cittaResidenza ? '(' + a.cittaResidenza + ')' : ''} ${a.provResidenza || ''}</div>` : ''}
         ${a.svm ? `<div><strong>Scad. Visita Medica:</strong> ${formatSvmDisplay(a.svm)}</div>` : ''}
+        ${a.pdfVisita ? `<div><a href="${a.pdfVisita}" target="_blank">Scarica PDF visita medica</a></div>` : ''}
         ${a.note ? `<div><strong>Note:</strong> ${a.note}</div>` : ''}
       </div>
       <div class="atleta-azioni">
@@ -247,6 +249,11 @@ function modificaAtleta(i) {
       <input type="text" class="input-card" id="provResidenza" value="${a.provResidenza || ''}" placeholder="Provincia">
       <input type="date" class="input-card" id="svm" value="${a.svm || ''}" placeholder="Scadenza Visita Medica">
       <label for="svm" style="font-size: 0.9em; color: #666; margin: -5px 0 10px 8px;">Scadenza Visita Medica (SVM)</label>
+      <label class="input-file-label">
+        Allegato PDF visita medica:
+        <input type="file" id="pdf-visita-edit" accept="application/pdf">
+      </label>
+      <div id="pdf-visita-info-edit" style="font-size:0.96em; color:#888; margin-bottom:7px;">${a.pdfVisita ? `<a href="${a.pdfVisita}" target="_blank">PDF attuale</a>` : ""}</div>
       <input type="text" class="input-card" id="note" value="${a.note || ''}" placeholder="Note">
       <div style="margin-top: 16px;">
         <button onclick="salvaModifica(${i})">SALVA</button>
@@ -254,7 +261,6 @@ function modificaAtleta(i) {
       </div>
     </div>
   `;
-  
   document.getElementById('foto-edit-input').addEventListener('change', function(evt) {
     const file = evt.target.files[0];
     if (!file) return;
@@ -270,6 +276,21 @@ function modificaAtleta(i) {
     };
     reader.readAsDataURL(file);
   });
+  document.getElementById('pdf-visita-edit').addEventListener('change', function(evt) {
+    const file = evt.target.files[0];
+    if (!file) return;
+    if (file.size > 300000) {
+      alert("Il PDF è troppo grande! Usa un file sotto i 300KB.");
+      evt.target.value = "";
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      document.getElementById('pdf-visita-info-edit').textContent = "PDF allegato: " + file.name;
+      document.getElementById('pdf-visita-info-edit').dataset.pdf = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
 }
 
 function salvaModifica(i) {
@@ -281,9 +302,12 @@ function salvaModifica(i) {
   }
   let foto = document.getElementById('foto-preview-edit').src;
   if (!foto || !foto.startsWith('data:')) foto = atleti[i].foto || "";
-  
+  let pdfVisita = atleti[i].pdfVisita || "";
+  if (document.getElementById('pdf-visita-info-edit').dataset.pdf)
+    pdfVisita = document.getElementById('pdf-visita-info-edit').dataset.pdf;
   atleti[i] = {
     foto: foto,
+    pdfVisita: pdfVisita,
     nome: nome,
     cognome: cognome,
     sesso: document.getElementById('sesso').value,
@@ -305,7 +329,6 @@ function salvaModifica(i) {
     note: document.getElementById('note').value,
     dataCreazione: atleti[i].dataCreazione || new Date().toISOString()
   };
-  
   salvaAtleti();
   mostraLista();
   mostraCardAtleta(i);
@@ -332,7 +355,7 @@ function salvaAtleti() {
     localStorage.setItem('atleti-dinamo', JSON.stringify(atleti));
   } catch (e) {
     if (e.name === 'QuotaExceededError') {
-      alert('Spazio di archiviazione esaurito! Riduci la dimensione delle foto o esporta i dati.');
+      alert('Spazio di archiviazione esaurito! Riduci la dimensione delle foto/pdf o esporta i dati.');
     } else {
       alert('Errore nel salvataggio: ' + e.message);
     }
@@ -380,6 +403,11 @@ function mostraCardAggiungi() {
       <input type="text" class="input-card" id="provResidenza" placeholder="Provincia">
       <input type="date" class="input-card" id="svm" placeholder="Scadenza Visita Medica">
       <label for="svm" style="font-size: 0.9em; color: #666; margin: -5px 0 10px 8px;">Scadenza Visita Medica (SVM)</label>
+      <label class="input-file-label">
+        Allegato PDF visita medica:
+        <input type="file" id="pdf-visita" accept="application/pdf">
+      </label>
+      <div id="pdf-visita-info" style="font-size:0.96em; color:#888; margin-bottom:7px;"></div>
       <input type="text" class="input-card" id="note" placeholder="Note">
       <div style="margin-top: 16px;">
         <button onclick="salvaNuovoAtleta()">SALVA</button>
@@ -387,7 +415,6 @@ function mostraCardAggiungi() {
       </div>
     </div>
   `;
-  
   document.getElementById('foto-input').addEventListener('change', function(evt) {
     const file = evt.target.files[0];
     if (!file) return;
@@ -403,6 +430,21 @@ function mostraCardAggiungi() {
     };
     reader.readAsDataURL(file);
   });
+  document.getElementById('pdf-visita').addEventListener('change', function(evt) {
+    const file = evt.target.files[0];
+    if (!file) return;
+    if (file.size > 300000) {
+      alert("Il PDF è troppo grande! Usa un file sotto i 300KB.");
+      evt.target.value = "";
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      document.getElementById('pdf-visita-info').textContent = "PDF allegato: " + file.name;
+      document.getElementById('pdf-visita-info').dataset.pdf = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
 }
 
 function salvaNuovoAtleta() {
@@ -414,9 +456,12 @@ function salvaNuovoAtleta() {
   }
   let foto = document.getElementById('foto-preview-add').src;
   if (!foto || !foto.startsWith('data:')) foto = "";
-  
+  let pdfVisita = "";
+  if (document.getElementById('pdf-visita-info').dataset.pdf)
+    pdfVisita = document.getElementById('pdf-visita-info').dataset.pdf;
   const nuovoAtleta = {
     foto: foto,
+    pdfVisita: pdfVisita,
     nome: nome,
     cognome: cognome,
     sesso: document.getElementById('sesso').value,
@@ -438,7 +483,6 @@ function salvaNuovoAtleta() {
     note: document.getElementById('note').value,
     dataCreazione: new Date().toISOString()
   };
-  
   atleti.push(nuovoAtleta);
   salvaAtleti();
   mostraLista();
@@ -472,7 +516,6 @@ window.addEventListener('DOMContentLoaded', function() {
   document.getElementById('file-import').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (!file) return;
-    
     const reader = new FileReader();
     reader.onload = function(evt) {
       try {
