@@ -27,8 +27,7 @@ function applicaUpperCaseInput() {
   });
 }
 
-// ALTRI CODICI DEL JS INVARIATI 
-// (usa il JS completo che hai già, sostituisci solo la funzione salvaNuovoAtleta e salvaModifica come di seguito)
+// ...Altri codici invariati (filtri, percentuale ecc.)
 
 function salvaNuovoAtleta() {
   let atleta = {
@@ -102,24 +101,35 @@ function salvaModifica(i) {
   mostraCardAtleta(i);
 }
 
-/* DOPO ogni mostraCardAggiungi() o funzione che crea una modale input, chiama SEMPRE:
-applicaUpperCaseInput();
-*/
+// ... resto invariato fino alla fine tranne importa:
 
-/* All'avvio esegui forzatura maiuscole su tutti i dati già presenti (solo una volta) */
 window.addEventListener('DOMContentLoaded', function() {
   mostraLista();
-  if(atleti && Array.isArray(atleti)) {
-    let unaVolta = localStorage.getItem('dinamo-uppercased') === '1';
-    if (!unaVolta) {
-      atleti = atleti.map(upperAll);
-      salvaAtleti();
-      localStorage.setItem('dinamo-uppercased', '1');
-    }
-  }
+  // Non c'è più bisogno di forzare upper su tutti i dati all'avvio
   document.getElementById('btn-aggiungi-bottom').onclick = function() {
     mostraCardAggiungi();
     applicaUpperCaseInput();
   };
-  // ... resto invariato (import, export, filtri ...)
+  document.getElementById('file-import').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      try {
+        let importedData = JSON.parse(evt.target.result);
+        if (Array.isArray(importedData)) {
+          importedData = importedData.map(upperAll); // Forza sempre MAIUSCOLO
+          atleti = importedData;
+          salvaAtleti();
+          mostraLista();
+          alert('Elenco atleti importato con successo!');
+        } else {
+          alert('File non valido: formato non riconosciuto.');
+        }
+      } catch (err) {
+        alert('Errore nel file: ' + err.message);
+      }
+    };
+    reader.readAsText(file);
+  });
 });
