@@ -1,0 +1,26 @@
+[
+  {
+    "foto": "",
+    "pdfVisita": "",
+    "nome": "MARIO",
+    "cognome": "ROSSI",
+    "sesso": "M",
+    "numeroMaglia": "10",
+    "ruolo": "PALLEGGIATORE",
+    "campionato": "SERIE D MASCHILE",
+    "dataNascita": "2000-01-01",
+    "luogoNascita": "ROMA",
+    "provNascita": "RM",
+    "codiceFiscale": "RSSMRA00A01H501Z",
+    "altezza": "185",
+    "peso": "73",
+    "email": "ROSSI.MARIO@EMAIL.IT",
+    "cellulare": "3331234567",
+    "viaResidenza": "VIA ROMA 10",
+    "cittaResidenza": "ROMA",
+    "provResidenza": "RM",
+    "svm": "2026-09-10",
+    "note": "",
+    "dataCreazione": "2025-10-09T21:17:37.166Z"
+  }
+]
