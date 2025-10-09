@@ -3,34 +3,10 @@ let editIndex = null;
 let atletaSelezionato = null;
 let filtroAttivo = null;
 
-function upperAll(obj) {
-  let o = {};
-  for (let k in obj) {
-    if (
-      k === "foto" || k === "pdfVisita" ||
-      k === "svm" || k === "dataNascita" || k === "dataCreazione"
-      || k === "peso" || k === "altezza"
-      || k === "email"
-    ) { o[k] = obj[k]; }
-    else o[k] = (typeof obj[k] === "string") ? obj[k].toUpperCase() : obj[k];
-  }
-  return o;
-}
-
-function applicaUpperCaseInput() {
-  document.querySelectorAll('.input-card, .select-card').forEach(input => {
-    if(input.type !== 'date' && input.type !== 'email' && input.type !== 'number' && input.type !== 'file') {
-      input.addEventListener('input', function() {
-        this.value = this.value.toUpperCase();
-      });
-    }
-  });
-}
-
-// ...Altri codici invariati (filtri, percentuale ecc.)
+// ... (resto funzioni invariato, dashboard, percentuali ecc.)
 
 function salvaNuovoAtleta() {
-  let atleta = {
+  const nuovoAtleta = {
     foto: (document.getElementById('foto-preview-add').src && document.getElementById('foto-preview-add').src.startsWith("data:")) ? document.getElementById('foto-preview-add').src : "",
     pdfVisita: (document.getElementById('pdf-visita-info') && document.getElementById('pdf-visita-info').dataset.pdf) ? document.getElementById('pdf-visita-info').dataset.pdf : "",
     nome: document.getElementById('nome').value,
@@ -54,19 +30,18 @@ function salvaNuovoAtleta() {
     note: document.getElementById('note').value,
     dataCreazione: new Date().toISOString()
   };
-  atleta = upperAll(atleta);
-  if (!atleta.nome || !atleta.cognome) {
+  if (!nuovoAtleta.nome || !nuovoAtleta.cognome) {
     alert('Nome e Cognome sono obbligatori');
     return;
   }
-  atleti.push(atleta);
+  atleti.push(nuovoAtleta);
   salvaAtleti();
   mostraLista();
   clearCardAtleta();
 }
 
 function salvaModifica(i) {
-  let atleta = {
+  const atleta = {
     foto: (document.getElementById('foto-preview-edit').src && document.getElementById('foto-preview-edit').src.startsWith("data:")) ? document.getElementById('foto-preview-edit').src : atleti[i].foto || "",
     pdfVisita: (document.getElementById('pdf-visita-info-edit') && document.getElementById('pdf-visita-info-edit').dataset.pdf) ? document.getElementById('pdf-visita-info-edit').dataset.pdf : atleti[i].pdfVisita || "",
     nome: document.getElementById('nome').value,
@@ -90,7 +65,6 @@ function salvaModifica(i) {
     note: document.getElementById('note').value,
     dataCreazione: atleti[i].dataCreazione || new Date().toISOString()
   };
-  atleta = upperAll(atleta);
   if (!atleta.nome || !atleta.cognome) {
     alert('Nome e Cognome sono obbligatori');
     return;
@@ -101,14 +75,11 @@ function salvaModifica(i) {
   mostraCardAtleta(i);
 }
 
-// ... resto invariato fino alla fine tranne importa:
-
 window.addEventListener('DOMContentLoaded', function() {
   mostraLista();
-  // Non c'è più bisogno di forzare upper su tutti i dati all'avvio
   document.getElementById('btn-aggiungi-bottom').onclick = function() {
     mostraCardAggiungi();
-    applicaUpperCaseInput();
+    // nessun uppercase in input
   };
   document.getElementById('file-import').addEventListener('change', function(e) {
     const file = e.target.files[0];
@@ -118,7 +89,6 @@ window.addEventListener('DOMContentLoaded', function() {
       try {
         let importedData = JSON.parse(evt.target.result);
         if (Array.isArray(importedData)) {
-          importedData = importedData.map(upperAll); // Forza sempre MAIUSCOLO
           atleti = importedData;
           salvaAtleti();
           mostraLista();
