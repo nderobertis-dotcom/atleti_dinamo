@@ -68,3 +68,13 @@ header p { font-size:1.1rem; opacity:.9;}
 .btn-backup:hover { background:#764ba2;}
 @media (max-width:1000px) { .container { max-width:97vw;} .stats-grid { grid-template-columns:repeat(auto-fit,minmax(140px, 1fr)); }}
 @media (max-width:520px) { .stat-card { padding:8px; min-height:70px;} .stats-grid { grid-template-columns:1fr 1fr; } .atleta { padding:12px;} .foto-atleta-big { width:55px; height:55px;} .foto-atleta-mini { width:32px; height:32px;} .atleta-list-item { padding:12px;} .atleta-dettagli-lista { font-size:.8em;} .btn-entra { min-width:70px; padding:6px 12px;}}
+.action-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  margin: 28px 0 16px 0;
+}
+.action-bar button {
+  min-width: 140px;
+}
