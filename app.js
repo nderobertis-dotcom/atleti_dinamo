@@ -339,7 +339,7 @@ function isCodiceTesseramentoValid(code, excludeIndex = null) {
 function salvaNuovoAtleta() {
   let code = document.getElementById('codiceTesseramento').value;
   if (!isCodiceTesseramentoValid(code)) {
-    alert("Codice tesseramento obbligatorio, numerico di 8 cifre e UNIVOCO.");
+    alert("Codice tesseramento obbligatorio, numerico di 7 cifre e UNIVOCO.");
     return;
   }
   let atleta = {
