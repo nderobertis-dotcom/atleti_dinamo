@@ -246,20 +246,22 @@ function modificaAtleta(i) {
       <label class="input-file-label">Foto:<input type="file" id="foto-edit-input" accept="image/*"></label>
       <input type="text" class="input-card" id="nome" value="${a.nome || ''}" placeholder="Nome *">
       <input type="text" class="input-card" id="cognome" value="${a.cognome || ''}" placeholder="Cognome *">
+      <select class="select-card" id="ruolo">
+        <option value="">Ruolo</option>
+        <option value="PALLEGGIATORE" ${a.ruolo==="PALLEGGIATORE" ? "selected":""} >PALLEGGIATORE</option>
+        <option value="LIBERO" ${a.ruolo==="LIBERO" ? "selected":""}>LIBERO</option>
+        <option value="SCHIACCIATORE" ${a.ruolo==="SCHIACCIATORE" ? "selected":""}>SCHIACCIATORE</option>
+        <option value="CENTRALE" ${a.ruolo==="CENTRALE" ? "selected":""}>CENTRALE</option>
+        <option value="OPPOSTO" ${a.ruolo==="OPPOSTO" ? "selected":""}>OPPOSTO</option>
+        <option value="ALLENATORE" ${a.ruolo==="ALLENATORE" ? "selected":""}>ALLENATORE</option>
+        <option value="DIRIGENTE" ${a.ruolo==="DIRIGENTE" ? "selected":""}>DIRIGENTE</option>
+      </select>
       <select class="select-card" id="sesso">
         <option value="">Sesso</option>
         <option value="M" ${a.sesso === 'M' ? 'selected' : ''}>Maschile</option>
         <option value="F" ${a.sesso === 'F' ? 'selected' : ''}>Femminile</option>
       </select>
       <input type="number" class="input-card" id="numeroMaglia" value="${a.numeroMaglia || ''}" placeholder="Numero maglia (1-99)" min="1" max="99">
-      <select class="select-card" id="ruolo">
-        <option value="">Ruolo</option>
-        <option value="Palleggiatore" ${a.ruolo === 'Palleggiatore' ? 'selected' : ''}>Palleggiatore</option>
-        <option value="Libero" ${a.ruolo === 'Libero' ? 'selected' : ''}>Libero</option>
-        <option value="Schiacciatore" ${a.ruolo === 'Schiacciatore' ? 'selected' : ''}>Schiacciatore</option>
-        <option value="Centrale" ${a.ruolo === 'Centrale' ? 'selected' : ''}>Centrale</option>
-        <option value="Opposto" ${a.ruolo === 'Opposto' ? 'selected' : ''}>Opposto</option>
-      </select>
       <select class="select-card" id="campionato">
         <option value="">Campionato</option>
         <option value="SERIE D MASCHILE" ${a.campionato === 'SERIE D MASCHILE' ? 'selected' : ''}>SERIE D MASCHILE</option>
@@ -323,13 +325,10 @@ function modificaAtleta(i) {
   });
   applicaUpperCaseInput();
 }
-
-// MODIFICATA: controllo a 7 cifre!
 function isCodiceTesseramentoValid(code, excludeIndex = null) {
   if (!/^\d{7}$/.test(code)) return false;
   return !atleti.some((a, i) => a.codiceTesseramento === code && i !== excludeIndex);
 }
-
 function salvaNuovoAtleta() {
   let code = document.getElementById('codiceTesseramento').value;
   if (!isCodiceTesseramentoValid(code)) {
@@ -342,9 +341,9 @@ function salvaNuovoAtleta() {
     codiceTesseramento: code,
     nome: document.getElementById('nome').value,
     cognome: document.getElementById('cognome').value,
+    ruolo: document.getElementById('ruolo').value,
     sesso: document.getElementById('sesso').value,
     numeroMaglia: document.getElementById('numeroMaglia').value,
-    ruolo: document.getElementById('ruolo').value,
     campionato: document.getElementById('campionato').value,
     dataNascita: document.getElementById('dataNascita').value,
     luogoNascita: document.getElementById('luogoNascita').value,
@@ -378,9 +377,9 @@ function salvaModifica(i) {
     codiceTesseramento: atleti[i].codiceTesseramento,
     nome: document.getElementById('nome').value,
     cognome: document.getElementById('cognome').value,
+    ruolo: document.getElementById('ruolo').value,
     sesso: document.getElementById('sesso').value,
     numeroMaglia: document.getElementById('numeroMaglia').value,
-    ruolo: document.getElementById('ruolo').value,
     campionato: document.getElementById('campionato').value,
     dataNascita: document.getElementById('dataNascita').value,
     luogoNascita: document.getElementById('luogoNascita').value,
@@ -450,11 +449,9 @@ function esportaAtleti() {
 }
 window.addEventListener('DOMContentLoaded', function() {
   mostraLista();
-  
   document.getElementById('btn-aggiungi-bottom').onclick = function() {
     mostraCardAggiungi();
   };
-  
   document.getElementById('file-import').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -478,3 +475,92 @@ window.addEventListener('DOMContentLoaded', function() {
     reader.readAsText(file);
   });
 });
+
+function mostraCardAggiungi() {
+  const div = document.getElementById('card-atleta');
+  div.innerHTML = `
+    <div class="atleta" style="background: #f9f9f9; border-color: #4CAF50;">
+      <input type="number" class="input-card" id="codiceTesseramento" placeholder="CODICE TESSERAMENTO (7 cifre)" min="1000000" max="9999999">
+      <img class="foto-atleta-big" id="foto-preview-add" style="display:none;">
+      <label class="input-file-label">Foto:<input type="file" id="foto-input" accept="image/*"></label>
+      <input type="text" class="input-card" id="nome" placeholder="Nome *">
+      <input type="text" class="input-card" id="cognome" placeholder="Cognome *">
+      <select class="select-card" id="ruolo">
+        <option value="">Ruolo</option>
+        <option value="PALLEGGIATORE">PALLEGGIATORE</option>
+        <option value="LIBERO">LIBERO</option>
+        <option value="SCHIACCIATORE">SCHIACCIATORE</option>
+        <option value="CENTRALE">CENTRALE</option>
+        <option value="OPPOSTO">OPPOSTO</option>
+        <option value="ALLENATORE">ALLENATORE</option>
+        <option value="DIRIGENTE">DIRIGENTE</option>
+      </select>
+      <select class="select-card" id="sesso">
+        <option value="">Sesso</option>
+        <option value="M">Maschile</option>
+        <option value="F">Femminile</option>
+      </select>
+      <input type="number" class="input-card" id="numeroMaglia" placeholder="Numero maglia (1-99)" min="1" max="99">
+      <select class="select-card" id="campionato">
+        <option value="">Campionato</option>
+        <option value="SERIE D MASCHILE">SERIE D MASCHILE</option>
+        <option value="1° DIV. FEMMINILE">1° DIV. FEMMINILE</option>
+        <option value="1° DIVISIONE MASCHILE">1° DIVISIONE MASCHILE</option>
+      </select>
+      <input type="date" class="input-card" id="dataNascita">
+      <input type="text" class="input-card" id="luogoNascita" placeholder="Luogo di nascita">
+      <input type="text" class="input-card" id="provNascita" placeholder="Provincia di nascita">
+      <input type="text" class="input-card" id="codiceFiscale" placeholder="Codice fiscale">
+      <input type="number" class="input-card" id="altezza" placeholder="Altezza (cm)" min="150" max="220">
+      <input type="number" class="input-card" id="peso" placeholder="Peso (kg)" min="40" max="150">
+      <input type="email" class="input-card" id="email" placeholder="Email">
+      <input type="text" class="input-card" id="cellulare" placeholder="Cellulare">
+      <input type="text" class="input-card" id="viaResidenza" placeholder="Via/Piazza">
+      <input type="text" class="input-card" id="cittaResidenza" placeholder="Città">
+      <input type="text" class="input-card" id="provResidenza" placeholder="Provincia">
+      <input type="date" class="input-card" id="svm" placeholder="Scadenza Visita Medica">
+      <label for="svm" style="font-size: 0.9em; color: #666; margin: -5px 0 10px 8px;">Scadenza Visita Medica (SVM)</label>
+      <label class="input-file-label">
+        Allegato PDF visita medica:
+        <input type="file" id="pdf-visita" accept="application/pdf">
+      </label>
+      <div id="pdf-visita-info" style="font-size:0.96em; color:#888; margin-bottom:7px;"></div>
+      <input type="text" class="input-card" id="note" placeholder="Note">
+      <div style="margin-top: 16px;">
+        <button onclick="salvaNuovoAtleta()">SALVA</button>
+        <button onclick="annullaEdit()">ANNULLA</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('foto-input').addEventListener('change', function(evt) {
+    const file = evt.target.files[0];
+    if (!file) return;
+    if (file.size > 150000) {
+      alert("L'immagine è troppo grande! Usa una foto inferiore a 150KB.");
+      evt.target.value = "";
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      document.getElementById('foto-preview-add').src = ev.target.result;
+      document.getElementById('foto-preview-add').style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  });
+  document.getElementById('pdf-visita').addEventListener('change', function(evt) {
+    const file = evt.target.files[0];
+    if (!file) return;
+    if (file.size > 300000) {
+      alert("Il PDF è troppo grande! Usa un file sotto i 300KB.");
+      evt.target.value = "";
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      document.getElementById('pdf-visita-info').textContent = "PDF allegato: " + file.name;
+      document.getElementById('pdf-visita-info').dataset.pdf = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+  applicaUpperCaseInput();
+}
