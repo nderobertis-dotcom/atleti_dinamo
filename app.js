@@ -332,7 +332,7 @@ function modificaAtleta(i) {
 }
 
 function isCodiceTesseramentoValid(code, excludeIndex = null) {
-  if (!/^\d{8}$/.test(code)) return false;
+  if (!/^\d{7}$/.test(code)) return false;
   return !atleti.some((a, i) => a.codiceTesseramento === code && i !== excludeIndex);
 }
 
