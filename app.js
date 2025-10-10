@@ -144,7 +144,6 @@ function aggiornaStatistiche() {
     document.getElementById('num-1divm').textContent = '0';
     return;
   }
-  
   const atletiConEta = atleti.filter(a => a.dataNascita);
   if (atletiConEta.length > 0) {
     const sommaEta = atletiConEta.reduce((sum, a) => {
@@ -156,7 +155,6 @@ function aggiornaStatistiche() {
   } else {
     document.getElementById('eta-media').textContent = '-';
   }
-  
   const atletiConAltezza = atleti.filter(a => a.altezza && !isNaN(a.altezza));
   if (atletiConAltezza.length > 0) {
     const sommaAltezza = atletiConAltezza.reduce((sum, a) => sum + parseInt(a.altezza), 0);
@@ -165,12 +163,10 @@ function aggiornaStatistiche() {
   } else {
     document.getElementById('altezza-media').textContent = '-';
   }
-  
   const numMaschi = atleti.filter(a => a.sesso === 'M').length;
   const numFemmine = atleti.filter(a => a.sesso === 'F').length;
   document.getElementById('num-maschi').textContent = numMaschi;
   document.getElementById('num-femmine').textContent = numFemmine;
-  
   document.getElementById('num-seriedm').textContent = 
     atleti.filter(a => a.campionato === 'SERIE D MASCHILE').length;
   document.getElementById('num-1divf').textContent = 
@@ -295,7 +291,6 @@ function modificaAtleta(i) {
       </div>
     </div>
   `;
-  
   document.getElementById('foto-edit-input').addEventListener('change', function(evt) {
     const file = evt.target.files[0];
     if (!file) return;
@@ -311,7 +306,6 @@ function modificaAtleta(i) {
     };
     reader.readAsDataURL(file);
   });
-  
   document.getElementById('pdf-visita-edit').addEventListener('change', function(evt) {
     const file = evt.target.files[0];
     if (!file) return;
@@ -327,10 +321,10 @@ function modificaAtleta(i) {
     };
     reader.readAsDataURL(file);
   });
-  
   applicaUpperCaseInput();
 }
 
+// MODIFICATA: controllo a 7 cifre!
 function isCodiceTesseramentoValid(code, excludeIndex = null) {
   if (!/^\d{7}$/.test(code)) return false;
   return !atleti.some((a, i) => a.codiceTesseramento === code && i !== excludeIndex);
@@ -377,7 +371,6 @@ function salvaNuovoAtleta() {
   mostraLista();
   clearCardAtleta();
 }
-
 function salvaModifica(i) {
   let atleta = {
     foto: (document.getElementById('foto-preview-edit').src && document.getElementById('foto-preview-edit').src.startsWith("data:")) ? document.getElementById('foto-preview-edit').src : atleti[i].foto || "",
@@ -414,13 +407,11 @@ function salvaModifica(i) {
   mostraLista();
   mostraCardAtleta(i);
 }
-
 function annullaEdit() {
   mostraLista();
   if (atletaSelezionato !== null) mostraCardAtleta(atletaSelezionato);
   else clearCardAtleta();
 }
-
 function eliminaAtleta(i) {
   const atleta = atleti[i];
   if (confirm(`Eliminare ${atleta.nome} ${atleta.cognome}?`)) {
@@ -430,7 +421,6 @@ function eliminaAtleta(i) {
     clearCardAtleta();
   }
 }
-
 function salvaAtleti() {
   try {
     localStorage.setItem('atleti-dinamo', JSON.stringify(atleti));
@@ -442,97 +432,6 @@ function salvaAtleti() {
     }
   }
 }
-
-function mostraCardAggiungi() {
-  const div = document.getElementById('card-atleta');
-  div.innerHTML = `
-    <div class="atleta" style="background: #f9f9f9; border-color: #4CAF50;">
-      <input type="number" class="input-card" id="codiceTesseramento" placeholder="CODICE TESSERAMENTO (8 cifre)" min="10000000" max="99999999">
-      <img class="foto-atleta-big" id="foto-preview-add" style="display:none;">
-      <label class="input-file-label">Foto:<input type="file" id="foto-input" accept="image/*"></label>
-      <input type="text" class="input-card" id="nome" placeholder="Nome *">
-      <input type="text" class="input-card" id="cognome" placeholder="Cognome *">
-      <select class="select-card" id="sesso">
-        <option value="">Sesso</option>
-        <option value="M">Maschile</option>
-        <option value="F">Femminile</option>
-      </select>
-      <input type="number" class="input-card" id="numeroMaglia" placeholder="Numero maglia (1-99)" min="1" max="99">
-      <select class="select-card" id="ruolo">
-        <option value="">Ruolo</option>
-        <option value="Palleggiatore">Palleggiatore</option>
-        <option value="Libero">Libero</option>
-        <option value="Schiacciatore">Schiacciatore</option>
-        <option value="Centrale">Centrale</option>
-        <option value="Opposto">Opposto</option>
-      </select>
-      <select class="select-card" id="campionato">
-        <option value="">Campionato</option>
-        <option value="SERIE D MASCHILE">SERIE D MASCHILE</option>
-        <option value="1° DIV. FEMMINILE">1° DIV. FEMMINILE</option>
-        <option value="1° DIVISIONE MASCHILE">1° DIVISIONE MASCHILE</option>
-      </select>
-      <input type="date" class="input-card" id="dataNascita">
-      <input type="text" class="input-card" id="luogoNascita" placeholder="Luogo di nascita">
-      <input type="text" class="input-card" id="provNascita" placeholder="Provincia di nascita">
-      <input type="text" class="input-card" id="codiceFiscale" placeholder="Codice fiscale">
-      <input type="number" class="input-card" id="altezza" placeholder="Altezza (cm)" min="150" max="220">
-      <input type="number" class="input-card" id="peso" placeholder="Peso (kg)" min="40" max="150">
-      <input type="email" class="input-card" id="email" placeholder="Email">
-      <input type="text" class="input-card" id="cellulare" placeholder="Cellulare">
-      <input type="text" class="input-card" id="viaResidenza" placeholder="Via/Piazza">
-      <input type="text" class="input-card" id="cittaResidenza" placeholder="Città">
-      <input type="text" class="input-card" id="provResidenza" placeholder="Provincia">
-      <input type="date" class="input-card" id="svm" placeholder="Scadenza Visita Medica">
-      <label for="svm" style="font-size: 0.9em; color: #666; margin: -5px 0 10px 8px;">Scadenza Visita Medica (SVM)</label>
-      <label class="input-file-label">
-        Allegato PDF visita medica:
-        <input type="file" id="pdf-visita" accept="application/pdf">
-      </label>
-      <div id="pdf-visita-info" style="font-size:0.96em; color:#888; margin-bottom:7px;"></div>
-      <input type="text" class="input-card" id="note" placeholder="Note">
-      <div style="margin-top: 16px;">
-        <button onclick="salvaNuovoAtleta()">SALVA</button>
-        <button onclick="annullaEdit()">ANNULLA</button>
-      </div>
-    </div>
-  `;
-  
-  document.getElementById('foto-input').addEventListener('change', function(evt) {
-    const file = evt.target.files[0];
-    if (!file) return;
-    if (file.size > 150000) {
-      alert("L'immagine è troppo grande! Usa una foto inferiore a 150KB.");
-      evt.target.value = "";
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = function(ev) {
-      document.getElementById('foto-preview-add').src = ev.target.result;
-      document.getElementById('foto-preview-add').style.display = 'block';
-    };
-    reader.readAsDataURL(file);
-  });
-  
-  document.getElementById('pdf-visita').addEventListener('change', function(evt) {
-    const file = evt.target.files[0];
-    if (!file) return;
-    if (file.size > 300000) {
-      alert("Il PDF è troppo grande! Usa un file sotto i 300KB.");
-      evt.target.value = "";
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      document.getElementById('pdf-visita-info').textContent = "PDF allegato: " + file.name;
-      document.getElementById('pdf-visita-info').dataset.pdf = e.target.result;
-    };
-    reader.readAsDataURL(file);
-  });
-  
-  applicaUpperCaseInput();
-}
-
 function esportaAtleti() {
   try {
     const data = JSON.stringify(atleti, null, 2);
@@ -549,7 +448,6 @@ function esportaAtleti() {
     alert('Errore durante l\'esportazione: ' + e.message);
   }
 }
-
 window.addEventListener('DOMContentLoaded', function() {
   mostraLista();
   
