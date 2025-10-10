@@ -1,5 +1,5 @@
 .input-card, .select-card { text-transform: uppercase; }
-/* usa il CSS già completo: dashboard, card, responsive... */
+
 body { font-family: 'Segoe UI', 'Tahoma', Geneva, Verdana, sans-serif; background:linear-gradient(135deg,#667eea 0%,#764ba2 100%); min-height:100vh; padding:20px; color:#333;}
 .container { max-width: 900px; margin: 0 auto;}
 header { text-align: center; color: white; margin-bottom: 30px;}
@@ -26,6 +26,8 @@ header p { font-size:1.1rem; opacity:.9;}
 .camp-1divf-card { background:linear-gradient(135deg, #fdc6e0 0%, #fd6e9f 95%);}
 .camp-1divm-card { background:linear-gradient(135deg, #edebe6 0%, #b3b7c8 95%);}
 .complete-card { background: linear-gradient(135deg,#ffc837 0%,#ff8008 100%);}
+.vm-scadute-card { background: linear-gradient(135deg, #ef473a 0%, #fcb045 100%);}
+.vm-scadenza-card { background: linear-gradient(135deg, #ff9800 0%, #fff200 100%); color: #665c00;}
 .stat-number { display:block; font-size:1.9rem; font-weight:bold; margin-bottom:6px; text-shadow:1px 1px 2px rgba(0,0,0,0.20);}
 .stat-label { font-size:.92rem; opacity:.92; font-weight:500;}
 .lista-section { background:rgba(255,255,255,0.98); border-radius:14px; padding:25px; box-shadow:0 8px 32px rgba(0,0,0,0.10); margin-bottom:25px;}
