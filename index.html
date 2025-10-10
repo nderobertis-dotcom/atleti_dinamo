@@ -74,25 +74,21 @@
       </div>
     </div>
 
-    <div class="lista-section">
-      <h2>Lista Atleti</h2>
-      <div id="lista-atleti"></div>
-      <div id="card-atleta" style="margin-top: 30px;"></div>
-      <div id="lista-vuota" style="display:none;">
-        <p>Nessun atleta inserito. Usa il bottone "Aggiungi Atleta" qui sotto per iniziare!</p>
-      </div>
-    </div>
-
-    <div class="backup-section" style="text-align:center; margin:24px 0;">
+    <!-- Barra Pulsanti tra dashboard e lista atleti -->
+    <div class="action-bar">
+      <button id="btn-aggiungi-bottom" class="btn-aggiungi-principale">➕ Aggiungi Nuovo Atleta</button>
       <button onclick="esportaAtleti()" class="btn-backup">📤 Esporta elenco</button>
       <input type="file" id="file-import" style="display:none;">
       <button onclick="document.getElementById('file-import').click()" class="btn-backup">📥 Importa elenco</button>
     </div>
 
-    <div class="inserisci-bottom">
-      <button id="btn-aggiungi-bottom" class="btn-aggiungi-principale">
-        ➕ Aggiungi Nuovo Atleta
-      </button>
+    <div class="lista-section">
+      <h2>Lista Atleti</h2>
+      <div id="lista-atleti"></div>
+      <div id="card-atleta" style="margin-top: 30px;"></div>
+      <div id="lista-vuota" style="display:none;">
+        <p>Nessun atleta inserito. Usa il bottone "Aggiungi Atleta" qui sopra per iniziare!</p>
+      </div>
     </div>
 
   </div>
