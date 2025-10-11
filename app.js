@@ -666,3 +666,31 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+// Tutta la classe AthleteManager che hai fornito
+// TUTTE le funzioni attuali (sezioni, filter, modale, form, dashboard, chart...)
+// + handler per import dati
+
+document.getElementById('import-file').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    try {
+      let imported = JSON.parse(evt.target.result);
+      if (Array.isArray(imported)) {
+        athleteManager.athletes = imported;
+        athleteManager.filteredAthletes = [...imported];
+        athleteManager.updateDashboard();
+        athleteManager.renderAthletes();
+        alert('Dati importati con successo!');
+      } else {
+        alert('File importato non corretto!');
+      }
+    } catch (err) {
+      alert('Errore durante l\'import: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+});
+
+// Tutto il resto del tuo app.js, senza tagliare nulla!
