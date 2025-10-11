@@ -1436,3 +1436,14 @@ select.form-control {
 }
 
 /* ... tutto il tuo style esteso fornito sopra ... */
+.logo-img {
+  max-width: 54px;
+  max-height: 54px;
+  border-radius: 50%;
+  display: block;
+  margin-right: 8px;
+}
+
+input[type="text"], input[type="email"], input[type="number"], select {
+  text-transform: uppercase !important;
+}
