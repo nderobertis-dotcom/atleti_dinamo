@@ -100,11 +100,22 @@ function mostraLista() {
   const div = document.getElementById('lista-atleti');
   const listaVuota = document.getElementById('lista-vuota');
   let listaFiltrata = [...atleti];
-  
+
+  // filtro campo cerca
+  const query = (document.getElementById("cercaAtleta")?.value||"").trim().toUpperCase();
+  if(query){
+    listaFiltrata = listaFiltrata.filter(a => 
+      (a.nome && a.nome.toUpperCase().includes(query)) ||
+      (a.cognome && a.cognome.toUpperCase().includes(query)) ||
+      (a.ruolo && a.ruolo.toUpperCase().includes(query)) ||
+      (a.dataNascita && (a.dataNascita.startsWith(query) || (new Date(a.dataNascita).getFullYear().toString().includes(query))))
+    );
+  }
+
   if (filtroAttivo === 'M' || filtroAttivo === 'F') {
-    listaFiltrata = atleti.filter(a => a.sesso === filtroAttivo);
+    listaFiltrata = listaFiltrata.filter(a => a.sesso === filtroAttivo);
   } else if (['SERIE D MASCHILE', "1° DIV. FEMMINILE", "1° DIVISIONE MASCHILE"].includes(filtroAttivo)) {
-    listaFiltrata = atleti.filter(a => a.campionato === filtroAttivo);
+    listaFiltrata = listaFiltrata.filter(a => a.campionato === filtroAttivo);
   }
   
   if (listaFiltrata.length === 0) {
@@ -623,4 +634,5 @@ window.addEventListener('DOMContentLoaded', function() {
     };
     reader.readAsText(file);
   });
+  document.getElementById('cercaAtleta').addEventListener('input', mostraLista);
 });
