@@ -78,3 +78,24 @@ header p { font-size:1.1rem; opacity:.9;}
 .action-bar button {
   min-width: 140px;
 }
+.input-card, .select-card { text-transform: uppercase; }
+
+.action-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 22px;
+  margin: 28px 0 16px 0;
+}
+.input-cerca {
+  font-size:1em;
+  padding:8px 14px;
+  border:2px solid #667eea;
+  border-radius:8px;
+  min-width:170px;
+  margin-right:7px;
+  outline:none;
+}
+.input-cerca:focus {
+  border-color:#4CAF50;
+}
