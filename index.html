@@ -63,15 +63,18 @@
       </nav>
     </aside>
     <main class="main-content">
+
       <section id="dashboard-section" class="content-section active">
-        <!-- Dashboard stat e chart -->
+        <!-- Dashboard stats e chart -->
       </section>
+
       <section id="atleti-section" class="content-section">
         <!-- Elenco, filtri, grid atleti -->
       </section>
+
       <section id="aggiungi-section" class="content-section">
         <!-- FORM AGGIUNGI ATLETA -->
-        <form id="athlete-form" class="athlete-form">
+        <form id="athlete-form" class="athlete-form" autocomplete="off">
           <div class="form-sections">
             <div class="form-section">
               <h3>Dati Anagrafici</h3>
@@ -81,8 +84,8 @@
                   <input type="text" id="codiceTesseramento" name="codiceTesseramento" class="form-control" maxlength="7" pattern="\d{7}" required style="text-transform: uppercase">
                 </div>
                 <div class="form-group">
-                  <label class="form-label" for="sesso">Sesso *</label>
-                  <select id="sesso" name="sesso" class="form-control" required>
+                  <label class="form-label" for="sesso">Sesso</label>
+                  <select id="sesso" name="sesso" class="form-control">
                     <option value="">Seleziona...</option>
                     <option value="M">M</option>
                     <option value="F">F</option>
@@ -91,27 +94,39 @@
               </div>
               <div class="form-row">
                 <div class="form-group">
-                  <label class="form-label" for="nome">Nome *</label>
-                  <input type="text" id="nome" name="nome" class="form-control" required style="text-transform: uppercase">
+                  <label class="form-label" for="nome">Nome</label>
+                  <input type="text" id="nome" name="nome" class="form-control" style="text-transform: uppercase">
                 </div>
                 <div class="form-group">
-                  <label class="form-label" for="cognome">Cognome *</label>
-                  <input type="text" id="cognome" name="cognome" class="form-control" required style="text-transform: uppercase">
+                  <label class="form-label" for="cognome">Cognome</label>
+                  <input type="text" id="cognome" name="cognome" class="form-control" style="text-transform: uppercase">
                 </div>
               </div>
               <div class="form-row">
                 <div class="form-group">
-                  <label class="form-label" for="dataNascita">Data di Nascita *</label>
-                  <input type="date" id="dataNascita" name="dataNascita" class="form-control" required>
+                  <label class="form-label" for="dataNascita">Data di Nascita</label>
+                  <input type="date" id="dataNascita" name="dataNascita" class="form-control">
                 </div>
                 <div class="form-group">
                   <label class="form-label" for="codiceFiscale">Codice Fiscale</label>
                   <input type="text" id="codiceFiscale" name="codiceFiscale" class="form-control" style="text-transform: uppercase">
                 </div>
               </div>
-              <div class="form-group">
-                <label class="form-label" for="indirizzo">Indirizzo</label>
-                <input type="text" id="indirizzo" name="indirizzo" class="form-control" style="text-transform: uppercase">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="via">Via</label>
+                  <input type="text" id="via" name="via" class="form-control" style="text-transform: uppercase">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="provincia">Provincia</label>
+                  <select id="provincia" name="provincia" class="form-control"></select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="comune">Comune</label>
+                  <select id="comune" name="comune" class="form-control">
+                    <option value="">Seleziona prima la provincia...</option>
+                  </select>
+                </div>
               </div>
               <div class="form-row">
                 <div class="form-group">
@@ -128,12 +143,12 @@
               <h3>Dati Fisici</h3>
               <div class="form-row">
                 <div class="form-group">
-                  <label class="form-label" for="altezza">Altezza (cm) *</label>
-                  <input type="number" id="altezza" name="altezza" class="form-control" min="100" max="250" required>
+                  <label class="form-label" for="altezza">Altezza (cm)</label>
+                  <input type="number" id="altezza" name="altezza" class="form-control" min="100" max="250">
                 </div>
                 <div class="form-group">
-                  <label class="form-label" for="peso">Peso (kg) *</label>
-                  <input type="number" id="peso" name="peso" class="form-control" min="30" max="150" required>
+                  <label class="form-label" for="peso">Peso (kg)</label>
+                  <input type="number" id="peso" name="peso" class="form-control" min="30" max="150">
                 </div>
               </div>
             </div>
@@ -149,25 +164,22 @@
                     <option value="CENTRALE">CENTRALE</option>
                     <option value="OPPOSTO">OPPOSTO</option>
                     <option value="PALLEGGIATORE">PALLEGGIATORE</option>
+                    <option value="ALLENATORE">ALLENATORE</option>
                   </select>
                 </div>
                 <div class="form-group">
-                  <label class="form-label" for="numeroMaglia">Numero Maglia *</label>
-                  <input type="number" id="numeroMaglia" name="numeroMaglia" class="form-control" min="1" max="99" required>
+                  <label class="form-label" for="numeroMaglia">Numero Maglia</label>
+                  <input type="number" id="numeroMaglia" name="numeroMaglia" class="form-control" min="1" max="99">
                 </div>
               </div>
               <div class="form-row">
                 <div class="form-group">
-                  <label class="form-label" for="anniEsperienza">Anni di Esperienza</label>
-                  <input type="number" id="anniEsperienza" name="anniEsperienza" class="form-control" min="0" max="30">
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="livello">Livello *</label>
-                  <select id="livello" name="livello" class="form-control" required>
-                    <option value="">Seleziona livello...</option>
-                    <option value="Giovanile">Giovanile</option>
-                    <option value="Senior">Senior</option>
-                    <option value="Professionista">Professionista</option>
+                  <label class="form-label" for="campionato">Campionato</label>
+                  <select id="campionato" name="campionato" class="form-control">
+                    <option value="">Seleziona campionato...</option>
+                    <option value="SERIE D MASCHILE">SERIE D MASCHILE</option>
+                    <option value="1° DIV. FEMMINILE">1° DIV. FEMMINILE</option>
+                    <option value="1° DIVISIONE MASCHILE">1° DIV. MASCHILE</option>
                   </select>
                 </div>
               </div>
