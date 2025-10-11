@@ -2,97 +2,54 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestione Atleti - Dinamo Molfetta</title>
+  <title>Dashboard Atleti Dinamo Molfetta</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-
-    <header>
-      <h1 onclick="filtraAtleti(null)" style="cursor:pointer;">🏐 Gestione Atleti - Dinamo Molfetta</h1>
-      <p>Sistema di gestione schede atleti della squadra</p>
-    </header>
-
-    <div class="stats-section">
-      <h2>Dashboard Squadra</h2>
-      <div class="stats-grid">
-        <!-- Tutte le card della dashboard -->
-        <div class="stat-card logo-card" onclick="filtraAtleti(null)">
-          <div class="logo-container">
-            <img src="logo-dinamo.png" alt="Dinamo Molfetta" id="logo-dinamo"
-                 onerror="this.style.display='none'; document.getElementById('logo-placeholder').style.display='flex';">
-            <div id="logo-placeholder" class="logo-placeholder">
-              <div class="logo-text">DINAMO</div>
-              <div class="logo-subtext">MOLFETTA</div>
-            </div>
-          </div>
-        </div>
-        <div class="stat-card atleti-card" onclick="filtraAtleti(null)">
-          <span class="stat-number" id="total-atleti">0</span>
-          <span class="stat-label">Atleti Totali</span>
-        </div>
-        <div class="stat-card eta-card">
-          <span class="stat-number" id="eta-media">-</span>
-          <span class="stat-label">Età Media</span>
-        </div>
-        <div class="stat-card altezza-card">
-          <span class="stat-number" id="altezza-media">-</span>
-          <span class="stat-label">Altezza Media</span>
-        </div>
-        <div class="stat-card sesso-m-card" onclick="filtraAtleti('M')">
-          <span class="stat-number" id="num-maschi">0</span>
-          <span class="stat-label">Atleti M</span>
-        </div>
-        <div class="stat-card sesso-f-card" onclick="filtraAtleti('F')">
-          <span class="stat-number" id="num-femmine">0</span>
-          <span class="stat-label">Atlete F</span>
-        </div>
-        <div class="stat-card camp-seriedm-card" onclick="filtraAtleti('SERIE D MASCHILE')">
-          <span class="stat-number" id="num-seriedm">0</span>
-          <span class="stat-label">Serie D Maschile</span>
-        </div>
-        <div class="stat-card camp-1divf-card" onclick="filtraAtleti('1° DIV. FEMMINILE')">
-          <span class="stat-number" id="num-1divf">0</span>
-          <span class="stat-label">1° Div. Femminile</span>
-        </div>
-        <div class="stat-card camp-1divm-card" onclick="filtraAtleti('1° DIVISIONE MASCHILE')">
-          <span class="stat-number" id="num-1divm">0</span>
-          <span class="stat-label">1° Div. Maschile</span>
-        </div>
-        <div class="stat-card vm-scadute-card">
-          <span class="stat-number" id="vm-scadute">0</span>
-          <span class="stat-label">Visite Mediche Scadute</span>
-        </div>
-        <div class="stat-card vm-scadenza-card">
-          <span class="stat-number" id="vm-scadenza">0</span>
-          <span class="stat-label">Visite Mediche in Scadenza</span>
-        </div>
-        <div class="stat-card complete-card">
-          <span class="stat-number" id="percent-complete">0%</span>
-          <span class="stat-label">Completamento dati</span>
+  <div class="dashboard">
+    <div class="dashboard-header">
+      <div class="logo-card">
+        <img src="logo_dinamo.png" alt="Logo Dinamo" class="logo-img">
+      </div>
+      <div class="stats-card">
+        <h2>Statistiche squadra</h2>
+        <div id="statistiche">
+          <!-- Esempio statistica -->
+          <span>Atleti totali: <strong id="totale-atleti">0</strong></span>
         </div>
       </div>
     </div>
-
-    <!-- Action bar con campo cerca + pulsanti -->
-    <div class="action-bar">
-      <input type="text" id="cercaAtleta" class="input-cerca" placeholder="Cerca atleta...">
-      <button id="btn-aggiungi-bottom" class="btn-aggiungi-principale">➕ Aggiungi Nuovo Atleta</button>
-      <button onclick="esportaAtleti()" class="btn-backup">📤 Esporta elenco</button>
-      <input type="file" id="file-import" style="display:none;">
-      <button onclick="document.getElementById('file-import').click()" class="btn-backup">📥 Importa elenco</button>
+    <div class="menu-bar">
+      <button id="add-athlete-btn">+ Aggiungi atleta</button>
+      <select id="gender-filter">
+        <option value="">Tutti i generi</option>
+        <option value="M">Maschile</option>
+        <option value="F">Femminile</option>
+      </select>
+      <input type="text" id="ricerca" placeholder="Cerca per cognome..." autocomplete="off">
+      <button id="cerca-btn">Cerca</button>
     </div>
-
-    <div class="lista-section">
-      <h2>Lista Atleti</h2>
-      <div id="lista-atleti"></div>
-      <div id="card-atleta" style="margin-top: 30px;"></div>
-      <div id="lista-vuota" style="display:none;">
-        <p>Nessun atleta inserito. Usa il bottone "Aggiungi Atleta" qui sopra per iniziare!</p>
-      </div>
+    <div id="form-card" class="hidden">
+      <form id="athlete-form">
+        <input type="text" id="nome" placeholder="Nome" required>
+        <input type="text" id="cognome" placeholder="Cognome" required>
+        <select id="genere" required>
+          <option value="">Seleziona genere</option>
+          <option value="M">Maschile</option>
+          <option value="F">Femminile</option>
+        </select>
+        <input type="date" id="nascita" placeholder="Data di nascita" required>
+        <input type="text" id="luogo-nascita" placeholder="Luogo di nascita" required>
+        <input type="text" id="codice-fiscale" placeholder="Codice Fiscale" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <input type="file" id="foto" accept="image/*">
+        <button type="submit">Salva</button>
+        <button type="button" id="cancel-btn">Annulla</button>
+      </form>
     </div>
-
+    <h2>Elenco atleti</h2>
+    <ul id="lista-atleti"></ul>
   </div>
   <script src="app.js"></script>
 </body>
