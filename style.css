@@ -1409,3 +1409,15 @@ select.form-control {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-text-secondary);
 }
+.logo-img {
+  max-width: 54px;
+  max-height: 54px;
+  width: auto;
+  height: auto;
+  border-radius: 50%;
+  display: block;
+  margin: auto;
+}
+
+/* ... tutto il tuo style esteso fornito sopra ... */
+/* (Mantieni TUTTE le regole, design tokens, layout, cards, sidebar, responsive ecc) */
