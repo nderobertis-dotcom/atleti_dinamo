@@ -717,3 +717,34 @@ document.getElementById('import-file').addEventListener('change', function(e) {
 });
 
 // ... resto del js come già inviato ...
+// ... class AthleteManager ... (codice tuo, senza tagli)
+
+AthleteManager.prototype.roles = ["Palleggiatore", "Libero", "Schiacciatore", "Centrale", "Opposto"];
+AthleteManager.prototype.levels = ["Giovanile", "Senior", "Professionista"];
+
+// ... tutto il resto invariato della tua classe/JS già fornito sopra ...
+
+document.getElementById('import-file').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    try {
+      let imported = JSON.parse(evt.target.result);
+      if (Array.isArray(imported)) {
+        athleteManager.athletes = imported;
+        athleteManager.filteredAthletes = [...imported];
+        athleteManager.updateDashboard();
+        athleteManager.renderAthletes();
+        alert('Dati importati con successo!');
+      } else {
+        alert('File importato non corretto!');
+      }
+    } catch (err) {
+      alert('Errore durante l\'import: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+});
+
+// ... init, showSection e tutto il resto della tua logica ...
