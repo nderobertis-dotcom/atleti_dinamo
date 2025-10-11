@@ -2,340 +2,51 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <title>Dashboard Atleti Dinamo</title>
+  <title>Gestione Atleti - Squadra Volley</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-  <div class="dashboard">
-    <div class="logo-card">
-      <img src="logo_dinamo.png" alt="Logo Dinamo" class="logo-img">
+  <!-- Header -->
+  <header class="header">
+    <div class="container flex items-center justify-between">
+      <div class="header-brand">
+        <i class="fas fa-volleyball-ball"></i>
+        <h1>Gestione Atleti - Squadra Volley</h1>
+      </div>
+      <nav class="header-nav">
+        <button class="btn btn--primary" onclick="showSection('dashboard')">
+          <i class="fas fa-chart-dashboard"></i> Dashboard
+        </button>
+        <button class="btn btn--outline" onclick="showSection('atleti')">
+          <i class="fas fa-users"></i> Atleti
+        </button>
+      </nav>
     </div>
-    <h2>Elenco atleti</h2>
-    <input type="text" id="ricerca" placeholder="Cerca per cognome...">
-    <button id="cerca-btn">Cerca</button>
-    <ul id="lista-atleti"></ul>
-  </div>
-  <script src="app.js"></script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestione Atleti - Squadra Volley</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-</head>
-<body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container flex items-center justify-between">
-            <div class="header-brand">
-                <i class="fas fa-volleyball-ball"></i>
-                <h1>Gestione Atleti - Squadra Volley</h1>
-            </div>
-            <nav class="header-nav">
-                <button class="btn btn--primary" onclick="showSection('dashboard')">
-                    <i class="fas fa-chart-dashboard"></i> Dashboard
-                </button>
-                <button class="btn btn--outline" onclick="showSection('atleti')">
-                    <i class="fas fa-users"></i> Atleti
-                </button>
-            </nav>
-        </div>
-    </header>
+  </header>
 
-    <div class="main-layout">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <nav class="sidebar-nav">
-                <ul>
-                    <li>
-                        <button class="sidebar-link active" onclick="showSection('dashboard')" data-section="dashboard">
-                            <i class="fas fa-chart-line"></i>
-                            <span>Dashboard</span>
-                        </button>
-                    </li>
-                    <li>
-                        <button class="sidebar-link" onclick="showSection('atleti')" data-section="atleti">
-                            <i class="fas fa-users"></i>
-                            <span>Tutti gli Atleti</span>
-                        </button>
-                    </li>
-                    <li>
-                        <button class="sidebar-link" onclick="showSection('aggiungi')" data-section="aggiungi">
-                            <i class="fas fa-user-plus"></i>
-                            <span>Aggiungi Atleta</span>
-                        </button>
-                    </li>
-                    <li>
-                        <button class="sidebar-link" onclick="exportData()">
-                            <i class="fas fa-download"></i>
-                            <span>Esporta Dati</span>
-                        </button>
-                    </li>
-                </ul>
-            </nav>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Dashboard Section -->
-            <section id="dashboard-section" class="content-section active">
-                <div class="section-header">
-                    <h2>Dashboard Squadra</h2>
-                    <p>Panoramica generale degli atleti</p>
-                </div>
-                
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div class="stat-content">
-                            <h3 id="total-athletes">0</h3>
-                            <p>Atleti Totali</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-calendar-alt"></i>
-                        </div>
-                        <div class="stat-content">
-                            <h3 id="avg-age">0</h3>
-                            <p>Età Media</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-ruler-vertical"></i>
-                        </div>
-                        <div class="stat-content">
-                            <h3 id="avg-height">0</h3>
-                            <p>Altezza Media</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-medal"></i>
-                        </div>
-                        <div class="stat-content">
-                            <h3 id="senior-count">0</h3>
-                            <p>Atleti Senior</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="dashboard-charts">
-                    <div class="chart-container">
-                        <div class="card">
-                            <div class="card__body">
-                                <h4>Distribuzione per Ruoli</h4>
-                                <div id="roles-chart-container" style="position: relative; height: 300px;">
-                                    <canvas id="roles-chart"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="chart-container">
-                        <div class="card">
-                            <div class="card__body">
-                                <h4>Distribuzione per Livelli</h4>
-                                <div id="levels-chart-container" style="position: relative; height: 300px;">
-                                    <canvas id="levels-chart"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Atleti Section -->
-            <section id="atleti-section" class="content-section">
-                <div class="section-header">
-                    <h2>Gestione Atleti</h2>
-                    <p>Visualizza e gestisci tutti gli atleti della squadra</p>
-                </div>
-
-                <!-- Filters and Search -->
-                <div class="filters-container">
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" id="search-input" placeholder="Cerca atleti per nome..." class="form-control">
-                    </div>
-                    <div class="filter-controls">
-                        <select id="role-filter" class="form-control">
-                            <option value="">Tutti i Ruoli</option>
-                        </select>
-                        <select id="level-filter" class="form-control">
-                            <option value="">Tutti i Livelli</option>
-                        </select>
-                        <button class="btn btn--secondary" onclick="clearFilters()">
-                            <i class="fas fa-times"></i> Pulisci Filtri
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Athletes Grid -->
-                <div id="athletes-grid" class="athletes-grid"></div>
-            </section>
-
-            <!-- Aggiungi Atleta Section -->
-            <section id="aggiungi-section" class="content-section">
-                <div class="section-header">
-                    <h2>Aggiungi Nuovo Atleta</h2>
-                    <p>Inserisci i dati del nuovo membro della squadra</p>
-                </div>
-
-                <form id="athlete-form" class="athlete-form">
-                    <div class="form-sections">
-                        <!-- Dati Anagrafici -->
-                        <div class="form-section">
-                            <h3>Dati Anagrafici</h3>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label" for="nome">Nome *</label>
-                                    <input type="text" id="nome" name="nome" class="form-control" required>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="cognome">Cognome *</label>
-                                    <input type="text" id="cognome" name="cognome" class="form-control" required>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label" for="dataNascita">Data di Nascita *</label>
-                                    <input type="date" id="dataNascita" name="dataNascita" class="form-control" required>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="codiceFiscale">Codice Fiscale</label>
-                                    <input type="text" id="codiceFiscale" name="codiceFiscale" class="form-control">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" for="indirizzo">Indirizzo</label>
-                                <input type="text" id="indirizzo" name="indirizzo" class="form-control">
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label" for="telefono">Telefono</label>
-                                    <input type="tel" id="telefono" name="telefono" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="email">Email</label>
-                                    <input type="email" id="email" name="email" class="form-control">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Dati Fisici -->
-                        <div class="form-section">
-                            <h3>Dati Fisici</h3>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label" for="altezza">Altezza (cm) *</label>
-                                    <input type="number" id="altezza" name="altezza" class="form-control" min="150" max="250" required>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="peso">Peso (kg) *</label>
-                                    <input type="number" id="peso" name="peso" class="form-control" min="40" max="150" required>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label" for="wingspan">Wingspan (cm)</label>
-                                    <input type="number" id="wingspan" name="wingspan" class="form-control" min="150" max="250">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="saltoVerticale">Salto Verticale (cm)</label>
-                                    <input type="number" id="saltoVerticale" name="saltoVerticale" class="form-control" min="30" max="120">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Dati Sportivi -->
-                        <div class="form-section">
-                            <h3>Dati Sportivi</h3>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label" for="ruolo">Ruolo *</label>
-                                    <select id="ruolo" name="ruolo" class="form-control" required>
-                                        <option value="">Seleziona ruolo...</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="numeroMaglia">Numero Maglia *</label>
-                                    <input type="number" id="numeroMaglia" name="numeroMaglia" class="form-control" min="1" max="99" required>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label" for="anniEsperienza">Anni di Esperienza</label>
-                                    <input type="number" id="anniEsperienza" name="anniEsperienza" class="form-control" min="0" max="30">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="livello">Livello *</label>
-                                    <select id="livello" name="livello" class="form-control" required>
-                                        <option value="">Seleziona livello...</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Note -->
-                        <div class="form-section">
-                            <h3>Note Aggiuntive</h3>
-                            <div class="form-group">
-                                <label class="form-label" for="note">Note</label>
-                                <textarea id="note" name="note" class="form-control" rows="3" placeholder="Aggiungi note sull'atleta..."></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn--primary btn--lg">
-                            <i class="fas fa-save"></i> Salva Atleta
-                        </button>
-                        <button type="button" class="btn btn--secondary btn--lg" onclick="resetForm()">
-                            <i class="fas fa-times"></i> Annulla
-                        </button>
-                    </div>
-                </form>
-            </section>
-        </main>
-    </div>
-
-    <!-- Athlete Detail Modal -->
-    <div id="athlete-modal" class="modal hidden">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modal-athlete-name">Dettagli Atleta</h3>
-                <button class="modal-close" onclick="closeModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body" id="modal-athlete-details">
-                <!-- Content will be populated by JavaScript -->
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn--outline" onclick="closeModal()">Chiudi</button>
-                <button class="btn btn--primary" onclick="editAthlete()">
-                    <i class="fas fa-edit"></i> Modifica
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2024 Gestione Atleti - Squadra Volley. Sistema moderno per la gestione dei dati sportivi.</p>
-        </div>
-    </footer>
-
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="app.js"></script>
-</body>
-</html>
+  <div class="main-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <button class="sidebar-link active" onclick="showSection('dashboard')" data-section="dashboard">
+              <i class="fas fa-chart-line"></i>
+              <span>Dashboard</span>
+            </button>
+          </li>
+          <li>
+            <button class="sidebar-link" onclick="showSection('atleti')" data-section="atleti">
+              <i class="fas fa-users"></i>
+              <span>Tutti gli Atleti</span>
+            </button>
+          </li>
+          <li>
+            <button class="sidebar-link" onclick="showSection('aggiungi')" data-section="aggiungi">
+              <i class="fas fa-user-plus"></i>
+              <span>Aggiungi Atleta</span>
+            </button>
+          </li>
+          <li>
+            <button class
