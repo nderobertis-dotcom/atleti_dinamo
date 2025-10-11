@@ -694,3 +694,26 @@ document.getElementById('import-file').addEventListener('change', function(e) {
 });
 
 // Tutto il resto del tuo app.js, senza tagliare nulla!
+// ... AthleteManager e tutte le funzioni ...
+
+function showSection(sectionName) {
+  document.querySelectorAll('.sidebar-link').forEach(link => {
+    link.classList.remove('active');
+    if (link.dataset.section === sectionName) {
+      link.classList.add('active');
+    }
+  });
+  document.querySelectorAll('.content-section').forEach(section => {
+    section.classList.remove('active');
+  });
+  const targetSection = document.getElementById(`${sectionName}-section`);
+  if (targetSection) {
+    targetSection.classList.add('active');
+  }
+}
+
+document.getElementById('import-file').addEventListener('change', function(e) {
+  // ... funzione di import ...
+});
+
+// ... resto del js come già inviato ...
