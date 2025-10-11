@@ -1427,3 +1427,12 @@ select.form-control {
 }
 
 /* ... tutto il tuo style esteso ... */
+.logo-img {
+  max-width: 54px;
+  max-height: 54px;
+  border-radius: 50%;
+  display: block;
+  margin-right: 8px;
+}
+
+/* ... tutto il tuo style esteso fornito sopra ... */
