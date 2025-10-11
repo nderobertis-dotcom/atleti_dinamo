@@ -1456,3 +1456,6 @@ input[type="text"], input[type="email"], input[type="number"], select {
 }
 
 /* Mantieni tutto il resto invariato */
+.content-section { display: none; }
+.content-section.active { display: block; }
+/* ...tutto il resto invariato... */
