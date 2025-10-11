@@ -1,103 +1,25 @@
 body {
-  font-family: 'Segoe UI', Arial, sans-serif;
+  font-family: Arial, sans-serif;
   background: #f1f1f1;
-  margin: 0;
-  padding: 0;
 }
-
 .dashboard {
   background: #fff;
-  max-width: 700px;
-  margin: 36px auto;
-  padding: 28px 18px 28px 18px;
-  border-radius: 18px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.09);
+  max-width: 440px;
+  margin: 30px auto;
+  padding: 24px;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
 }
-
-.dashboard-header {
-  display: flex;
-  gap: 22px;
-  align-items: flex-start;
-  margin-bottom: 28px;
-}
-
 .logo-card {
-  min-width: 80px;
-  min-height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #f5f5f5;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
-  box-shadow: 0 2px 10px #edf2fa;
+  overflow: hidden;
+  margin-bottom: 22px;
+  box-shadow: 0 2px 8px #eee;
+  display: flex; align-items: center; justify-content: center;
 }
-
-.logo-img {
-  max-width: 66px;
-  max-height: 66px;
-  border-radius: 50%;
-}
-
-.statistiche-globali {
-  flex: 1;
-  background: #fcfcfc;
-  border-radius: 10px;
-  padding: 12px 18px;
-  box-shadow: 0 2px 8px rgba(60,60,120,0.07);
-  font-size: 1.06em;
-  margin-top: 10px;
-}
-.menu-bar {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-.menu-bar button,
-.filtri-bar button {
-  padding: 7px 15px;
-  background: #1976d2;
-  color: #fff;
-  border: none;
-  border-radius: 7px;
-  font-weight: bold;
-  cursor: pointer;
-  font-size: 1em;
-  transition: background 0.18s;
-}
-.menu-bar button:hover,
-.filtri-bar button:hover { background: #115293; }
-.menu-bar input[type=file] { border:none; background:transparent;}
-.filtri-bar { display:flex; gap:7px; margin-bottom:14px;}
-.atleta-list-item {
-  padding: 10px 0;
-  border-bottom: 1px solid #eee;
-  font-size: 1.08em;
-  color: #232323;
-  display: flex; justify-content: space-between; align-items: center;
-}
-.atleta-info { display:flex; align-items:center; gap:12px }
-.foto-atleta-mini { width:32px;height:32px;border-radius:50%;object-fit:cover;margin-right:8px;border:1px solid #ccc;}
-.btn-entra { background:#35a; color:#fff; border:none; border-radius:5px; padding:8px 16px; font-weight:bold; cursor:pointer }
-.atleta { border:2px solid #1976d2; padding:16px; border-radius:11px; margin:18px 0 8px 0; background:#fbfbfd;}
-.foto-atleta-big { width:78px;height:78px;border-radius:50%;object-fit:cover;margin-bottom:7px; display:block}
-.atleta-header { display:flex; align-items:center; gap:14px }
-.atleta-nome { font-size:1.22em; font-weight:700; margin-bottom:6px;}
-.numero-maglia { background:#1976d2; color:#fff; border-radius:5px; font-weight:700; padding:4px 9px;}
-.atleta-ruolo { font-size:1.08em; margin-bottom:8px; color:#005bbb;}
-.atleta-dettagli-lista { color:#555; font-size:0.99em;}
-.atleta-dettagli { margin-top:9px;}
-.atleta-azioni { margin-top:20px;}
-.btn-modifica,.btn-elimina,.btn-backup {background:#1976d2;color:#fff;border:none;border-radius:6px;font-weight:700;padding:6px 18px;cursor:pointer; margin-right:9px}
-.btn-elimina { background:#a33;}
-.btn-backup {background:#28a745;}
-.svm-scaduta { color:#c00; font-weight:bold;}
-.svm-in-scadenza { color:#e89b0f; font-weight:bold;}
-.input-card,.select-card { border-radius:7px; padding:6px 10px; border:1px solid #ccc; font-size:1em; margin-bottom:8px; }
-.input-file-label { display:block; font-size:0.97em; margin-bottom:9px;}
-#section-abbigliamento,#section-abbigliamento-edit { margin-top:9px;}
-/* Responsive */
-@media (max-width: 700px) {
-  .dashboard { max-width: 100vw; padding:3vw;}
-  .dashboard-header { flex-wrap:wrap;}
-  .statistiche-globali { font-size:0.97em; padding:9px 4vw; }
-}
+.logo-img { width: 58px; height: 58px; object-fit: contain; border-radius: 50%; }
+#lista-atleti { list-style: none; padding: 0;}
+#lista-atleti li { padding: 8px 0; border-bottom: 1px solid #eee;}
+#lista-atleti li:last-child { border-bottom: none;}
