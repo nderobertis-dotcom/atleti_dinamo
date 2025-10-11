@@ -1447,3 +1447,12 @@ select.form-control {
 input[type="text"], input[type="email"], input[type="number"], select {
   text-transform: uppercase !important;
 }
+.logo-img {
+  max-width: 54px;
+  max-height: 54px;
+  border-radius: 50%;
+  display: block;
+  margin-right: 8px;
+}
+
+/* Mantieni tutto il resto invariato */
