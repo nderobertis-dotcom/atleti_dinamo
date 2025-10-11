@@ -17,6 +17,7 @@
     <div class="stats-section">
       <h2>Dashboard Squadra</h2>
       <div class="stats-grid">
+        <!-- Tutte le card della dashboard -->
         <div class="stat-card logo-card" onclick="filtraAtleti(null)">
           <div class="logo-container">
             <img src="logo-dinamo.png" alt="Dinamo Molfetta" id="logo-dinamo"
@@ -74,8 +75,9 @@
       </div>
     </div>
 
-    <!-- Barra Pulsanti tra dashboard e lista atleti -->
+    <!-- Action bar con campo cerca + pulsanti -->
     <div class="action-bar">
+      <input type="text" id="cercaAtleta" class="input-cerca" placeholder="Cerca atleta...">
       <button id="btn-aggiungi-bottom" class="btn-aggiungi-principale">➕ Aggiungi Nuovo Atleta</button>
       <button onclick="esportaAtleti()" class="btn-backup">📤 Esporta elenco</button>
       <input type="file" id="file-import" style="display:none;">
