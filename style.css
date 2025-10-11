@@ -1418,6 +1418,12 @@ select.form-control {
   display: block;
   margin: auto;
 }
+.logo-img {
+  max-width: 54px;
+  max-height: 54px;
+  border-radius: 50%;
+  display: block;
+  margin-right: 8px;
+}
 
-/* ... tutto il tuo style esteso fornito sopra ... */
-/* (Mantieni TUTTE le regole, design tokens, layout, cards, sidebar, responsive ecc) */
+/* ... tutto il tuo style esteso ... */
