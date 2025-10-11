@@ -11,44 +11,33 @@
       <div class="logo-card">
         <img src="logo_dinamo.png" alt="Logo Dinamo" class="logo-img">
       </div>
-      <div class="stats-card">
-        <h2>Statistiche squadra</h2>
-        <div id="statistiche">
-          <span>Atleti totali: <strong id="totale-atleti">0</strong></span>
-        </div>
+      <div class="statistiche-globali">
+        <div>Totale atleti: <span id="total-atleti">0</span></div>
+        <div>Completamento dati: <span id="percent-complete">0%</span></div>
+        <div>VM scadute: <span id="vm-scadute">0</span> | In scadenza: <span id="vm-scadenza">0</span></div>
+        <div>Età media: <span id="eta-media">-</span></div>
+        <div>Altezza media: <span id="altezza-media">-</span></div>
+        <div>Maschi: <span id="num-maschi">0</span> | Femmine: <span id="num-femmine">0</span></div>
+        <div>Serie D Maschile: <span id="num-seriedm">0</span> | 1° Div. Femminile: <span id="num-1divf">0</span> | 1° Div. Maschile: <span id="num-1divm">0</span></div>
       </div>
     </div>
-    <div class="search-bar menu-bar">
-      <button id="add-athlete-btn">+ Aggiungi atleta</button>
-      <select id="gender-filter">
-        <option value="">Tutti i generi</option>
-        <option value="M">Maschile</option>
-        <option value="F">Femminile</option>
-      </select>
-      <input type="text" id="ricerca" placeholder="Cerca per cognome..." autocomplete="off">
-      <button id="cerca-btn">Cerca</button>
+    <div class="menu-bar">
+      <button id="btn-aggiungi-bottom">+ Aggiungi atleta</button>
+      <button onclick="esportaAtleti()">Esporta elenco</button>
+      <input type="file" id="file-import" accept=".json">
     </div>
-    <div id="form-card" class="hidden">
-      <form id="athlete-form">
-        <input type="text" id="nome" placeholder="Nome" required>
-        <input type="text" id="cognome" placeholder="Cognome" required>
-        <select id="genere" required>
-          <option value="">Seleziona genere</option>
-          <option value="M">Maschile</option>
-          <option value="F">Femminile</option>
-        </select>
-        <input type="date" id="nascita" placeholder="Data di nascita" required>
-        <input type="text" id="luogo-nascita" placeholder="Luogo di nascita" required>
-        <input type="text" id="codice-fiscale" placeholder="Codice Fiscale" required>
-        <input type="email" id="email" placeholder="Email" required>
-        <input type="password" id="password" placeholder="Password" required>
-        <input type="file" id="foto" accept="image/*">
-        <button type="submit">Salva</button>
-        <button type="button" id="cancel-btn">Annulla</button>
-      </form>
+    <div class="filtri-bar">
+      <button onclick="filtraAtleti(null)">Tutti</button>
+      <button onclick="filtraAtleti('M')">Maschi</button>
+      <button onclick="filtraAtleti('F')">Femmine</button>
+      <button onclick="filtraAtleti('SERIE D MASCHILE')">Serie D M</button>
+      <button onclick="filtraAtleti('1° DIV. FEMMINILE')">1° Div. F</button>
+      <button onclick="filtraAtleti('1° DIVISIONE MASCHILE')">1° Div. M</button>
     </div>
-    <h2>Elenco atleti</h2>
-    <ul id="lista-atleti"></ul>
+    <h2 style="margin-top:22px">Elenco atleti</h2>
+    <div id="lista-vuota" style="display:none; color:#777; margin:15px 0 12px 0;">Nessun atleta presente o nessun risultato per il filtro corrente.</div>
+    <div id="lista-atleti"></div>
+    <div id="card-atleta"></div>
   </div>
   <script src="app.js"></script>
 </body>
