@@ -64,15 +64,110 @@
     </aside>
     <main class="main-content">
       <section id="dashboard-section" class="content-section active">
-        <!-- Dashboard stat e chart -->
+        <!-- Dashboard statistiche, chart, ecc (invariato; da JS) -->
       </section>
       <section id="atleti-section" class="content-section">
-        <!-- Elenco, filtri, grid atleti -->
+        <!-- Griglia atleti, filtri, ricerca (da JS) -->
       </section>
       <section id="aggiungi-section" class="content-section">
-        <!-- FORM AGGIUNGI ATLETA -->
+        <!-- FORM COMPLETA Atleta -->
         <form id="athlete-form" class="athlete-form">
-          <!-- ... tutti i campi form come già fornito ... -->
+          <div class="form-sections">
+            <div class="form-section">
+              <h3>Dati Anagrafici</h3>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="nome">Nome *</label>
+                  <input type="text" id="nome" name="nome" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="cognome">Cognome *</label>
+                  <input type="text" id="cognome" name="cognome" class="form-control" required>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="dataNascita">Data di Nascita *</label>
+                  <input type="date" id="dataNascita" name="dataNascita" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="codiceFiscale">Codice Fiscale</label>
+                  <input type="text" id="codiceFiscale" name="codiceFiscale" class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="indirizzo">Indirizzo</label>
+                <input type="text" id="indirizzo" name="indirizzo" class="form-control">
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="telefono">Telefono</label>
+                  <input type="tel" id="telefono" name="telefono" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="email">Email</label>
+                  <input type="email" id="email" name="email" class="form-control">
+                </div>
+              </div>
+            </div>
+            <div class="form-section">
+              <h3>Dati Fisici</h3>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="altezza">Altezza (cm) *</label>
+                  <input type="number" id="altezza" name="altezza" class="form-control" min="100" max="250" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="peso">Peso (kg) *</label>
+                  <input type="number" id="peso" name="peso" class="form-control" min="30" max="150" required>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="wingspan">Wingspan (cm)</label>
+                  <input type="number" id="wingspan" name="wingspan" class="form-control" min="100" max="280">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="saltoVerticale">Salto Verticale (cm)</label>
+                  <input type="number" id="saltoVerticale" name="saltoVerticale" class="form-control" min="15" max="120">
+                </div>
+              </div>
+            </div>
+            <div class="form-section">
+              <h3>Dati Sportivi</h3>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="ruolo">Ruolo *</label>
+                  <select id="ruolo" name="ruolo" class="form-control" required>
+                    <option value="">Seleziona ruolo...</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="numeroMaglia">Numero Maglia *</label>
+                  <input type="number" id="numeroMaglia" name="numeroMaglia" class="form-control" min="1" max="99" required>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="anniEsperienza">Anni di Esperienza</label>
+                  <input type="number" id="anniEsperienza" name="anniEsperienza" class="form-control" min="0" max="30">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="livello">Livello *</label>
+                  <select id="livello" name="livello" class="form-control" required>
+                    <option value="">Seleziona livello...</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="form-section">
+              <h3>Note Aggiuntive</h3>
+              <div class="form-group">
+                <label class="form-label" for="note">Note</label>
+                <textarea id="note" name="note" class="form-control" rows="3" placeholder="Aggiungi note sull'atleta..."></textarea>
+              </div>
+            </div>
+          </div>
           <div class="form-actions">
             <button type="submit" class="btn btn--primary btn--lg">
               <i class="fas fa-save"></i> Salva Atleta
