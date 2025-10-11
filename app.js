@@ -1,3 +1,4 @@
+// Dati iniziali d'esempio
 let elencoOriginario = [
   {
     cognome: "Rossi",
@@ -31,21 +32,26 @@ let elencoOriginario = [
   }
 ];
 
+// Stato filtro
 let filtroCognome = "";
 let filtroGenere = "";
 
+// Visualizza elenco all'avvio
 aggiornaStatistiche();
 mostraAtleti(elencoOriginario);
 
+// Bottone: Mostra form
 document.getElementById("add-athlete-btn").onclick = function() {
   document.getElementById("form-card").classList.remove("hidden");
 };
 
+// Bottone: Annulla form
 document.getElementById("cancel-btn").onclick = function() {
   document.getElementById("athlete-form").reset();
   document.getElementById("form-card").classList.add("hidden");
 };
 
+// Submit form: aggiungi atleta
 document.getElementById("athlete-form").onsubmit = function(e) {
   e.preventDefault();
   const nuovo = {
@@ -79,16 +85,19 @@ document.getElementById("athlete-form").onsubmit = function(e) {
   }
 };
 
+// Filtro cognome con bottone cerca
 document.getElementById("cerca-btn").onclick = function() {
   filtroCognome = document.getElementById("ricerca").value.trim().toLowerCase();
   filtraEVisualizza();
 };
 
+// Filtro genere
 document.getElementById("gender-filter").onchange = function() {
   filtroGenere = this.value;
   filtraEVisualizza();
 };
 
+// Funzione applica filtri e mostra
 function filtraEVisualizza() {
   let filtrati = [...elencoOriginario];
   if (filtroCognome) {
@@ -104,6 +113,7 @@ function filtraEVisualizza() {
   mostraAtleti(filtrati);
 }
 
+// Mostra elenco atleti
 function mostraAtleti(atleti) {
   atleti = atleti.sort((a, b) => a.cognome.localeCompare(b.cognome));
   const lista = document.getElementById("lista-atleti");
@@ -119,11 +129,13 @@ function mostraAtleti(atleti) {
     const li = document.createElement("li");
     const row = document.createElement("div");
     row.className = "elenco-fields";
+    // Foto
     const foto = document.createElement("img");
     foto.className = "atleta-foto";
     foto.src = atleta.foto ? atleta.foto : "https://via.placeholder.com/40?text=A";
     foto.alt = `${atleta.cognome} Foto`;
     row.appendChild(foto);
+    // Dati principali
     const dati = document.createElement("span");
     dati.textContent =
       atleta.cognome + " " + atleta.nome +
@@ -131,11 +143,13 @@ function mostraAtleti(atleti) {
       " - Nato a " + atleta.luogoNascita +
       " il " + atleta.nascita;
     row.appendChild(dati);
+    // Codice Fiscale
     const cf = document.createElement("span");
     cf.textContent = "CF: " + atleta.codiceFiscale;
     cf.style.fontSize = '0.98em';
     cf.style.marginLeft = "10px";
     row.appendChild(cf);
+    // Email
     const mail = document.createElement("span");
     mail.textContent = atleta.email;
     mail.style.marginLeft = "10px";
@@ -146,6 +160,7 @@ function mostraAtleti(atleti) {
   document.getElementById("totale-atleti").textContent = atleti.length;
 }
 
+// Mostra statistiche
 function aggiornaStatistiche() {
   document.getElementById("totale-atleti").textContent = elencoOriginario.length;
 }
