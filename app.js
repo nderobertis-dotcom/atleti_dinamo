@@ -22,7 +22,6 @@ function caricaDati() {
         return Array.isArray(arr) ? arr : [];
     } catch { return []; }
 }
-
 athletes = caricaDati();
 
 function salvaSuStorage() {
@@ -46,18 +45,49 @@ function upper(s) {
     return s ? s.trim().toUpperCase() : '';
 }
 
+// MODALE Visualizza
+const modal = document.getElementById('athlete-modal');
+const modalClose = document.getElementById('modal-close');
+const modalData = document.getElementById('modal-data');
+function openModal(idx) {
+    const a = athletes[idx];
+    if (!a) return;
+    let birthStr = a.birthdate ? new Date(a.birthdate).toLocaleDateString('it-IT') : '';
+    let eta = a.birthdate ? calcolaEta(a.birthdate) : '';
+    modalData.innerHTML = `
+      <div><b>Nome:</b> ${upper(a.first)}</div>
+      <div><b>Cognome:</b> ${upper(a.last)}</div>
+      <div><b>Codice fiscale:</b> ${upper(a.cf)}</div>
+      <div><b>Genere:</b> ${a.gender}</div>
+      <div><b>Data di nascita:</b> ${birthStr}</div>
+      <div><b>Età:</b> ${eta}</div>
+      <div><b>Documento:</b> ${a.docType}</div>
+      <div><b>Numero Documento:</b> ${upper(a.docNumber)}</div>
+    `;
+    modal.style.display = 'block';
+}
+modalClose.onclick = function() {
+    modal.style.display = 'none';
+};
+window.onclick = function(event) {
+    if (event.target == modal) modal.style.display = 'none';
+}
+
 function updateAthleteList() {
     const list = document.getElementById('athlete-list');
     list.innerHTML = '';
     athletes.forEach((a, idx) => {
-        const eta = calcolaEta(a.birthdate);
-        const birthStr = new Date(a.birthdate).toLocaleDateString('it-IT');
         const li = document.createElement('li');
-        const dati = document.createElement('span');
-        dati.textContent = `${upper(a.last)} ${upper(a.first)} (${a.gender}, ${birthStr}, ${eta} anni, CF: ${upper(a.cf)}, ${a.docType}: ${upper(a.docNumber)})`;
-
+        const info = document.createElement('span');
+        info.className = 'info';
+        info.textContent = `${upper(a.last)} ${upper(a.first)}`;
         const actions = document.createElement('div');
         actions.className = 'actions';
+
+        const btnView = document.createElement('button');
+        btnView.className = 'view';
+        btnView.textContent = 'Visualizza';
+        btnView.onclick = () => openModal(idx);
 
         const btnEdit = document.createElement('button');
         btnEdit.className = 'edit';
@@ -89,9 +119,10 @@ function updateAthleteList() {
             }
         };
 
+        actions.appendChild(btnView);
         actions.appendChild(btnEdit);
         actions.appendChild(btnDelete);
-        li.appendChild(dati);
+        li.appendChild(info);
         li.appendChild(actions);
         list.appendChild(li);
     });
