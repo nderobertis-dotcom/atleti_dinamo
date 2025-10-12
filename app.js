@@ -12,15 +12,17 @@ function calcolaEta(dataNascita) {
     if (m < 0 || (m === 0 && oggi.getDate() < nascita.getDate())) eta--;
     return eta;
 }
-
 function upper(s) { return s ? s.trim().toUpperCase() : ''; }
 
-try {
-    if (localStorage.getItem('athletes')) {
-        athletes = JSON.parse(localStorage.getItem('athletes'));
-        if (!Array.isArray(athletes)) athletes = [];
-    }
-} catch(e) { athletes = []; }
+function caricaDati() {
+    try {
+        let dati = localStorage.getItem('athletes');
+        if (!dati) return [];
+        let arr = JSON.parse(dati);
+        return Array.isArray(arr) ? arr : [];
+    } catch { return []; }
+}
+athletes = caricaDati();
 
 function salvaSuStorage() { localStorage.setItem('athletes', JSON.stringify(athletes)); }
 
@@ -37,30 +39,24 @@ function updateDashboard() {
     document.getElementById('female-athletes').textContent = athletes.filter(a => a.gender === 'F').length;
 }
 
-// MODALE VISUALIZZA
-const modal = document.getElementById('atleta-modal');
-const modalClose = document.getElementById('modal-close');
-const modalData = document.getElementById('modal-data');
-function openModal(idx) {
+function showScheda(idx) {
+    const box = document.getElementById('atleta-scheda');
+    if (typeof idx === 'undefined' || idx === null || !athletes[idx]) {
+        box.innerHTML = "<div class='info-group'>Seleziona un atleta per visualizzare i dettagli.</div>";
+        return;
+    }
     const a = athletes[idx];
-    if (!a) return;
     let birthStr = a.birthdate ? new Date(a.birthdate).toLocaleDateString('it-IT') : '';
     let eta = a.birthdate ? calcolaEta(a.birthdate) : '';
-    modalData.innerHTML = `
-      <div><b>Nome:</b> ${upper(a.first)}</div>
-      <div><b>Cognome:</b> ${upper(a.last)}</div>
-      <div><b>Codice fiscale:</b> ${upper(a.cf)}</div>
-      <div><b>Genere:</b> ${a.gender}</div>
-      <div><b>Data di nascita:</b> ${birthStr}</div>
-      <div><b>Età:</b> ${eta}</div>
-      <div><b>Documento:</b> ${a.docType}</div>
-      <div><b>Numero Documento:</b> ${upper(a.docNumber)}</div>
+    box.innerHTML = `
+      <div class="main-id">${upper(a.last)} ${upper(a.first)}</div>
+      <div class="info-group"><span class="field-label">Codice fiscale:</span> ${upper(a.cf)}</div>
+      <div class="info-group"><span class="field-label">Genere:</span> ${a.gender}</div>
+      <div class="info-group"><span class="field-label">Data di nascita:</span> ${birthStr}</div>
+      <div class="info-group"><span class="field-label">Età:</span> ${eta}</div>
+      <div class="info-group"><span class="field-label">Documento:</span> ${a.docType}</div>
+      <div class="info-group"><span class="field-label">Numero Documento:</span> ${upper(a.docNumber)}</div>
     `;
-    modal.style.display = 'block';
-}
-modalClose.onclick = function() { modal.style.display = 'none'; };
-window.onclick = function(event) {
-    if (event.target == modal) modal.style.display = 'none';
 }
 
 function updateAthleteList() {
@@ -77,7 +73,7 @@ function updateAthleteList() {
         const btnView = document.createElement('button');
         btnView.className = 'view';
         btnView.textContent = 'Visualizza';
-        btnView.onclick = () => openModal(idx);
+        btnView.onclick = () => showScheda(idx);
 
         const btnEdit = document.createElement('button');
         btnEdit.className = 'edit';
@@ -105,6 +101,7 @@ function updateAthleteList() {
                 salvaSuStorage();
                 updateDashboard();
                 updateAthleteList();
+                showScheda();
                 resetForm();
             }
         };
@@ -128,6 +125,7 @@ function resetForm() {
 
 updateDashboard();
 updateAthleteList();
+showScheda();
 
 document.getElementById('athlete-form').addEventListener('submit', function(e) {
     e.preventDefault();
@@ -148,6 +146,7 @@ document.getElementById('athlete-form').addEventListener('submit', function(e) {
         salvaSuStorage();
         updateDashboard();
         updateAthleteList();
+        showScheda();
         resetForm();
     }
 });
