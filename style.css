@@ -5,7 +5,6 @@ body {
     color: #24304a;
     min-height: 100vh;
 }
-
 header {
     background: #213b71;
     color: #fff;
@@ -14,20 +13,17 @@ header {
     margin-bottom: 32px;
     box-shadow: 0 4px 16px #1d2d5038;
 }
-
 .logo {
     max-width: 100px;
     margin: 16px auto 0 auto;
     display: block;
     filter: drop-shadow(0 2px 4px #59688855);
 }
-
 main {
     max-width: 720px;
     margin: auto;
     padding: 20px;
 }
-
 .dashboard {
     display: flex;
     justify-content: space-around;
@@ -35,7 +31,6 @@ main {
     margin: 22px 0 28px 0;
     flex-wrap: wrap;
 }
-
 .stat-card {
     background: #fffbe8;
     padding: 1.1em 2.4em;
@@ -51,7 +46,6 @@ main {
     transform: scale(1.045);
     box-shadow: 0 4px 18px #fef19278;
 }
-
 #athlete-form-section, #athlete-list-section {
     background: #fff;
     padding: 28px 24px;
@@ -60,11 +54,9 @@ main {
     box-shadow: 0 2px 22px #bacadd2b;
     border: 2px solid #e2e8f5;
 }
-
 #athlete-form-section {
     margin-bottom: 32px;
 }
-
 #athlete-form-section h2, #athlete-list-section h2 {
     margin-top: 0;
     font-size: 1.35em;
@@ -73,11 +65,9 @@ main {
     letter-spacing: 1px;
     margin-bottom: 10px;
 }
-
 form {
     margin-top: 6px;
 }
-
 form input, form select {
     margin: 9px 10px 9px 0;
     padding: 10px;
@@ -90,7 +80,6 @@ form input, form select {
     box-shadow: 0 1px 5px #f0f4fa25;
     transition: border-color 0.2s;
 }
-
 #first-name,
 #last-name,
 #cf,
@@ -98,13 +87,11 @@ form input, form select {
     text-transform: uppercase;
     letter-spacing: 1px;
 }
-
 form input:focus, form select:focus {
     border-color: #4d96ff;
     outline: none;
     background: #fffde8;
 }
-
 form button {
     background: linear-gradient(90deg, #213b71 0%, #4383d9 100%);
     color: #fff;
@@ -119,17 +106,14 @@ form button {
     box-shadow: 0 2px 8px #30476633;
     transition: background 0.18s, transform 0.17s;
 }
-
 form button:hover {
     background: linear-gradient(90deg, #4368d9 0%, #213b71 100%);
     transform: scale(1.06);
 }
-
 #athlete-list {
     list-style: none;
     padding: 0;
 }
-
 #athlete-list li {
     background: #f8fbff;
     margin-bottom: 12px;
@@ -143,7 +127,6 @@ form button:hover {
     border-left: 3px solid #213b71;
     word-break: break-word;
 }
-
 #athlete-list li span {
     font-family: 'Segoe UI', Arial, sans-serif;
     color: #213b71;
@@ -153,27 +136,24 @@ form button:hover {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-
 .actions {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     flex-shrink: 0;
-    margin-left: 12px;
+    margin-left: 8px;
 }
-
-/* Pulsanti arrotondati, ben visibili */
 .actions .edit,
 .actions .delete {
     display: inline-block;
-    padding: 10px 28px;
+    padding: 10px 26px;
     font-size: 1em;
     font-weight: 600;
-    border-radius: 23px;
+    border-radius: 22px;
     white-space: nowrap;
     text-align: center;
     transition: background 0.2s, transform 0.15s;
+    margin-left: 0;
 }
-
 .actions .edit {
     background: linear-gradient(90deg, #1966c2 0%, #4d96ff 100%);
     color: #fff;
@@ -187,7 +167,6 @@ form button:hover {
     color: #fff;
     transform: scale(1.09);
 }
-
 .actions .delete {
     background: linear-gradient(90deg, #e15c5c 0%, #ff7575 100%);
     color: #fff;
@@ -201,7 +180,6 @@ form button:hover {
     color: #fff;
     transform: scale(1.09);
 }
-
 @media (max-width: 900px) {
     #athlete-list li, #athlete-list li span {
         font-size: 0.97em;
@@ -209,7 +187,6 @@ form button:hover {
     }
     .actions { margin-left: 0; }
 }
-
 @media (max-width: 660px) {
     main {
         padding: 1vw;
