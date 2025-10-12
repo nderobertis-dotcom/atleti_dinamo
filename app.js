@@ -1,3 +1,7 @@
+// Struttura dati atleti
+let athletes = [];
+
+// Funzione per calcolare età dalla data di nascita
 function calcolaEta(dataNascita) {
     const oggi = new Date();
     const nascita = new Date(dataNascita);
@@ -8,14 +12,13 @@ function calcolaEta(dataNascita) {
     }
     return eta;
 }
-// Struttura dati atleti
-let athletes = [];
 
 // Utility per aggiornare dashboard
 function updateDashboard() {
     document.getElementById('total-athletes').textContent = athletes.length;
     if (athletes.length > 0) {
-        let avgAge = (athletes.reduce((sum, a) => sum + a.age, 0) / athletes.length).toFixed(1);
+        let sommaEta = athletes.reduce((sum, a) => sum + calcolaEta(a.birthdate), 0);
+        let avgAge = (sommaEta / athletes.length).toFixed(1);
         document.getElementById('avg-age').textContent = avgAge;
     } else {
         document.getElementById('avg-age').textContent = '-';
@@ -31,8 +34,10 @@ function updateAthleteList() {
     // Ordine alfabetico per cognome, poi nome
     athletes.sort((a, b) => a.last.localeCompare(b.last) || a.first.localeCompare(b.first));
     athletes.forEach(a => {
+        const eta = calcolaEta(a.birthdate);
+        const birthStr = new Date(a.birthdate).toLocaleDateString('it-IT');
         const li = document.createElement('li');
-        li.textContent = `${a.last} ${a.first} (${a.gender}, ${a.age} anni)`;
+        li.textContent = `${a.last} ${a.first} (${a.gender}, ${birthStr}, ${eta} anni)`;
         list.appendChild(li);
     });
 }
@@ -42,10 +47,10 @@ document.getElementById('athlete-form').addEventListener('submit', function(e) {
     const first = document.getElementById('first-name').value.trim();
     const last = document.getElementById('last-name').value.trim();
     const gender = document.getElementById('gender').value;
-    const age = parseInt(document.getElementById('age').value, 10);
+    const birthdate = document.getElementById('birthdate').value;
 
-    if (first && last && gender && age) {
-        athletes.push({ first, last, gender, age });
+    if (first && last && gender && birthdate) {
+        athletes.push({ first, last, gender, birthdate });
         updateDashboard();
         updateAthleteList();
         this.reset();
