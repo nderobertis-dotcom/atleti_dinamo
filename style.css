@@ -20,10 +20,70 @@ header {
     filter: drop-shadow(0 2px 4px #59688855);
 }
 main {
-    max-width: 720px;
+    max-width: 920px;
     margin: auto;
     padding: 20px;
 }
+.flex-container {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    margin-bottom: 30px;
+}
+
+#athlete-detail-section {
+    background: #fffbe8;
+    min-width: 340px;
+    border-radius: 23px;
+    box-shadow: 0 8px 24px #b0bddc2a;
+    border: 2.5px solid #fecf50;
+    padding: 35px 28px 20px 28px;
+    color: #213b71;
+    font-size: 1.06em;
+    min-height: 330px;
+    max-width: 370px;
+}
+#athlete-detail-section h2 {
+    color: #1966c2;
+    font-size: 1.20em;
+    font-weight: bold;
+    margin-top: 0;
+    margin-bottom: 14px;
+}
+#atleta-scheda {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+#atleta-scheda .main-id {
+    font-size: 1.19em;
+    font-weight: bold;
+    color: #1966c2;
+    letter-spacing: 1.5px;
+    margin-bottom: 9px;
+    border-bottom: 1px solid #dde8ff;
+    padding-bottom: 6px;
+    text-align: left;
+}
+#atleta-scheda .field-label {
+    color: #3b548c;
+    font-weight: 600;
+    min-width: 122px;
+    margin-right: 7px;
+    display: inline-block;
+}
+#atleta-scheda .info-group {
+    background: #fafcff;
+    border-radius: 9px;
+    padding: 5px 14px;
+    box-shadow: 0 1px 4px #b0bddc16;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
 .dashboard {
     display: flex;
     justify-content: space-around;
@@ -171,5 +231,30 @@ form button:hover {
     background: linear-gradient(90deg, #b72a34 0%, #e15c5c 100%);
     transform: scale(1.07);
 }
-
-/* MODALE magnificato -- stile pop
+@media (max-width: 1024px) {
+    .flex-container {
+        flex-direction: column;
+        gap: 12px;
+    }
+    #athlete-detail-section { max-width: 97vw; min-width: 0; margin-bottom: 16px;}
+}
+@media (max-width: 900px) {
+    #athlete-list li, #athlete-list li .info {
+        font-size: 0.97em;
+        white-space: normal;
+    }
+    .actions { margin-left: 0; }
+}
+@media (max-width: 660px) {
+    main {
+        padding: 1vw;
+    }
+    .dashboard { flex-direction: column; align-items: center; gap: 13px;}
+    #athlete-list li { 
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    #athlete-list li .info { white-space: normal; }
+    .actions { margin-top: 10px; }
+    #athlete-detail-section { max-width: 99vw !important;}
+}
