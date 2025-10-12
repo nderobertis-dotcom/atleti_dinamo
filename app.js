@@ -35,6 +35,10 @@ function updateDashboard() {
     document.getElementById('female-athletes').textContent = athletes.filter(a => a.gender === 'F').length;
 }
 
+function upper(s) {
+    return s ? s.trim().toUpperCase() : '';
+}
+
 function updateAthleteList() {
     const list = document.getElementById('athlete-list');
     list.innerHTML = '';
@@ -44,7 +48,10 @@ function updateAthleteList() {
         const birthStr = new Date(a.birthdate).toLocaleDateString('it-IT');
         const li = document.createElement('li');
         li.innerHTML = `
-            <span>${a.last} ${a.first} (${a.gender}, ${birthStr}, ${eta} anni, CF: ${a.cf}, ${a.docType}: ${a.docNumber})</span>
+            <span>
+                ${upper(a.last)} ${upper(a.first)} 
+                (${a.gender}, ${birthStr}, ${eta} anni, CF: ${upper(a.cf)}, ${a.docType}: ${upper(a.docNumber)})
+            </span>
             <button class="edit" data-idx="${idx}">Modifica</button>
             <button class="delete" data-idx="${idx}">Cancella</button>
         `;
@@ -54,13 +61,13 @@ function updateAthleteList() {
         btn.onclick = function() {
             editIndex = parseInt(this.dataset.idx, 10);
             const atleta = athletes[editIndex];
-            document.getElementById('first-name').value = atleta.first;
-            document.getElementById('last-name').value = atleta.last;
-            document.getElementById('cf').value = atleta.cf;
+            document.getElementById('first-name').value = upper(atleta.first);
+            document.getElementById('last-name').value = upper(atleta.last);
+            document.getElementById('cf').value = upper(atleta.cf);
             document.getElementById('gender').value = atleta.gender;
             document.getElementById('birthdate').value = atleta.birthdate;
             document.getElementById('doc-type').value = atleta.docType;
-            document.getElementById('doc-number').value = atleta.docNumber;
+            document.getElementById('doc-number').value = upper(atleta.docNumber);
             document.getElementById('form-title').textContent = 'Modifica Atleta';
             document.querySelector('#athlete-form button[type="submit"]').textContent = "Salva";
             document.getElementById('cancel-edit').style.display = '';
@@ -93,13 +100,14 @@ updateAthleteList();
 
 document.getElementById('athlete-form').addEventListener('submit', function(e) {
     e.preventDefault();
-    const first = document.getElementById('first-name').value.trim();
-    const last = document.getElementById('last-name').value.trim();
-    const cf = document.getElementById('cf').value.trim();
+    // CONVERSIONE IN MAIUSCOLO
+    const first = upper(document.getElementById('first-name').value);
+    const last = upper(document.getElementById('last-name').value);
+    const cf = upper(document.getElementById('cf').value);
     const gender = document.getElementById('gender').value;
     const birthdate = document.getElementById('birthdate').value;
     const docType = document.getElementById('doc-type').value;
-    const docNumber = document.getElementById('doc-number').value.trim();
+    const docNumber = upper(document.getElementById('doc-number').value);
 
     if (first && last && cf && gender && birthdate && docType && docNumber) {
         if (editIndex !== null) {
