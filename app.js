@@ -42,31 +42,41 @@ function upper(s) {
 function updateAthleteList() {
     const list = document.getElementById('athlete-list');
     list.innerHTML = '';
-    athletes.sort((a, b) => a.last.localeCompare(b.last) || a.first.localeCompare(b.first));
     athletes.forEach((a, idx) => {
-        const eta = calcolaEta(a.birthdate);
-        const birthStr = new Date(a.birthdate).toLocaleDateString('it-IT');
         const li = document.createElement('li');
+        li.style.display = 'flex';
+        li.style.justifyContent = 'space-between';
+        li.style.alignItems = 'center';
 
+        // Dati atleta
         const dati = document.createElement('span');
         dati.textContent =
-            `${upper(a.last)} ${upper(a.first)} (${a.gender}, ${birthStr}, ${eta} anni, CF: ${upper(a.cf)}, ${a.docType}: ${upper(a.docNumber)})`;
+            `${a.last.toUpperCase()} ${a.first.toUpperCase()} (${a.gender}, ${a.birthdate}, CF: ${a.cf.toUpperCase()}, ${a.docType}: ${a.docNumber.toUpperCase()})`;
 
+        // Bottoni
         const actions = document.createElement('div');
-        actions.className = 'actions';
+        actions.style.display = 'flex';
+        actions.style.gap = '12px';
 
         const btnEdit = document.createElement('button');
         btnEdit.className = 'edit';
         btnEdit.textContent = 'Modifica';
+        btnEdit.style.padding = '10px 26px';
+        btnEdit.style.borderRadius = '22px';
+        btnEdit.style.background = 'linear-gradient(90deg, #1966c2 0%, #4d96ff 100%)';
+        btnEdit.style.border = '2px solid #1553a1';
+        btnEdit.style.color = '#fff';
+        btnEdit.style.fontWeight = '600';
+        btnEdit.style.fontSize = '1em';
         btnEdit.onclick = function() {
             editIndex = idx;
-            document.getElementById('first-name').value = upper(a.first);
-            document.getElementById('last-name').value = upper(a.last);
-            document.getElementById('cf').value = upper(a.cf);
+            document.getElementById('first-name').value = a.first;
+            document.getElementById('last-name').value = a.last;
+            document.getElementById('cf').value = a.cf;
             document.getElementById('gender').value = a.gender;
             document.getElementById('birthdate').value = a.birthdate;
             document.getElementById('doc-type').value = a.docType;
-            document.getElementById('doc-number').value = upper(a.docNumber);
+            document.getElementById('doc-number').value = a.docNumber;
             document.getElementById('form-title').textContent = 'Modifica Atleta';
             document.querySelector('#athlete-form button[type="submit"]').textContent = "Salva";
             document.getElementById('cancel-edit').style.display = '';
@@ -75,6 +85,13 @@ function updateAthleteList() {
         const btnDelete = document.createElement('button');
         btnDelete.className = 'delete';
         btnDelete.textContent = 'Cancella';
+        btnDelete.style.padding = '10px 26px';
+        btnDelete.style.borderRadius = '22px';
+        btnDelete.style.background = 'linear-gradient(90deg, #e15c5c 0%, #ff7575 100%)';
+        btnDelete.style.border = '2px solid #b72a34';
+        btnDelete.style.color = '#fff';
+        btnDelete.style.fontWeight = '600';
+        btnDelete.style.fontSize = '1em';
         btnDelete.onclick = function() {
             if (confirm('Vuoi davvero cancellare questo atleta?')) {
                 athletes.splice(idx, 1);
@@ -93,6 +110,8 @@ function updateAthleteList() {
 
         list.appendChild(li);
     });
+}
+
 }
 
 function resetForm() {
