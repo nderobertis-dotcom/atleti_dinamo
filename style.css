@@ -80,6 +80,10 @@ form input, form select {
     box-shadow: 0 1px 5px #f0f4fa25;
     transition: border-color 0.2s;
 }
+.gender-select {
+    min-width: 60px !important;
+    width: 90px !important;
+}
 #first-name,
 #last-name,
 #cf,
@@ -91,6 +95,18 @@ form input:focus, form select:focus {
     border-color: #4d96ff;
     outline: none;
     background: #fffde8;
+}
+.document-row {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.document-row select {
+    min-width: 140px !important;
+}
+.document-row input {
+    margin-right: 0;
 }
 form button {
     background: linear-gradient(90deg, #213b71 0%, #4383d9 100%);
