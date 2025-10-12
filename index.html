@@ -26,19 +26,21 @@
                 <input type="text" id="first-name" placeholder="Nome" required>
                 <input type="text" id="last-name" placeholder="Cognome" required>
                 <input type="text" id="cf" placeholder="Codice Fiscale" required>
-                <select id="gender" required>
+                <select id="gender" required class="gender-select">
                     <option value="">Genere</option>
                     <option value="M">M</option>
                     <option value="F">F</option>
                 </select>
                 <input type="date" id="birthdate" placeholder="Data di nascita" required>
-                <select id="doc-type" required>
-                    <option value="">Tipo Documento</option>
-                    <option value="Carta d'identità">Carta d'identità</option>
-                    <option value="Patente">Patente</option>
-                    <option value="Passaporto">Passaporto</option>
-                </select>
-                <input type="text" id="doc-number" placeholder="Numero Documento" required>
+                <div class="document-row">
+                  <select id="doc-type" required>
+                      <option value="">Tipo Documento</option>
+                      <option value="Carta d'identità">Carta d'identità</option>
+                      <option value="Patente">Patente</option>
+                      <option value="Passaporto">Passaporto</option>
+                  </select>
+                  <input type="text" id="doc-number" placeholder="Numero Documento" required>
+                </div>
                 <button type="submit">Aggiungi</button>
                 <button type="button" id="cancel-edit" style="display:none;">Annulla</button>
             </form>
