@@ -44,7 +44,7 @@ function updateAthleteList() {
         const birthStr = new Date(a.birthdate).toLocaleDateString('it-IT');
         const li = document.createElement('li');
         li.innerHTML = `
-            <span>${a.last} ${a.first} (${a.gender}, ${birthStr}, ${eta} anni, CF: ${a.cf})</span>
+            <span>${a.last} ${a.first} (${a.gender}, ${birthStr}, ${eta} anni, CF: ${a.cf}, ${a.docType}: ${a.docNumber})</span>
             <button class="edit" data-idx="${idx}">Modifica</button>
             <button class="delete" data-idx="${idx}">Cancella</button>
         `;
@@ -59,6 +59,8 @@ function updateAthleteList() {
             document.getElementById('cf').value = atleta.cf;
             document.getElementById('gender').value = atleta.gender;
             document.getElementById('birthdate').value = atleta.birthdate;
+            document.getElementById('doc-type').value = atleta.docType;
+            document.getElementById('doc-number').value = atleta.docNumber;
             document.getElementById('form-title').textContent = 'Modifica Atleta';
             document.querySelector('#athlete-form button[type="submit"]').textContent = "Salva";
             document.getElementById('cancel-edit').style.display = '';
@@ -96,12 +98,14 @@ document.getElementById('athlete-form').addEventListener('submit', function(e) {
     const cf = document.getElementById('cf').value.trim();
     const gender = document.getElementById('gender').value;
     const birthdate = document.getElementById('birthdate').value;
+    const docType = document.getElementById('doc-type').value;
+    const docNumber = document.getElementById('doc-number').value.trim();
 
-    if (first && last && cf && gender && birthdate) {
+    if (first && last && cf && gender && birthdate && docType && docNumber) {
         if (editIndex !== null) {
-            athletes[editIndex] = { first, last, cf, gender, birthdate };
+            athletes[editIndex] = { first, last, cf, gender, birthdate, docType, docNumber };
         } else {
-            athletes.push({ first, last, cf, gender, birthdate });
+            athletes.push({ first, last, cf, gender, birthdate, docType, docNumber });
         }
         salvaSuStorage();
         updateDashboard();
