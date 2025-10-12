@@ -42,6 +42,13 @@ function updateAthleteList() {
     });
 }
 
+// Carica dati atleti da localStorage, se presenti
+if (localStorage.getItem('athletes')) {
+    athletes = JSON.parse(localStorage.getItem('athletes'));
+}
+updateDashboard();
+updateAthleteList();
+
 document.getElementById('athlete-form').addEventListener('submit', function(e) {
     e.preventDefault();
     const first = document.getElementById('first-name').value.trim();
@@ -51,6 +58,7 @@ document.getElementById('athlete-form').addEventListener('submit', function(e) {
 
     if (first && last && gender && birthdate) {
         athletes.push({ first, last, gender, birthdate });
+        localStorage.setItem('athletes', JSON.stringify(athletes)); // Salva direttamente
         updateDashboard();
         updateAthleteList();
         this.reset();
