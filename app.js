@@ -58,7 +58,7 @@ document.getElementById('athlete-form').addEventListener('submit', function(e) {
 
     if (first && last && gender && birthdate) {
         athletes.push({ first, last, gender, birthdate });
-        localStorage.setItem('athletes', JSON.stringify(athletes)); // Salva direttamente
+        localStorage.setItem('athletes', JSON.stringify(athletes)); // Salva su localStorage
         updateDashboard();
         updateAthleteList();
         this.reset();
