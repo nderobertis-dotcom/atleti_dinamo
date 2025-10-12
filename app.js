@@ -1,6 +1,4 @@
-// Struttura dati atleti
-let athletes = [];
-
+document.addEventListener("DOMContentLoaded", function() {
 // Funzione per calcolare età dalla data di nascita
 function calcolaEta(dataNascita) {
     const oggi = new Date();
@@ -11,6 +9,12 @@ function calcolaEta(dataNascita) {
         eta--;
     }
     return eta;
+}
+
+// Carica array atleti da localStorage o lo inizializza vuoto
+let athletes = [];
+if (localStorage.getItem('athletes')) {
+    athletes = JSON.parse(localStorage.getItem('athletes'));
 }
 
 // Utility per aggiornare dashboard
@@ -31,7 +35,6 @@ function updateDashboard() {
 function updateAthleteList() {
     const list = document.getElementById('athlete-list');
     list.innerHTML = '';
-    // Ordine alfabetico per cognome, poi nome
     athletes.sort((a, b) => a.last.localeCompare(b.last) || a.first.localeCompare(b.first));
     athletes.forEach(a => {
         const eta = calcolaEta(a.birthdate);
@@ -42,13 +45,11 @@ function updateAthleteList() {
     });
 }
 
-// Carica dati atleti da localStorage, se presenti
-if (localStorage.getItem('athletes')) {
-    athletes = JSON.parse(localStorage.getItem('athletes'));
-}
+// Aggiorna vista all’avvio
 updateDashboard();
 updateAthleteList();
 
+// Gestione submit form
 document.getElementById('athlete-form').addEventListener('submit', function(e) {
     e.preventDefault();
     const first = document.getElementById('first-name').value.trim();
@@ -58,9 +59,10 @@ document.getElementById('athlete-form').addEventListener('submit', function(e) {
 
     if (first && last && gender && birthdate) {
         athletes.push({ first, last, gender, birthdate });
-        localStorage.setItem('athletes', JSON.stringify(athletes)); // Salva su localStorage
+        localStorage.setItem('athletes', JSON.stringify(athletes));
         updateDashboard();
         updateAthleteList();
         this.reset();
     }
+});
 });
