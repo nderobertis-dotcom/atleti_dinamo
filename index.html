@@ -32,6 +32,13 @@
                     <option value="F">F</option>
                 </select>
                 <input type="date" id="birthdate" placeholder="Data di nascita" required>
+                <select id="doc-type" required>
+                    <option value="">Tipo Documento</option>
+                    <option value="Carta d'identità">Carta d'identità</option>
+                    <option value="Patente">Patente</option>
+                    <option value="Passaporto">Passaporto</option>
+                </select>
+                <input type="text" id="doc-number" placeholder="Numero Documento" required>
                 <button type="submit">Aggiungi</button>
                 <button type="button" id="cancel-edit" style="display:none;">Annulla</button>
             </form>
@@ -46,4 +53,3 @@
     <script src="app.js" defer></script>
 </body>
 </html>
-
