@@ -4,29 +4,25 @@ let athletes = [];
 let editIndex = null;
 
 function calcolaEta(dataNascita) {
+    if (!dataNascita) return "";
     const oggi = new Date();
     const nascita = new Date(dataNascita);
     let eta = oggi.getFullYear() - nascita.getFullYear();
     const m = oggi.getMonth() - nascita.getMonth();
-    if (m < 0 || (m === 0 && oggi.getDate() < nascita.getDate())) {
-        eta--;
-    }
+    if (m < 0 || (m === 0 && oggi.getDate() < nascita.getDate())) eta--;
     return eta;
 }
 
-function caricaDati() {
-    try {
-        let dati = localStorage.getItem('athletes');
-        if (!dati) return [];
-        let arr = JSON.parse(dati);
-        return Array.isArray(arr) ? arr : [];
-    } catch { return []; }
-}
-athletes = caricaDati();
+function upper(s) { return s ? s.trim().toUpperCase() : ''; }
 
-function salvaSuStorage() {
-    localStorage.setItem('athletes', JSON.stringify(athletes));
-}
+try {
+    if (localStorage.getItem('athletes')) {
+        athletes = JSON.parse(localStorage.getItem('athletes'));
+        if (!Array.isArray(athletes)) athletes = [];
+    }
+} catch(e) { athletes = []; }
+
+function salvaSuStorage() { localStorage.setItem('athletes', JSON.stringify(athletes)); }
 
 function updateDashboard() {
     document.getElementById('total-athletes').textContent = athletes.length;
@@ -41,12 +37,8 @@ function updateDashboard() {
     document.getElementById('female-athletes').textContent = athletes.filter(a => a.gender === 'F').length;
 }
 
-function upper(s) {
-    return s ? s.trim().toUpperCase() : '';
-}
-
-// MODALE Visualizza
-const modal = document.getElementById('athlete-modal');
+// MODALE VISUALIZZA
+const modal = document.getElementById('atleta-modal');
 const modalClose = document.getElementById('modal-close');
 const modalData = document.getElementById('modal-data');
 function openModal(idx) {
@@ -66,9 +58,7 @@ function openModal(idx) {
     `;
     modal.style.display = 'block';
 }
-modalClose.onclick = function() {
-    modal.style.display = 'none';
-};
+modalClose.onclick = function() { modal.style.display = 'none'; };
 window.onclick = function(event) {
     if (event.target == modal) modal.style.display = 'none';
 }
