@@ -19,7 +19,16 @@
             <div class="stat-card">Maschi: <span id="male-athletes">0</span></div>
             <div class="stat-card">Femmine: <span id="female-athletes">0</span></div>
         </section>
-
+        <div class="flex-container">
+            <section id="athlete-detail-section">
+                <h2>Scheda Atleta</h2>
+                <div id="atleta-scheda"></div>
+            </section>
+            <section id="athlete-list-section">
+                <h2>Elenco Atleti</h2>
+                <ul id="athlete-list"></ul>
+            </section>
+        </div>
         <section id="athlete-form-section">
             <h2 id="form-title">Aggiungi Atleta</h2>
             <form id="athlete-form">
@@ -45,22 +54,7 @@
                 <button type="button" id="cancel-edit" style="display:none;">Annulla</button>
             </form>
         </section>
-
-        <section id="athlete-list-section">
-            <h2>Elenco Atleti</h2>
-            <ul id="athlete-list"></ul>
-        </section>
     </main>
-
-    <!-- MODALE PER SCHEDA ATLETA -->
-    <div id="athlete-modal" class="modal">
-      <div class="modal-content">
-        <span id="modal-close" class="close">&times;</span>
-        <h2>Scheda Atleta</h2>
-        <div id="modal-data"></div>
-      </div>
-    </div>
-
     <script src="app.js" defer></script>
 </body>
 </html>
