@@ -1,3 +1,13 @@
+function calcolaEta(dataNascita) {
+    const oggi = new Date();
+    const nascita = new Date(dataNascita);
+    let eta = oggi.getFullYear() - nascita.getFullYear();
+    const m = oggi.getMonth() - nascita.getMonth();
+    if (m < 0 || (m === 0 && oggi.getDate() < nascita.getDate())) {
+        eta--;
+    }
+    return eta;
+}
 // Struttura dati atleti
 let athletes = [];
 
