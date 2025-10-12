@@ -1,5 +1,8 @@
 document.addEventListener("DOMContentLoaded", function() {
 
+let athletes = [];
+let editIndex = null;
+
 function calcolaEta(dataNascita) {
     const oggi = new Date();
     const nascita = new Date(dataNascita);
@@ -10,9 +13,6 @@ function calcolaEta(dataNascita) {
     }
     return eta;
 }
-
-let athletes = [];
-let editIndex = null;
 
 if (localStorage.getItem('athletes')) {
     athletes = JSON.parse(localStorage.getItem('athletes'));
@@ -43,18 +43,17 @@ function updateAthleteList() {
         const eta = calcolaEta(a.birthdate);
         const birthStr = new Date(a.birthdate).toLocaleDateString('it-IT');
         const li = document.createElement('li');
-        const dati = document.createElement('div');
-        dati.textContent = `${a.last} ${a.first} (${a.gender}, ${birthStr}, ${eta} anni, CF: ${a.cf})`;
-
-        const actions = document.createElement('div');
-        actions.className = 'actions';
-
-        const btnEdit = document.createElement('button');
-        btnEdit.className = 'edit';
-        btnEdit.textContent = 'Modifica';
-        btnEdit.addEventListener('click', function() {
-            editIndex = idx;
-            const atleta = athletes[idx];
+        li.innerHTML = `
+            <span>${a.last} ${a.first} (${a.gender}, ${birthStr}, ${eta} anni, CF: ${a.cf})</span>
+            <button class="edit" data-idx="${idx}">Modifica</button>
+            <button class="delete" data-idx="${idx}">Cancella</button>
+        `;
+        list.appendChild(li);
+    });
+    document.querySelectorAll('.edit').forEach(btn => {
+        btn.onclick = function() {
+            editIndex = parseInt(this.dataset.idx, 10);
+            const atleta = athletes[editIndex];
             document.getElementById('first-name').value = atleta.first;
             document.getElementById('last-name').value = atleta.last;
             document.getElementById('cf').value = atleta.cf;
@@ -63,27 +62,19 @@ function updateAthleteList() {
             document.getElementById('form-title').textContent = 'Modifica Atleta';
             document.querySelector('#athlete-form button[type="submit"]').textContent = "Salva";
             document.getElementById('cancel-edit').style.display = '';
-        });
-
-        const btnDelete = document.createElement('button');
-        btnDelete.className = 'delete';
-        btnDelete.textContent = 'Cancella';
-        btnDelete.addEventListener('click', function() {
+        };
+    });
+    document.querySelectorAll('.delete').forEach(btn => {
+        btn.onclick = function() {
+            const i = parseInt(this.dataset.idx, 10);
             if (confirm('Vuoi davvero cancellare questo atleta?')) {
-                athletes.splice(idx, 1);
+                athletes.splice(i, 1);
                 salvaSuStorage();
                 updateDashboard();
                 updateAthleteList();
                 resetForm();
             }
-        });
-
-        actions.appendChild(btnEdit);
-        actions.appendChild(btnDelete);
-
-        li.appendChild(dati);
-        li.appendChild(actions);
-        list.appendChild(li);
+        };
     });
 }
 
@@ -119,8 +110,6 @@ document.getElementById('athlete-form').addEventListener('submit', function(e) {
     }
 });
 
-document.getElementById('cancel-edit').addEventListener('click', function() {
-    resetForm();
-});
+document.getElementById('cancel-edit').onclick = resetForm;
 
 });
