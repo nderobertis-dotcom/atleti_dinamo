@@ -119,9 +119,9 @@ form button:hover {
     align-items: center;
     font-size: 1.08em;
     border-left: 3px solid #213b71;
-    word-break: break-word;
+    word-break: keep-all;
 }
-#athlete-list li span {
+#athlete-list li .info {
     font-family: 'Segoe UI', Arial, sans-serif;
     color: #213b71;
     font-weight: 500;
@@ -129,6 +129,7 @@ form button:hover {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    margin-right: 8px;
 }
 .actions {
     display: flex;
@@ -136,46 +137,100 @@ form button:hover {
     flex-shrink: 0;
     margin-left: 8px;
 }
+.actions .view,
 .actions .edit,
 .actions .delete {
     display: inline-block;
-    padding: 10px 26px;
+    padding: 10px 18px;
     font-size: 1em;
     font-weight: 600;
     border-radius: 22px;
     white-space: nowrap;
     text-align: center;
-    transition: background 0.2s, transform 0.15s;
     margin-left: 0;
+    transition: background 0.2s, transform 0.15s;
+    border: none;
+    cursor: pointer;
+}
+.actions .view {
+    background: linear-gradient(90deg, #3dd87e 0%, #4ef6b4 100%);
+    color: #fff;
+    border: 2px solid #23905e;
+    box-shadow: 0 1px 5px #24bb6665;
+}
+.actions .view:hover {
+    background: linear-gradient(90deg, #23905e 0%, #33c26c 100%);
+    color: #fff;
+    transform: scale(1.07);
 }
 .actions .edit {
     background: linear-gradient(90deg, #1966c2 0%, #4d96ff 100%);
     color: #fff;
-    border: none;
-    box-shadow: 0 1px 5px #65a9fc29;
     border: 2px solid #1553a1;
-    cursor: pointer;
+    box-shadow: 0 1px 5px #65a9fc29;
 }
 .actions .edit:hover {
     background: linear-gradient(90deg, #143a70 0%, #1966c2 100%);
     color: #fff;
-    transform: scale(1.09);
+    transform: scale(1.07);
 }
 .actions .delete {
     background: linear-gradient(90deg, #e15c5c 0%, #ff7575 100%);
     color: #fff;
-    border: none;
-    box-shadow: 0 1px 5px #e15c5c33;
     border: 2px solid #b72a34;
-    cursor: pointer;
+    box-shadow: 0 1px 5px #e15c5c33;
 }
 .actions .delete:hover {
     background: linear-gradient(90deg, #b72a34 0%, #e15c5c 100%);
     color: #fff;
-    transform: scale(1.09);
+    transform: scale(1.07);
+}
+/* MODALE */
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 11; 
+    padding-top: 100px; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; 
+    background-color: rgba(30,46,100, 0.18);
+}
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 28px 38px;
+    border: 3px solid #213b71;
+    border-radius: 16px;
+    max-width: 420px;
+    box-shadow: 0 8px 24px #2d395336;
+    position: relative;
+    color: #213b71;
+}
+.close {
+    color: #a1b4db;
+    position: absolute;
+    top: 13px;
+    right: 20px;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.16s;
+}
+.close:hover, .close:focus {
+    color: #e15c5c;
+}
+#modal-data {
+    margin-top: 18px;
+    font-size: 1.1em;
+}
+#modal-data div {
+    margin-bottom: 7px;
 }
 @media (max-width: 900px) {
-    #athlete-list li, #athlete-list li span {
+    #athlete-list li, #athlete-list li .info {
         font-size: 0.97em;
         white-space: normal;
     }
@@ -190,6 +245,9 @@ form button:hover {
         flex-direction: column;
         align-items: flex-start;
     }
-    #athlete-list li span { white-space: normal; }
+    #athlete-list li .info { white-space: normal; }
     .actions { margin-top: 10px; }
+    .modal-content { 
+        max-width: 94vw; padding: 17px 7vw;
+    }
 }
