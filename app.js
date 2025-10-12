@@ -125,3 +125,10 @@ document.getElementById('athlete-form').addEventListener('submit', function(e) {
 document.getElementById('cancel-edit').onclick = resetForm;
 
 });
+const btnEdit = document.createElement('button');
+btnEdit.className = 'edit';
+btnEdit.textContent = 'Modifica';
+
+const btnDelete = document.createElement('button');
+btnDelete.className = 'delete';
+btnDelete.textContent = 'Cancella';
