@@ -116,3 +116,85 @@ form button:hover { background: linear-gradient(90deg, #4368d9 0%, #213b71 100%)
     border: 2px solid #b72a34;
 }
 .actions .delete:hover { background: linear-gradient(90deg, #b72a34 0%, #e15c5c 100%); transform: scale(1.07); }
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 111; 
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(21,41,100,0.18);
+}
+.modal-content {
+    background: #fff;
+    margin: 100px auto 0 auto;
+    padding: 44px 42px 30px 42px;
+    border: 4px solid #213b71;
+    border-radius: 23px;
+    max-width: 410px;
+    min-width: 260px;
+    min-height: 180px;
+    box-shadow: 0 12px 32px #213b7157, 0 4px 12px #b0bddc40;
+    color: #213b71;
+    position: relative;
+    animation: popup-in .26s;
+}
+@keyframes popup-in {
+    from { opacity: 0; transform: scale(0.9);}
+    to { opacity: 1; transform: scale(1);}
+}
+.close {
+    color: #bad1fd;
+    position: absolute;
+    top: 11px;
+    right: 22px;
+    font-size: 32px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.18s, transform 0.16s;
+}
+.close:hover, .close:focus {
+    color: #e15c5c;
+    transform: scale(1.18) rotate(7deg);
+}
+#modal-data {
+    margin-top: 22px;
+    font-size: 1.14em;
+    line-height: 1.45em;
+    color: #213b71;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+#modal-data .main-id {
+    font-size: 1.32em;
+    font-weight: bold;
+    color: #1966c2;
+    letter-spacing: 1.5px;
+    margin-bottom: 7px;
+    border-bottom: 1px solid #dde8ff;
+    padding-bottom: 5px;
+    text-align: left;
+}
+#modal-data .field-label {
+    color: #3b548c;
+    font-weight: 600;
+    margin-right: 7px;
+    min-width: 122px;
+    display: inline-block;
+}
+#modal-data .info-group {
+    background: #f8fbff;
+    border-radius: 10px;
+    padding: 6px 14px;
+    margin-bottom: 4px;
+    box-shadow: 0 1px 4px #b0bddc2d;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+@media (max-width: 660px) {
+    .modal-content { max-width: 97vw; padding: 15px 7vw 20px 7vw; }
+    #modal-data .info-group { flex-direction: column; align-items: flex-start; gap: 3px;}
+}
