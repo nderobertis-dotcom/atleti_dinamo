@@ -1,104 +1,46 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <title>Gestione Atleti - Squadra Volley</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Atleti - Pallavolo</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="header">
-    <div class="container flex items-center justify-between">
-      <div class="header-brand">
-        <img src="logo_dinamo.png" alt="Logo Dinamo" class="logo-img">
-        <i class="fas fa-volleyball-ball"></i>
-        <h1>Gestione Atleti - Squadra Volley</h1>
-      </div>
-      <nav class="header-nav">
-        <button class="btn btn--primary" onclick="showSection('dashboard')">
-          <i class="fas fa-chart-dashboard"></i> Dashboard
-        </button>
-        <button class="btn btn--outline" onclick="showSection('atleti')">
-          <i class="fas fa-users"></i> Atleti
-        </button>
-      </nav>
-    </div>
-  </header>
-  <div class="main-layout">
-    <aside class="sidebar">
-      <nav class="sidebar-nav">
-        <ul>
-          <li>
-            <button class="sidebar-link active" onclick="showSection('dashboard')" data-section="dashboard">
-              <i class="fas fa-chart-line"></i>
-              <span>Dashboard</span>
-            </button>
-          </li>
-          <li>
-            <button class="sidebar-link" onclick="showSection('atleti')" data-section="atleti">
-              <i class="fas fa-users"></i>
-              <span>Tutti gli Atleti</span>
-            </button>
-          </li>
-          <li>
-            <button class="sidebar-link" onclick="showSection('aggiungi')" data-section="aggiungi">
-              <i class="fas fa-user-plus"></i>
-              <span>Aggiungi Atleta</span>
-            </button>
-          </li>
-          <li>
-            <button class="sidebar-link" onclick="exportData()">
-              <i class="fas fa-download"></i>
-              <span>Esporta Dati</span>
-            </button>
-          </li>
-          <li>
-            <button class="sidebar-link" onclick="document.getElementById('import-file').click();">
-              <i class="fas fa-upload"></i>
-              <span>Importa Dati</span>
-            </button>
-            <input type="file" id="import-file" accept=".json" style="display:none;">
-          </li>
-        </ul>
-      </nav>
-    </aside>
-    <main class="main-content">
-      <section id="dashboard-section" class="content-section active">
-        <!-- Dashboard stat e chart (puoi aggiungere demo) -->
-      </section>
-      <section id="atleti-section" class="content-section">
-        <div id="athletes-grid"></div>
-      </section>
-      <section id="aggiungi-section" class="content-section">
-        <form id="athlete-form" class="athlete-form" autocomplete="off">
-          <!-- Form schema COME da tuo ultimo messaggio -->
-          <!-- ...vedi l'html fornito nella risposta precedente, stesso layout con id giusti... -->
-          <!-- Fai copia incolla dell'intera form aggiornata; qui la sintesi per brevità -->
-          <!-- CODICE TESSERAMENTO (obbligatorio), tutti gli altri campi con id e name corretti -->
-        </form>
-      </section>
-      <div id="athlete-modal" class="modal hidden">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h3 id="modal-athlete-name">Dettagli Atleta</h3>
-            <button class="modal-close" onclick="closeModal()">
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
-          <div class="modal-body" id="modal-athlete-details"></div>
-          <div class="modal-footer">
-            <button class="btn btn--outline" onclick="closeModal()">Chiudi</button>
-          </div>
-        </div>
-      </div>
+    <header>
+        <h1>Gestione Atleti - Pallavolo</h1>
+        <img src="logo.png" alt="Logo Società" class="logo">
+    </header>
+
+    <main>
+        <section class="dashboard">
+            <div class="stat-card">Totale Atleti: <span id="total-athletes">0</span></div>
+            <div class="stat-card">Media Età: <span id="avg-age">-</span></div>
+            <div class="stat-card">Maschi: <span id="male-athletes">0</span></div>
+            <div class="stat-card">Femmine: <span id="female-athletes">0</span></div>
+        </section>
+
+        <section id="athlete-form-section">
+            <h2>Aggiungi Atleta</h2>
+            <form id="athlete-form">
+                <input type="text" id="first-name" placeholder="Nome" required>
+                <input type="text" id="last-name" placeholder="Cognome" required>
+                <select id="gender" required>
+                    <option value="">Genere</option>
+                    <option value="M">M</option>
+                    <option value="F">F</option>
+                </select>
+                <input type="number" id="age" placeholder="Età" min="5" max="80" required>
+                <button type="submit">Aggiungi</button>
+            </form>
+        </section>
+
+        <section id="athlete-list-section">
+            <h2>Elenco Atleti</h2>
+            <ul id="athlete-list"></ul>
+        </section>
     </main>
-  </div>
-  <footer class="footer">
-    <div class="container">
-      <p>&copy; 2024 Gestione Atleti - Squadra Volley.</p>
-    </div>
-  </footer>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="app.js"></script>
+
+    <script src="app.js"></script>
 </body>
 </html>
