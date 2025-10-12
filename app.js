@@ -14,9 +14,16 @@ function calcolaEta(dataNascita) {
     return eta;
 }
 
-if (localStorage.getItem('athletes')) {
-    athletes = JSON.parse(localStorage.getItem('athletes'));
+function caricaDati() {
+    try {
+        let dati = localStorage.getItem('athletes');
+        if (!dati) return [];
+        let arr = JSON.parse(dati);
+        return Array.isArray(arr) ? arr : [];
+    } catch { return []; }
 }
+
+athletes = caricaDati();
 
 function salvaSuStorage() {
     localStorage.setItem('athletes', JSON.stringify(athletes));
@@ -46,17 +53,12 @@ function updateAthleteList() {
         const eta = calcolaEta(a.birthdate);
         const birthStr = new Date(a.birthdate).toLocaleDateString('it-IT');
         const li = document.createElement('li');
-
-        // Dati atleta
         const dati = document.createElement('span');
-        dati.textContent =
-            `${upper(a.last)} ${upper(a.first)} (${a.gender}, ${birthStr}, ${eta} anni, CF: ${upper(a.cf)}, ${a.docType}: ${upper(a.docNumber)})`;
+        dati.textContent = `${upper(a.last)} ${upper(a.first)} (${a.gender}, ${birthStr}, ${eta} anni, CF: ${upper(a.cf)}, ${a.docType}: ${upper(a.docNumber)})`;
 
-        // Bottoni azioni
         const actions = document.createElement('div');
         actions.className = 'actions';
 
-        // Bottone Modifica
         const btnEdit = document.createElement('button');
         btnEdit.className = 'edit';
         btnEdit.textContent = 'Modifica';
@@ -74,7 +76,6 @@ function updateAthleteList() {
             document.getElementById('cancel-edit').style.display = '';
         };
 
-        // Bottone Cancella
         const btnDelete = document.createElement('button');
         btnDelete.className = 'delete';
         btnDelete.textContent = 'Cancella';
@@ -90,10 +91,8 @@ function updateAthleteList() {
 
         actions.appendChild(btnEdit);
         actions.appendChild(btnDelete);
-
         li.appendChild(dati);
         li.appendChild(actions);
-
         list.appendChild(li);
     });
 }
