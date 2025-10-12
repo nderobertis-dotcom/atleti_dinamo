@@ -47,43 +47,51 @@ function updateAthleteList() {
         const eta = calcolaEta(a.birthdate);
         const birthStr = new Date(a.birthdate).toLocaleDateString('it-IT');
         const li = document.createElement('li');
-        li.innerHTML = `
-            <span>
-                ${upper(a.last)} ${upper(a.first)} 
-                (${a.gender}, ${birthStr}, ${eta} anni, CF: ${upper(a.cf)}, ${a.docType}: ${upper(a.docNumber)})
-            </span>
-            <button class="edit" data-idx="${idx}">Modifica</button>
-            <button class="delete" data-idx="${idx}">Cancella</button>
-        `;
-        list.appendChild(li);
-    });
-    document.querySelectorAll('.edit').forEach(btn => {
-        btn.onclick = function() {
-            editIndex = parseInt(this.dataset.idx, 10);
-            const atleta = athletes[editIndex];
-            document.getElementById('first-name').value = upper(atleta.first);
-            document.getElementById('last-name').value = upper(atleta.last);
-            document.getElementById('cf').value = upper(atleta.cf);
-            document.getElementById('gender').value = atleta.gender;
-            document.getElementById('birthdate').value = atleta.birthdate;
-            document.getElementById('doc-type').value = atleta.docType;
-            document.getElementById('doc-number').value = upper(atleta.docNumber);
+
+        const dati = document.createElement('span');
+        dati.textContent =
+            `${upper(a.last)} ${upper(a.first)} (${a.gender}, ${birthStr}, ${eta} anni, CF: ${upper(a.cf)}, ${a.docType}: ${upper(a.docNumber)})`;
+
+        const actions = document.createElement('div');
+        actions.className = 'actions';
+
+        const btnEdit = document.createElement('button');
+        btnEdit.className = 'edit';
+        btnEdit.textContent = 'Modifica';
+        btnEdit.onclick = function() {
+            editIndex = idx;
+            document.getElementById('first-name').value = upper(a.first);
+            document.getElementById('last-name').value = upper(a.last);
+            document.getElementById('cf').value = upper(a.cf);
+            document.getElementById('gender').value = a.gender;
+            document.getElementById('birthdate').value = a.birthdate;
+            document.getElementById('doc-type').value = a.docType;
+            document.getElementById('doc-number').value = upper(a.docNumber);
             document.getElementById('form-title').textContent = 'Modifica Atleta';
             document.querySelector('#athlete-form button[type="submit"]').textContent = "Salva";
             document.getElementById('cancel-edit').style.display = '';
         };
-    });
-    document.querySelectorAll('.delete').forEach(btn => {
-        btn.onclick = function() {
-            const i = parseInt(this.dataset.idx, 10);
+
+        const btnDelete = document.createElement('button');
+        btnDelete.className = 'delete';
+        btnDelete.textContent = 'Cancella';
+        btnDelete.onclick = function() {
             if (confirm('Vuoi davvero cancellare questo atleta?')) {
-                athletes.splice(i, 1);
+                athletes.splice(idx, 1);
                 salvaSuStorage();
                 updateDashboard();
                 updateAthleteList();
                 resetForm();
             }
         };
+
+        actions.appendChild(btnEdit);
+        actions.appendChild(btnDelete);
+
+        li.appendChild(dati);
+        li.appendChild(actions);
+
+        list.appendChild(li);
     });
 }
 
@@ -100,7 +108,6 @@ updateAthleteList();
 
 document.getElementById('athlete-form').addEventListener('submit', function(e) {
     e.preventDefault();
-    // CONVERSIONE IN MAIUSCOLO
     const first = upper(document.getElementById('first-name').value);
     const last = upper(document.getElementById('last-name').value);
     const cf = upper(document.getElementById('cf').value);
@@ -125,10 +132,3 @@ document.getElementById('athlete-form').addEventListener('submit', function(e) {
 document.getElementById('cancel-edit').onclick = resetForm;
 
 });
-const btnEdit = document.createElement('button');
-btnEdit.className = 'edit';
-btnEdit.textContent = 'Modifica';
-
-const btnDelete = document.createElement('button');
-btnDelete.className = 'delete';
-btnDelete.textContent = 'Cancella';
