@@ -43,40 +43,18 @@ function updateAthleteList() {
         const eta = calcolaEta(a.birthdate);
         const birthStr = new Date(a.birthdate).toLocaleDateString('it-IT');
         const li = document.createElement('li');
-        li.innerHTML = `
-            <div>
-                ${a.last} ${a.first} (${a.gender}, ${birthStr}, ${eta} anni, CF: ${a.cf})
-            </div>
-            <div class="actions">
-                <button class="edit" data-idx="${idx}">Modifica</button>
-                <button class="delete" data-idx="${idx}">Cancella</button>
-            </div>
-        `;
-        list.appendChild(li);
-    });
+        const dati = document.createElement('div');
+        dati.textContent = `${a.last} ${a.first} (${a.gender}, ${birthStr}, ${eta} anni, CF: ${a.cf})`;
 
-    // Pulsanti cancella
-    const deleteBtns = document.querySelectorAll('.delete');
-    deleteBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const i = parseInt(this.dataset.idx, 10);
-            if (confirm('Vuoi davvero cancellare questo atleta?')) {
-                athletes.splice(i, 1);
-                salvaSuStorage();
-                updateDashboard();
-                updateAthleteList();
-                resetForm();
-            }
-        });
-    });
+        const actions = document.createElement('div');
+        actions.className = 'actions';
 
-    // Pulsanti modifica
-    const editBtns = document.querySelectorAll('.edit');
-    editBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const i = parseInt(this.dataset.idx, 10);
-            editIndex = i;
-            const atleta = athletes[i];
+        const btnEdit = document.createElement('button');
+        btnEdit.className = 'edit';
+        btnEdit.textContent = 'Modifica';
+        btnEdit.addEventListener('click', function() {
+            editIndex = idx;
+            const atleta = athletes[idx];
             document.getElementById('first-name').value = atleta.first;
             document.getElementById('last-name').value = atleta.last;
             document.getElementById('cf').value = atleta.cf;
@@ -86,6 +64,26 @@ function updateAthleteList() {
             document.querySelector('#athlete-form button[type="submit"]').textContent = "Salva";
             document.getElementById('cancel-edit').style.display = '';
         });
+
+        const btnDelete = document.createElement('button');
+        btnDelete.className = 'delete';
+        btnDelete.textContent = 'Cancella';
+        btnDelete.addEventListener('click', function() {
+            if (confirm('Vuoi davvero cancellare questo atleta?')) {
+                athletes.splice(idx, 1);
+                salvaSuStorage();
+                updateDashboard();
+                updateAthleteList();
+                resetForm();
+            }
+        });
+
+        actions.appendChild(btnEdit);
+        actions.appendChild(btnDelete);
+
+        li.appendChild(dati);
+        li.appendChild(actions);
+        list.appendChild(li);
     });
 }
 
@@ -110,10 +108,8 @@ document.getElementById('athlete-form').addEventListener('submit', function(e) {
 
     if (first && last && cf && gender && birthdate) {
         if (editIndex !== null) {
-            // Modifica esistente
             athletes[editIndex] = { first, last, cf, gender, birthdate };
         } else {
-            // Nuovo inserimento
             athletes.push({ first, last, cf, gender, birthdate });
         }
         salvaSuStorage();
