@@ -86,7 +86,7 @@ function showMedicalList(type) {
     const container = document.getElementById('medical-list');
     let records = listExpiredAndExpiring(type);
     let color = type === "expired" ? "medical-red" : "medical-yellow";
-    let title = type === "expired" ? "Visite Mediche Scadute" : "Visite Mediche In Scadenza (prossimi 31 giorni)";
+    let title = type === "expired" ? "Visite Mediche Scadute" : "Visite Mediche In Scadenza (entro 31 giorni)";
     let html = `<h4>${title}</h4>`;
     if (records.length === 0) {
         html += "<div>Nessun atleta trovato.</div>";
@@ -253,7 +253,6 @@ document.getElementById('athlete-form').addEventListener('submit', function(e) {
 
 document.getElementById('cancel-edit').onclick = resetForm;
 
-// Card click per mostrare lista sottostante
 document.getElementById('card-scadute').onclick = function(e) {
     showMedicalList("expired");
     e.stopPropagation();
@@ -262,11 +261,11 @@ document.getElementById('card-inscadenza').onclick = function(e) {
     showMedicalList("expiring");
     e.stopPropagation();
 };
-
-// Click fuori dalla lista la fa sparire
 window.addEventListener("click", function(e){
     const ml = document.getElementById('medical-list');
-    if (!ml.contains(e.target) && !e.target.classList.contains('stat-card')) {
+    if (!ml.contains(e.target) && !e.target.classList.contains('stat-interact')) {
         hideMedicalList();
     }
+});
+
 });
