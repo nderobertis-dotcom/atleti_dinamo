@@ -28,3 +28,39 @@
             </section>
             <section id="athlete-list-section">
                 <h2>Elenco Atleti</h2>
+                <ul id="athlete-list"></ul>
+            </section>
+        </div>
+        <section id="athlete-form-section">
+            <h2 id="form-title">Aggiungi Atleta</h2>
+            <form id="athlete-form">
+                <input type="text" id="fipav-code" maxlength="7" pattern="\d{7}" title="7 cifre" placeholder="Codice FIPAV (7 cifre)" required>
+                <input type="text" id="first-name" placeholder="Nome" required>
+                <input type="text" id="last-name" placeholder="Cognome" required>
+                <input type="text" id="cf" placeholder="Codice Fiscale" required>
+                <select id="gender" required class="gender-select">
+                    <option value="">Genere</option>
+                    <option value="M">M</option>
+                    <option value="F">F</option>
+                </select>
+                <label class="label-inline" for="birthdate">Data di nascita</label>
+                <input type="date" id="birthdate" required>
+                <label class="label-inline" for="medical-expiry">Scadenza visita medica</label>
+                <input type="date" id="medical-expiry" required>
+                <div class="row-doc">
+                  <select id="doc-type" required>
+                      <option value="">Documento</option>
+                      <option value="Carta d'identità">Carta d'identità</option>
+                      <option value="Patente">Patente</option>
+                      <option value="Passaporto">Passaporto</option>
+                  </select>
+                  <input type="text" id="doc-number" placeholder="Numero Documento" required>
+                </div>
+                <button type="submit">Aggiungi</button>
+                <button type="button" id="cancel-edit" style="display:none;">Annulla</button>
+            </form>
+        </section>
+    </main>
+    <script src="app.js" defer></script>
+</body>
+</html>
