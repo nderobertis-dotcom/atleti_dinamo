@@ -54,7 +54,6 @@ main {
     color: #1966c2;
     font-weight: bold;
 }
-
 .flex-container {
     display: flex;
     gap: 40px;
@@ -132,7 +131,15 @@ main {
     border: 2px solid #b72a34;
     font-weight: bold;
 }
-
+.label-inline {
+    font-size: .96em;
+    font-weight: 500;
+    color: #208120;
+    margin-left: 2px;
+    margin-bottom: 2px;
+    margin-top: 4px;
+    display: block;
+}
 #athlete-form-section, #athlete-list-section {
     background: #fff;
     padding: 20px 17px;
