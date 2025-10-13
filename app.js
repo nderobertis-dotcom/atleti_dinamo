@@ -14,11 +14,9 @@ const DEFAULT_ATHLETE = {
     docType: "",
     docNumber: ""
 };
-
 function migrateAthlete(obj) {
     return { ...DEFAULT_ATHLETE, ...obj };
 }
-
 function calcolaEta(dataNascita) {
     if (!dataNascita) return "";
     const oggi = new Date();
@@ -29,7 +27,6 @@ function calcolaEta(dataNascita) {
     return eta;
 }
 function upper(s) { return s ? s.trim().toUpperCase() : ''; }
-
 function caricaDati() {
     try {
         let dati = localStorage.getItem('athletes');
@@ -40,15 +37,11 @@ function caricaDati() {
     } catch { return []; }
 }
 athletes = caricaDati();
-
 function salvaSuStorage() {
-    try {
-        localStorage.setItem('athletes', JSON.stringify(athletes));
-    } catch(e) {
-        alert("Errore nel salvataggio! " + e.message);
-    }
+    try { 
+        localStorage.setItem('athletes', JSON.stringify(athletes)); 
+    } catch(e) { alert("Errore nel salvataggio! " + e.message);}
 }
-
 function medicalStatus(expiry) {
     if (!expiry) return {class:"",code:"none"};
     const today = new Date();
@@ -62,8 +55,7 @@ function medicalStatus(expiry) {
     return { class: "medical-green", code:"valid" };
 }
 function listExpiredAndExpiring(type) {
-    const today = new Date();
-    today.setHours(0,0,0,0);
+    const today = new Date(); today.setHours(0,0,0,0);
     let result = [];
     athletes.forEach(a => {
         if (!a.medical_expiry) return;
@@ -77,8 +69,7 @@ function listExpiredAndExpiring(type) {
 }
 function countExpiredAndExpiring() {
     let expired = 0, expiring = 0;
-    const today = new Date();
-    today.setHours(0,0,0,0);
+    const today = new Date(); today.setHours(0,0,0,0);
     athletes.forEach(a => {
         if (!a.medical_expiry) return;
         const expiry = new Date(a.medical_expiry);
@@ -100,7 +91,6 @@ function updateDashboard() {
     }
     document.getElementById('male-athletes').textContent = athletes.filter(a => a.gender === 'M').length;
     document.getElementById('female-athletes').textContent = athletes.filter(a => a.gender === 'F').length;
-    // CARD VISITE
     const c = countExpiredAndExpiring();
     document.getElementById('total-expired').textContent = c.expired;
     document.getElementById('total-expiring').textContent = c.expiring;
@@ -294,5 +284,4 @@ window.addEventListener("click", function(e){
         hideMedicalList();
     }
 });
-
 });
