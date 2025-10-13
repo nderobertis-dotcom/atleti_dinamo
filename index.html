@@ -46,4 +46,21 @@
                 <label class="label-inline" for="birthdate">Data di nascita</label>
                 <input type="date" id="birthdate" required>
                 <label class="label-inline" for="medical-expiry">Scadenza visita medica</label>
-                <input type="date" id="medical-expiry" required
+                <input type="date" id="medical-expiry" required>
+                <div class="row-doc">
+                  <select id="doc-type" required>
+                      <option value="">Documento</option>
+                      <option value="Carta d'identità">Carta d'identità</option>
+                      <option value="Patente">Patente</option>
+                      <option value="Passaporto">Passaporto</option>
+                  </select>
+                  <input type="text" id="doc-number" placeholder="Numero Documento" required>
+                </div>
+                <button type="submit">Aggiungi</button>
+                <button type="button" id="cancel-edit" style="display:none;">Annulla</button>
+            </form>
+        </section>
+    </main>
+    <script src="app.js" defer></script>
+</body>
+</html>
