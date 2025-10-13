@@ -1,287 +1,43 @@
-document.addEventListener("DOMContentLoaded", function() {
-
+// Struttura dati atleti
 let athletes = [];
-let editIndex = null;
 
-const DEFAULT_ATHLETE = {
-    fipav: "",
-    first: "",
-    last: "",
-    cf: "",
-    gender: "",
-    birthdate: "",
-    medical_expiry: "",
-    docType: "",
-    docNumber: ""
-};
-function migrateAthlete(obj) {
-    return { ...DEFAULT_ATHLETE, ...obj };
-}
-function calcolaEta(dataNascita) {
-    if (!dataNascita) return "";
-    const oggi = new Date();
-    const nascita = new Date(dataNascita);
-    let eta = oggi.getFullYear() - nascita.getFullYear();
-    const m = oggi.getMonth() - nascita.getMonth();
-    if (m < 0 || (m === 0 && oggi.getDate() < nascita.getDate())) eta--;
-    return eta;
-}
-function upper(s) { return s ? s.trim().toUpperCase() : ''; }
-function caricaDati() {
-    try {
-        let dati = localStorage.getItem('athletes');
-        if (!dati) return [];
-        let arr = JSON.parse(dati);
-        if (!Array.isArray(arr)) return [];
-        return arr.map(migrateAthlete);
-    } catch { return []; }
-}
-athletes = caricaDati();
-function salvaSuStorage() {
-    try { 
-        localStorage.setItem('athletes', JSON.stringify(athletes)); 
-    } catch(e) { alert("Errore nel salvataggio! " + e.message);}
-}
-function medicalStatus(expiry) {
-    if (!expiry) return {class:"",code:"none"};
-    const today = new Date();
-    const expiryDate = new Date(expiry);
-    expiryDate.setHours(0,0,0,0);
-    today.setHours(0,0,0,0);
-    const diffMs = expiryDate - today;
-    const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
-    if (diffDays < 0) return { class: "medical-red", code:"expired" };
-    if (diffDays <= 31) return { class: "medical-yellow", code:"expiring" };
-    return { class: "medical-green", code:"valid" };
-}
-function listExpiredAndExpiring(type) {
-    const today = new Date(); today.setHours(0,0,0,0);
-    let result = [];
-    athletes.forEach(a => {
-        if (!a.medical_expiry) return;
-        const expiry = new Date(a.medical_expiry);
-        expiry.setHours(0,0,0,0);
-        const diff = Math.round((expiry - today)/(1000*60*60*24));
-        if (type === "expired" && diff < 0) result.push(a);
-        if (type === "expiring" && diff >= 0 && diff <= 31) result.push(a);
-    });
-    return result;
-}
-function countExpiredAndExpiring() {
-    let expired = 0, expiring = 0;
-    const today = new Date(); today.setHours(0,0,0,0);
-    athletes.forEach(a => {
-        if (!a.medical_expiry) return;
-        const expiry = new Date(a.medical_expiry);
-        expiry.setHours(0,0,0,0);
-        const diff = Math.round((expiry - today) / (1000 * 60 * 60 * 24));
-        if (diff < 0) expired++;
-        else if (diff <= 31) expiring++;
-    });
-    return { expired, expiring };
-}
+// Utility per aggiornare dashboard
 function updateDashboard() {
     document.getElementById('total-athletes').textContent = athletes.length;
     if (athletes.length > 0) {
-        let sommaEta = athletes.reduce((sum, a) => sum + calcolaEta(a.birthdate), 0);
-        let avgAge = (sommaEta / athletes.length).toFixed(1);
+        let avgAge = (athletes.reduce((sum, a) => sum + a.age, 0) / athletes.length).toFixed(1);
         document.getElementById('avg-age').textContent = avgAge;
     } else {
         document.getElementById('avg-age').textContent = '-';
     }
     document.getElementById('male-athletes').textContent = athletes.filter(a => a.gender === 'M').length;
     document.getElementById('female-athletes').textContent = athletes.filter(a => a.gender === 'F').length;
-    const c = countExpiredAndExpiring();
-    document.getElementById('total-expired').textContent = c.expired;
-    document.getElementById('total-expiring').textContent = c.expiring;
 }
-function showMedicalList(type) {
-    const container = document.getElementById('medical-list');
-    let records = listExpiredAndExpiring(type);
-    let color = type === "expired" ? "medical-red" : "medical-yellow";
-    let title = type === "expired" ? "Visite Mediche Scadute" : "Visite Mediche In Scadenza (entro 31 giorni)";
-    let html = `<h4>${title}</h4>`;
-    if (records.length === 0) {
-        html += "<div>Nessun atleta trovato.</div>";
-    } else {
-        html += `<ul>`;
-        records.forEach(a => {
-            let medicalStr = a.medical_expiry ? new Date(a.medical_expiry).toLocaleDateString('it-IT') : '-';
-            let fipav = a.fipav ? String(a.fipav).padStart(7,"0") : "-";
-            html += `<li><b>${upper(a.last)} ${upper(a.first)}</b> <span class="fipav-list">(FIPAV: ${fipav})</span> — <i>${medicalStr}</i></li>`;
-        });
-        html += `</ul>`;
-    }
-    container.innerHTML = html;
-    container.className = color;
-    container.style.display = "";
-}
-function hideMedicalList() {
-    const container = document.getElementById('medical-list');
-    container.innerHTML = "";
-    container.style.display = "none";
-    container.className = "";
-}
-function showScheda(idx) {
-    const box = document.getElementById('atleta-scheda');
-    if (typeof idx === 'undefined' || idx === null || !athletes[idx]) {
-        box.innerHTML = "<div class='info-group'>Seleziona un atleta per visualizzare i dettagli.</div>";
-        return;
-    }
-    const a = athletes[idx];
-    let fipavVal = (a.fipav !== undefined && a.fipav !== null) ? ("" + a.fipav).padStart(7, "0") : "-";
-    let birthStr = a.birthdate ? new Date(a.birthdate).toLocaleDateString('it-IT') : '';
-    let eta = a.birthdate ? calcolaEta(a.birthdate) : '';
-    let medicalStr = a.medical_expiry ? new Date(a.medical_expiry).toLocaleDateString('it-IT') : '-';
-    let medicalS = medicalStatus(a.medical_expiry);
-    box.innerHTML = `
-      <div class="info-group"><span class="field-label">CODICE FIPAV:</span> <b>${fipavVal}</b></div>
-      <div class="main-id">${upper(a.last)} ${upper(a.first)}</div>
-      <div class="info-group ${medicalS.class}"><span class="field-label">Scadenza visita medica:</span> <b>${medicalStr}</b></div>
-      <div class="info-group"><span class="field-label">Codice fiscale:</span> ${upper(a.cf)}</div>
-      <div class="info-group"><span class="field-label">Genere:</span> ${a.gender}</div>
-      <div class="info-group"><span class="field-label">Data di nascita:</span> ${birthStr}</div>
-      <div class="info-group"><span class="field-label">Età:</span> ${eta}</div>
-      <div class="info-group"><span class="field-label">Documento:</span> ${a.docType}</div>
-      <div class="info-group"><span class="field-label">Numero Documento:</span> ${upper(a.docNumber)}</div>
-    `;
-}
+
+// Utility per aggiornare lista atleti
 function updateAthleteList() {
     const list = document.getElementById('athlete-list');
     list.innerHTML = '';
-    athletes.forEach((a, idx) => {
+    // Ordine alfabetico per cognome, poi nome
+    athletes.sort((a, b) => a.last.localeCompare(b.last) || a.first.localeCompare(b.first));
+    athletes.forEach(a => {
         const li = document.createElement('li');
-        const info = document.createElement('span');
-        info.className = 'info';
-        info.textContent = `${upper(a.last)} ${upper(a.first)}`;
-        const actions = document.createElement('div');
-        actions.className = 'actions';
-
-        const btnView = document.createElement('button');
-        btnView.className = 'view';
-        btnView.textContent = 'V';
-        btnView.title = "Visualizza";
-        btnView.onclick = () => showScheda(idx);
-
-        const btnEdit = document.createElement('button');
-        btnEdit.className = 'edit';
-        btnEdit.textContent = 'M';
-        btnEdit.title = "Modifica";
-        btnEdit.onclick = function() {
-            editIndex = idx;
-            document.getElementById('fipav-code').value = a.fipav || '';
-            document.getElementById('first-name').value = upper(a.first);
-            document.getElementById('last-name').value = upper(a.last);
-            document.getElementById('cf').value = upper(a.cf);
-            document.getElementById('gender').value = a.gender;
-            document.getElementById('birthdate').value = a.birthdate;
-            document.getElementById('medical-expiry').value = a.medical_expiry || "";
-            document.getElementById('doc-type').value = a.docType;
-            document.getElementById('doc-number').value = upper(a.docNumber);
-            document.getElementById('form-title').textContent = 'Modifica Atleta';
-            document.querySelector('#athlete-form button[type="submit"]').textContent = "Salva";
-            document.getElementById('cancel-edit').style.display = '';
-        };
-
-        const btnDelete = document.createElement('button');
-        btnDelete.className = 'delete';
-        btnDelete.textContent = 'C';
-        btnDelete.title = "Cancella";
-        btnDelete.onclick = function() {
-            if (confirm('Vuoi davvero cancellare questo atleta?')) {
-                athletes.splice(idx, 1);
-                salvaSuStorage();
-                updateDashboard();
-                updateAthleteList();
-                showScheda();
-                hideMedicalList();
-                resetForm();
-            }
-        };
-
-        actions.appendChild(btnView);
-        actions.appendChild(btnEdit);
-        actions.appendChild(btnDelete);
-        li.appendChild(info);
-        li.appendChild(actions);
+        li.textContent = `${a.last} ${a.first} (${a.gender}, ${a.age} anni)`;
         list.appendChild(li);
     });
 }
 
-function resetForm() {
-    document.getElementById('athlete-form').reset();
-    document.getElementById('form-title').textContent = 'Aggiungi Atleta';
-    document.querySelector('#athlete-form button[type="submit"]').textContent = "Aggiungi";
-    document.getElementById('cancel-edit').style.display = 'none';
-    editIndex = null;
-}
-
-updateDashboard();
-updateAthleteList();
-showScheda();
-hideMedicalList();
-
 document.getElementById('athlete-form').addEventListener('submit', function(e) {
     e.preventDefault();
-    try {
-        const fipav = document.getElementById('fipav-code').value.trim();
-        const first = upper(document.getElementById('first-name').value);
-        const last = upper(document.getElementById('last-name').value);
-        const cf = upper(document.getElementById('cf').value);
-        const gender = document.getElementById('gender').value;
-        const birthdate = document.getElementById('birthdate').value;
-        const medical_expiry = document.getElementById('medical-expiry').value;
-        const docType = document.getElementById('doc-type').value;
-        const docNumber = upper(document.getElementById('doc-number').value);
+    const first = document.getElementById('first-name').value.trim();
+    const last = document.getElementById('last-name').value.trim();
+    const gender = document.getElementById('gender').value;
+    const age = parseInt(document.getElementById('age').value, 10);
 
-        if (!/^\d{7}$/.test(fipav)) {
-            alert('Il codice FIPAV deve essere composto da 7 cifre numeriche.');
-            document.getElementById('fipav-code').focus();
-            return;
-        }
-        if (!medical_expiry) {
-            alert('La scadenza visita medica è obbligatoria.');
-            document.getElementById('medical-expiry').focus();
-            return;
-        }
-        if (first && last && cf && gender && birthdate && docType && docNumber) {
-            const nuovo = migrateAthlete({
-                fipav: fipav,
-                first, last, cf, gender, birthdate, medical_expiry, docType, docNumber
-            });
-            if (editIndex !== null) {
-                athletes[editIndex] = nuovo;
-            } else {
-                athletes.push(nuovo);
-            }
-            salvaSuStorage();
-            updateDashboard();
-            updateAthleteList();
-            showScheda();
-            hideMedicalList();
-            resetForm();
-        } else {
-            alert("Compila tutti i campi obbligatori!");
-        }
-    } catch(ex) {
-        alert("Errore durante l'inserimento: " + ex.message);
+    if (first && last && gender && age) {
+        athletes.push({ first, last, gender, age });
+        updateDashboard();
+        updateAthleteList();
+        this.reset();
     }
-});
-
-document.getElementById('cancel-edit').onclick = resetForm;
-
-document.getElementById('card-scadute').onclick = function(e) {
-    showMedicalList("expired");
-    e.stopPropagation();
-};
-document.getElementById('card-inscadenza').onclick = function(e) {
-    showMedicalList("expiring");
-    e.stopPropagation();
-};
-window.addEventListener("click", function(e){
-    const ml = document.getElementById('medical-list');
-    if (ml && ml.style.display === "" && !ml.contains(e.target) && !e.target.classList.contains('stat-interact')) {
-        hideMedicalList();
-    }
-});
 });
