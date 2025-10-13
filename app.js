@@ -49,6 +49,7 @@ function showScheda(idx) {
     let birthStr = a.birthdate ? new Date(a.birthdate).toLocaleDateString('it-IT') : '';
     let eta = a.birthdate ? calcolaEta(a.birthdate) : '';
     box.innerHTML = `
+      <div class="info-group"><span class="field-label">CODICE FIPAV:</span> <b>${a.fipav ? a.fipav : "-"}</b></div>
       <div class="main-id">${upper(a.last)} ${upper(a.first)}</div>
       <div class="info-group"><span class="field-label">Codice fiscale:</span> ${upper(a.cf)}</div>
       <div class="info-group"><span class="field-label">Genere:</span> ${a.gender}</div>
@@ -72,14 +73,17 @@ function updateAthleteList() {
 
         const btnView = document.createElement('button');
         btnView.className = 'view';
-        btnView.textContent = 'Visualizza';
+        btnView.textContent = 'V'; // Visualizza
+        btnView.title = "Visualizza";
         btnView.onclick = () => showScheda(idx);
 
         const btnEdit = document.createElement('button');
         btnEdit.className = 'edit';
-        btnEdit.textContent = 'Modifica';
+        btnEdit.textContent = 'M'; // Modifica
+        btnEdit.title = "Modifica";
         btnEdit.onclick = function() {
             editIndex = idx;
+            document.getElementById('fipav-code').value = a.fipav || '';
             document.getElementById('first-name').value = upper(a.first);
             document.getElementById('last-name').value = upper(a.last);
             document.getElementById('cf').value = upper(a.cf);
@@ -94,7 +98,8 @@ function updateAthleteList() {
 
         const btnDelete = document.createElement('button');
         btnDelete.className = 'delete';
-        btnDelete.textContent = 'Cancella';
+        btnDelete.textContent = 'C'; // Cancella
+        btnDelete.title = "Cancella";
         btnDelete.onclick = function() {
             if (confirm('Vuoi davvero cancellare questo atleta?')) {
                 athletes.splice(idx, 1);
@@ -129,6 +134,7 @@ showScheda();
 
 document.getElementById('athlete-form').addEventListener('submit', function(e) {
     e.preventDefault();
+    const fipav = document.getElementById('fipav-code').value.trim();
     const first = upper(document.getElementById('first-name').value);
     const last = upper(document.getElementById('last-name').value);
     const cf = upper(document.getElementById('cf').value);
@@ -137,11 +143,24 @@ document.getElementById('athlete-form').addEventListener('submit', function(e) {
     const docType = document.getElementById('doc-type').value;
     const docNumber = upper(document.getElementById('doc-number').value);
 
+    // Controllo codice FIPAV: esattamente 7 cifre
+    if (!/^\d{7}$/.test(fipav)) {
+        alert('Il codice FIPAV deve essere composto da 7 cifre numeriche.');
+        document.getElementById('fipav-code').focus();
+        return;
+    }
+
     if (first && last && cf && gender && birthdate && docType && docNumber) {
         if (editIndex !== null) {
-            athletes[editIndex] = { first, last, cf, gender, birthdate, docType, docNumber };
+            athletes[editIndex] = {
+                fipav: fipav,
+                first, last, cf, gender, birthdate, docType, docNumber
+            };
         } else {
-            athletes.push({ first, last, cf, gender, birthdate, docType, docNumber });
+            athletes.push({
+                fipav: fipav,
+                first, last, cf, gender, birthdate, docType, docNumber
+            });
         }
         salvaSuStorage();
         updateDashboard();
