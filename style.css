@@ -177,7 +177,6 @@ main {
 .medical-green { color: #116d1e; background: #d9f7df; border: 2px solid #31d03c; font-weight: bold; }
 .medical-yellow { color: #a68a13; background: #fff8d4; border: 2px solid #dec113; font-weight: bold; }
 .medical-red   { color: #b72a34; background: #ffe0e0; border: 2px solid #b72a34; font-weight: bold; }
-
 .label-inline { font-size: .96em; font-weight: 500; color: #208120; margin-left: 2px; margin-bottom: 2px; margin-top: 4px; display: block;}
 #athlete-form-section, #athlete-list-section {
     background: #fff;
