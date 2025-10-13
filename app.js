@@ -46,10 +46,11 @@ function showScheda(idx) {
         return;
     }
     const a = athletes[idx];
+    let fipavVal = (a.fipav !== undefined && a.fipav !== null) ? ("" + a.fipav).padStart(7, "0") : "-";
     let birthStr = a.birthdate ? new Date(a.birthdate).toLocaleDateString('it-IT') : '';
     let eta = a.birthdate ? calcolaEta(a.birthdate) : '';
     box.innerHTML = `
-      <div class="info-group"><span class="field-label">CODICE FIPAV:</span> <b>${a.fipav ? a.fipav : "-"}</b></div>
+      <div class="info-group"><span class="field-label">CODICE FIPAV:</span> <b>${fipavVal}</b></div>
       <div class="main-id">${upper(a.last)} ${upper(a.first)}</div>
       <div class="info-group"><span class="field-label">Codice fiscale:</span> ${upper(a.cf)}</div>
       <div class="info-group"><span class="field-label">Genere:</span> ${a.gender}</div>
