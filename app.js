@@ -231,4 +231,68 @@ updateAthleteList();
 showScheda();
 hideMedicalList();
 
-document.getElementById('athlete-form').addEventListener('submit', function(e
+document.getElementById('athlete-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    try {
+        const fipav = document.getElementById('fipav-code').value.trim();
+        const first = upper(document.getElementById('first-name').value);
+        const last = upper(document.getElementById('last-name').value);
+        const cf = upper(document.getElementById('cf').value);
+        const gender = document.getElementById('gender').value;
+        const birthdate = document.getElementById('birthdate').value;
+        const medical_expiry = document.getElementById('medical-expiry').value;
+        const docType = document.getElementById('doc-type').value;
+        const docNumber = upper(document.getElementById('doc-number').value);
+
+        if (!/^\d{7}$/.test(fipav)) {
+            alert('Il codice FIPAV deve essere composto da 7 cifre numeriche.');
+            document.getElementById('fipav-code').focus();
+            return;
+        }
+        if (!medical_expiry) {
+            alert('La scadenza visita medica è obbligatoria.');
+            document.getElementById('medical-expiry').focus();
+            return;
+        }
+        if (first && last && cf && gender && birthdate && docType && docNumber) {
+            const nuovo = migrateAthlete({
+                fipav: fipav,
+                first, last, cf, gender, birthdate, medical_expiry, docType, docNumber
+            });
+            if (editIndex !== null) {
+                athletes[editIndex] = nuovo;
+            } else {
+                athletes.push(nuovo);
+            }
+            salvaSuStorage();
+            updateDashboard();
+            updateAthleteList();
+            showScheda();
+            hideMedicalList();
+            resetForm();
+        } else {
+            alert("Compila tutti i campi obbligatori!");
+        }
+    } catch(ex) {
+        alert("Errore durante l'inserimento: " + ex.message);
+    }
+});
+
+document.getElementById('cancel-edit').onclick = resetForm;
+
+document.getElementById('card-scadute').onclick = function(e) {
+    showMedicalList("expired");
+    e.stopPropagation();
+};
+document.getElementById('card-inscadenza').onclick = function(e) {
+    showMedicalList("expiring");
+    e.stopPropagation();
+};
+window.addEventListener("click", function(e){
+    const ml = document.getElementById('medical-list');
+    if (ml && ml.style.display === "" && !ml.contains(e.target) && !e.target.classList.contains('stat-interact')) {
+        hideMedicalList();
+    }
+});
+
+});
