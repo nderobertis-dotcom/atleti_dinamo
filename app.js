@@ -26,6 +26,34 @@ athletes = caricaDati();
 
 function salvaSuStorage() { localStorage.setItem('athletes', JSON.stringify(athletes)); }
 
+function medicalStatus(expiry) {
+    if (!expiry) return {class:"",code:"none"};
+    const today = new Date();
+    const expiryDate = new Date(expiry);
+    expiryDate.setHours(0,0,0,0);
+    today.setHours(0,0,0,0);
+    const diffMs = expiryDate - today;
+    const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+    if (diffDays < 0) return { class: "medical-red", code:"expired" };
+    if (diffDays <= 31) return { class: "medical-yellow", code:"expiring" };
+    return { class: "medical-green", code:"valid" };
+}
+
+function countExpiredAndExpiring() {
+    let expired = 0, expiring = 0;
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    athletes.forEach(a => {
+        if (!a.medical_expiry) return;
+        const expiry = new Date(a.medical_expiry);
+        expiry.setHours(0,0,0,0);
+        const diff = Math.round((expiry - today)/(1000*60*60*24));
+        if (diff < 0) expired++;
+        else if (diff <= 31) expiring++;
+    });
+    return { expired, expiring };
+}
+
 function updateDashboard() {
     document.getElementById('total-athletes').textContent = athletes.length;
     if (athletes.length > 0) {
@@ -37,19 +65,11 @@ function updateDashboard() {
     }
     document.getElementById('male-athletes').textContent = athletes.filter(a => a.gender === 'M').length;
     document.getElementById('female-athletes').textContent = athletes.filter(a => a.gender === 'F').length;
-}
 
-function medicalStatusClass(expiry) {
-    if (!expiry) return "";
-    const today = new Date();
-    const expiryDate = new Date(expiry);
-    expiryDate.setHours(0,0,0,0);
-    today.setHours(0,0,0,0);
-    const diffMs = expiryDate - today;
-    const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
-    if (diffDays < 0) return "medical-red";
-    if (diffDays <= 31) return "medical-yellow";
-    return "medical-green";
+    // Nuove statistiche
+    const c = countExpiredAndExpiring();
+    document.getElementById('total-expired').textContent = c.expired;
+    document.getElementById('total-expiring').textContent = c.expiring;
 }
 
 function showScheda(idx) {
@@ -63,11 +83,11 @@ function showScheda(idx) {
     let birthStr = a.birthdate ? new Date(a.birthdate).toLocaleDateString('it-IT') : '';
     let eta = a.birthdate ? calcolaEta(a.birthdate) : '';
     let medicalStr = a.medical_expiry ? new Date(a.medical_expiry).toLocaleDateString('it-IT') : '-';
-    let medicalClass = medicalStatusClass(a.medical_expiry);
+    let medicalS = medicalStatus(a.medical_expiry);
     box.innerHTML = `
       <div class="info-group"><span class="field-label">CODICE FIPAV:</span> <b>${fipavVal}</b></div>
       <div class="main-id">${upper(a.last)} ${upper(a.first)}</div>
-      <div class="info-group ${medicalClass}"><span class="field-label">Scadenza visita medica:</span> <b>${medicalStr}</b></div>
+      <div class="info-group ${medicalS.class}"><span class="field-label">Scadenza visita medica:</span> <b>${medicalStr}</b></div>
       <div class="info-group"><span class="field-label">Codice fiscale:</span> ${upper(a.cf)}</div>
       <div class="info-group"><span class="field-label">Genere:</span> ${a.gender}</div>
       <div class="info-group"><span class="field-label">Data di nascita:</span> ${birthStr}</div>
