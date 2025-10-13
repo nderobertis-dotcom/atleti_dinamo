@@ -30,7 +30,6 @@ main {
     align-items: flex-start;
     margin-bottom: 30px;
 }
-
 #athlete-detail-section {
     background: #fffbe8;
     min-width: 340px;
@@ -78,7 +77,6 @@ main {
     border-radius: 9px;
     padding: 5px 14px;
     box-shadow: 0 1px 4px #b0bddc16;
-    margin-bottom: 0;
     display: flex;
     align-items: center;
     white-space: nowrap;
@@ -102,10 +100,6 @@ main {
     border: 2px solid #fecf50;
     transition: transform 0.15s;
 }
-.stat-card:hover {
-    transform: scale(1.045);
-    box-shadow: 0 4px 18px #fef19278;
-}
 #athlete-form-section, #athlete-list-section {
     background: #fff;
     padding: 28px 24px;
@@ -127,15 +121,18 @@ form input, form select {
     color: #22346e;
     min-width: 135px;
 }
+#fipav-code {
+    width: 155px;
+    max-width: 170px;
+    font-family: inherit;
+    letter-spacing: 2px;
+    text-align: center;
+}
 .gender-select {
     width: 85px !important;
     min-width: 60px !important;
 }
-.row-doc {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-}
+.row-doc { display: flex; gap: 12px; align-items: center; }
 form button {
     background: linear-gradient(90deg, #213b71 0%, #4383d9 100%);
     color: #fff;
@@ -147,7 +144,6 @@ form button {
     font-weight: bold;
     letter-spacing: 1px;
     cursor: pointer;
-    box-shadow: 0 2px 8px #30476633;
     transition: background 0.18s, transform 0.17s;
 }
 form button:hover {
@@ -157,7 +153,8 @@ form button:hover {
 #first-name,
 #last-name,
 #cf,
-#doc-number {
+#doc-number,
+#fipav-code {
     text-transform: uppercase;
     letter-spacing: 1px;
 }
@@ -182,10 +179,14 @@ form button:hover {
     color: #213b71;
     font-weight: 500;
     letter-spacing: 0.5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1 1 auto;
 }
 .actions {
     display: flex;
-    gap: 10px;
+    gap: 7px;
     flex-shrink: 0;
     margin-left: 8px;
 }
@@ -193,16 +194,21 @@ form button:hover {
 .actions .edit,
 .actions .delete {
     display: inline-block;
-    padding: 10px 20px;
+    padding: 4px 11px;
     font-size: 1em;
     font-weight: 600;
-    border-radius: 22px;
+    border-radius: 17px;
     white-space: nowrap;
     text-align: center;
-    transition: background 0.2s, transform 0.15s;
     border: none;
     cursor: pointer;
     margin-left: 0;
+    min-width: 31px;
+    max-width: 31px;
+    min-height: 30px;
+    max-height: 33px;
+    line-height: 1.05em;
+    letter-spacing: 0;
 }
 .actions .view {
     background: linear-gradient(90deg, #34ca92 0%, #51ffe7 100%);
@@ -250,11 +256,6 @@ form button:hover {
         padding: 1vw;
     }
     .dashboard { flex-direction: column; align-items: center; gap: 13px;}
-    #athlete-list li { 
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    #athlete-list li .info { white-space: normal; }
-    .actions { margin-top: 10px; }
+    #athlete-list li { flex-direction: column; align-items: flex-start; }
     #athlete-detail-section { max-width: 99vw !important;}
 }
