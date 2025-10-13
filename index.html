@@ -11,56 +11,36 @@
         <h1>Gestione Atleti - Pallavolo</h1>
         <img src="logo.png" alt="Logo Società" class="logo">
     </header>
+
     <main>
         <section class="dashboard">
-            <div class="stat-card">Totale<br><span id="total-athletes">0</span></div>
-            <div class="stat-card">Età media<br><span id="avg-age">-</span></div>
-            <div class="stat-card">Maschi<br><span id="male-athletes">0</span></div>
-            <div class="stat-card">Femmine<br><span id="female-athletes">0</span></div>
-            <div class="stat-card medical-red stat-interact" id="card-scadute">Visite<br>scadute<br><span id="total-expired">0</span></div>
-            <div class="stat-card medical-yellow stat-interact" id="card-inscadenza">In<br>scadenza<br><span id="total-expiring">0</span></div>
+            <div class="stat-card">Totale Atleti: <span id="total-athletes">0</span></div>
+            <div class="stat-card">Media Età: <span id="avg-age">-</span></div>
+            <div class="stat-card">Maschi: <span id="male-athletes">0</span></div>
+            <div class="stat-card">Femmine: <span id="female-athletes">0</span></div>
         </section>
-        <div id="medical-list"></div>
-        <div class="flex-container">
-            <section id="athlete-detail-section">
-                <h2>Scheda Atleta</h2>
-                <div id="atleta-scheda"></div>
-            </section>
-            <section id="athlete-list-section">
-                <h2>Elenco Atleti</h2>
-                <ul id="athlete-list"></ul>
-            </section>
-        </div>
+
         <section id="athlete-form-section">
-            <h2 id="form-title">Aggiungi Atleta</h2>
-            <form id="athlete-form" autocomplete="off">
-                <input type="text" id="fipav-code" maxlength="7" pattern="\d{7}" title="7 cifre" placeholder="Codice FIPAV (7 cifre)" required>
+            <h2>Aggiungi Atleta</h2>
+            <form id="athlete-form">
                 <input type="text" id="first-name" placeholder="Nome" required>
                 <input type="text" id="last-name" placeholder="Cognome" required>
-                <input type="text" id="cf" placeholder="Codice Fiscale" required>
-                <select id="gender" required class="gender-select">
+                <select id="gender" required>
                     <option value="">Genere</option>
                     <option value="M">M</option>
                     <option value="F">F</option>
                 </select>
-                <label class="label-inline" for="birthdate">Data di nascita</label>
-                <input type="date" id="birthdate" required>
-                <label class="label-inline" for="medical-expiry">Scadenza visita medica</label>
-                <input type="date" id="medical-expiry" required>
-                <div class="row-doc">
-                  <select id="doc-type" required>
-                      <option value="">Documento</option>
-                      <option value="Carta d'identità">Carta d'identità</option>
-                      <option value="Patente">Patente</option>
-                      <option value="Passaporto">Passaporto</option>
-                  </select>
-                  <input type="text" id="doc-number" placeholder="Numero Documento" required>
-                </div>
+                <input type="number" id="age" placeholder="Età" min="5" max="80" required>
                 <button type="submit">Aggiungi</button>
-                <button type="button" id="cancel-edit" style="display:none;">Annulla</button>
             </form>
         </section>
+
+        <section id="athlete-list-section">
+            <h2>Elenco Atleti</h2>
+            <ul id="athlete-list"></ul>
+        </section>
     </main>
-    <script src="app.js" defer></script>
+
+    <script src="app.js"></script>
 </body>
 </html>
