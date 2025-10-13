@@ -38,6 +38,20 @@ function medicalStatus(expiry) {
     if (diffDays <= 31) return { class: "medical-yellow", code:"expiring" };
     return { class: "medical-green", code:"valid" };
 }
+function listExpiredAndExpiring(type) {
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    let result = [];
+    athletes.forEach(a => {
+        if (!a.medical_expiry) return;
+        const expiry = new Date(a.medical_expiry);
+        expiry.setHours(0,0,0,0);
+        const diff = Math.round((expiry - today)/(1000*60*60*24));
+        if (type === "expired" && diff < 0) result.push(a);
+        if (type === "expiring" && diff >= 0 && diff <= 31) result.push(a);
+    });
+    return result;
+}
 function countExpiredAndExpiring() {
     let expired = 0, expiring = 0;
     const today = new Date();
@@ -46,7 +60,7 @@ function countExpiredAndExpiring() {
         if (!a.medical_expiry) return;
         const expiry = new Date(a.medical_expiry);
         expiry.setHours(0,0,0,0);
-        const diff = Math.round((expiry - today)/(1000*60*60*24));
+        const diff = Math.round((expiry - today) / (1000 * 60 * 60 * 24));
         if (diff < 0) expired++;
         else if (diff <= 31) expiring++;
     });
@@ -68,7 +82,33 @@ function updateDashboard() {
     document.getElementById('total-expired').textContent = c.expired;
     document.getElementById('total-expiring').textContent = c.expiring;
 }
-
+function showMedicalList(type) {
+    const container = document.getElementById('medical-list');
+    let records = listExpiredAndExpiring(type);
+    let color = type === "expired" ? "medical-red" : "medical-yellow";
+    let title = type === "expired" ? "Visite Mediche Scadute" : "Visite Mediche In Scadenza (prossimi 31 giorni)";
+    let html = `<h4>${title}</h4>`;
+    if (records.length === 0) {
+        html += "<div>Nessun atleta trovato.</div>";
+    } else {
+        html += `<ul>`;
+        records.forEach(a => {
+            let medicalStr = a.medical_expiry ? new Date(a.medical_expiry).toLocaleDateString('it-IT') : '-';
+            let fipav = a.fipav ? String(a.fipav).padStart(7,"0") : "-";
+            html += `<li><b>${upper(a.last)} ${upper(a.first)}</b> <span class="fipav-list">(FIPAV: ${fipav})</span> — <i>${medicalStr}</i></li>`;
+        });
+        html += `</ul>`;
+    }
+    container.innerHTML = html;
+    container.className = color;
+    container.style.display = "";
+}
+function hideMedicalList() {
+    const container = document.getElementById('medical-list');
+    container.innerHTML = "";
+    container.style.display = "none";
+    container.className = "";
+}
 function showScheda(idx) {
     const box = document.getElementById('atleta-scheda');
     if (typeof idx === 'undefined' || idx === null || !athletes[idx]) {
@@ -93,7 +133,6 @@ function showScheda(idx) {
       <div class="info-group"><span class="field-label">Numero Documento:</span> ${upper(a.docNumber)}</div>
     `;
 }
-
 function updateAthleteList() {
     const list = document.getElementById('athlete-list');
     list.innerHTML = '';
@@ -142,6 +181,7 @@ function updateAthleteList() {
                 updateDashboard();
                 updateAthleteList();
                 showScheda();
+                hideMedicalList();
                 resetForm();
             }
         };
@@ -166,6 +206,7 @@ function resetForm() {
 updateDashboard();
 updateAthleteList();
 showScheda();
+hideMedicalList();
 
 document.getElementById('athlete-form').addEventListener('submit', function(e) {
     e.preventDefault();
@@ -205,10 +246,27 @@ document.getElementById('athlete-form').addEventListener('submit', function(e) {
         updateDashboard();
         updateAthleteList();
         showScheda();
+        hideMedicalList();
         resetForm();
     }
 });
 
 document.getElementById('cancel-edit').onclick = resetForm;
 
+// Card click per mostrare lista sottostante
+document.getElementById('card-scadute').onclick = function(e) {
+    showMedicalList("expired");
+    e.stopPropagation();
+};
+document.getElementById('card-inscadenza').onclick = function(e) {
+    showMedicalList("expiring");
+    e.stopPropagation();
+};
+
+// Click fuori dalla lista la fa sparire
+window.addEventListener("click", function(e){
+    const ml = document.getElementById('medical-list');
+    if (!ml.contains(e.target) && !e.target.classList.contains('stat-card')) {
+        hideMedicalList();
+    }
 });
