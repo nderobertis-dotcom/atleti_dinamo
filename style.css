@@ -25,42 +25,41 @@ main {
     padding: 18px;
 }
 
-/* DASHBOARD E CARD */
 .dashboard {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    gap: 15px;
+    gap: 16px;
     margin-bottom: 22px;
     align-items: stretch;
     flex-wrap: wrap;
 }
 .stat-card {
     background: #fffbe8;
-    padding: .78em 1.2em .82em 1.2em;
-    border-radius: 18px;
-    font-size: 1em;
-    box-shadow: 0 2px 16px #e2d75c18;
+    padding: 1em 1.5em .9em 1.5em;
+    border-radius: 21px;
+    font-size: 1.07em;
+    box-shadow: 0 2px 15px #dfe3bb25;
     text-align: center;
-    min-width: 70px;
-    max-width: 108px;
-    height: 63px;
+    min-width: 94px;
+    max-width: 120px;
+    height: 74px;
     border: 2.5px solid #fecf50;
     color: #213b71;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    vertical-align:middle;
+    vertical-align: middle;
     user-select: none;
     transition: box-shadow 0.18s, transform 0.17s, border 0.18s;
     cursor: default;
 }
 .stat-card span {
-    font-size: 1.25em;
+    font-size: 1.27em;
     color: #1966c2;
     font-weight: bold;
-    line-height: 1.2;
+    line-height: 1.15;
 }
 .stat-card.stat-interact { cursor: pointer; }
 .stat-card.medical-red,
@@ -76,14 +75,11 @@ main {
     border-color: #dec113;
 }
 .stat-card.stat-interact:hover, .stat-card.stat-interact:active {
-    box-shadow: 0 6px 24px #a9bac6aa;
+    box-shadow: 0 4px 23px #213b7155;
     border-color: #568d67;
     transform: scale(1.045);
     z-index: 3;
 }
-/* FINE CARD */
-
-/* MEDICAL BOTTOM LIST */
 #medical-list {
     margin: -10px auto 22px auto;
     max-width: 960px;
@@ -128,8 +124,121 @@ main {
     color: #1454b2;
     margin-left: 7px;
 }
-
-/* ---- RESTO style.css INVARIATA (scheda atleta, lista atleti, form, media queries) ---- */
+.flex-container {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    margin-bottom: 30px;
+}
+#athlete-detail-section {
+    background: #fffbe8;
+    min-width: 320px;
+    border-radius: 18px;
+    box-shadow: 0 8px 24px #b0bddc2a;
+    border: 2.5px solid #fecf50;
+    padding: 30px 20px 20px 22px;
+    color: #213b71;
+    font-size: 1.03em;
+    min-height: 300px;
+    max-width: 350px;
+}
+#athlete-detail-section h2 {
+    color: #1966c2;
+    font-size: .98em;
+    font-weight: bold;
+    margin-top: 0;
+    margin-bottom: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+#atleta-scheda {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+#atleta-scheda .main-id {
+    font-size: 1.11em;
+    font-weight: bold;
+    color: #1966c2;
+    letter-spacing: 1.3px;
+    margin-bottom: 6px;
+    border-bottom: 1px solid #dde8ff;
+    padding-bottom: 4px;
+    text-align: left;
+}
+#atleta-scheda .field-label {
+    color: #3b548c;
+    font-weight: 600;
+    min-width: 90px;
+    margin-right: 7px;
+    display: inline-block;
+}
+#atleta-scheda .info-group {
+    background: #fafcff;
+    border-radius: 8px;
+    padding: 3px 11px;
+    box-shadow: 0 1px 4px #b0bddc16;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
 .medical-green { color: #116d1e; background: #d9f7df; border: 2px solid #31d03c; font-weight: bold; }
 .medical-yellow { color: #a68a13; background: #fff8d4; border: 2px solid #dec113; font-weight: bold; }
 .medical-red   { color: #b72a34; background: #ffe0e0; border: 2px solid #b72a34; font-weight: bold; }
+
+.label-inline { font-size: .96em; font-weight: 500; color: #208120; margin-left: 2px; margin-bottom: 2px; margin-top: 4px; display: block;}
+#athlete-form-section, #athlete-list-section {
+    background: #fff;
+    padding: 20px 17px;
+    margin-bottom: 25px;
+    border-radius: 19px;
+    box-shadow: 0 2px 19px #bacadd2b;
+    border: 2px solid #e2e8f5;
+}
+#athlete-form-section { margin-bottom: 32px;}
+form input, form select {
+    margin: 6px 9px 6px 0;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #aeb9df;
+    font-size: .97em;
+    background: #f5f7fe;
+    color: #22346e;
+    min-width: 110px;
+}
+#fipav-code {
+    width: 125px;
+    max-width: 135px;
+    font-family: inherit;
+    letter-spacing: 2px;
+    text-align: center;
+}
+.gender-select {
+    width: 65px !important;
+    min-width: 43px !important;
+}
+#medical-expiry {
+    width: 150px;
+    max-width: 170px;
+    font-family: inherit;
+    font-size: .98em;
+    letter-spacing: 1px;
+    background: #f8fbff;
+    color: #213b71;
+}
+.row-doc { display: flex; gap: 7px; align-items: center; }
+form button {
+    background: linear-gradient(90deg, #213b71 0%, #4383d9 100%);
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    padding: 8px 14px;
+    margin: 12px 7px 0 0;
+    font-size: .97em;
+    font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer;
+}
+form button:hover {
+    background: linear-gradient(90deg, #4368d9 0%, #213b71
