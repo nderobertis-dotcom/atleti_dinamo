@@ -24,7 +24,6 @@ main {
     margin: auto;
     padding: 18px;
 }
-
 .dashboard {
     display: flex;
     flex-direction: row;
@@ -63,17 +62,9 @@ main {
 }
 .stat-card.stat-interact { cursor: pointer; }
 .stat-card.medical-red,
-.stat-card.medical-red span {
-    background: #ffe0e0;
-    color: #b72a34 !important;
-    border-color: #df9797;
-}
+.stat-card.medical-red span { background: #ffe0e0; color: #b72a34 !important; border-color: #df9797; }
 .stat-card.medical-yellow,
-.stat-card.medical-yellow span {
-    background: #fff8d4;
-    color: #a68a13 !important;
-    border-color: #dec113;
-}
+.stat-card.medical-yellow span { background: #fff8d4; color: #a68a13 !important; border-color: #dec113; }
 .stat-card.stat-interact:hover, .stat-card.stat-interact:active {
     box-shadow: 0 4px 23px #213b7155;
     border-color: #568d67;
@@ -234,11 +225,4 @@ form button {
     border: none;
     border-radius: 7px;
     padding: 8px 14px;
-    margin: 12px 7px 0 0;
-    font-size: .97em;
-    font-weight: bold;
-    letter-spacing: 1px;
-    cursor: pointer;
-}
-form button:hover {
-    background: linear-gradient(90deg, #4368d9 0%, #213b71
+    margin: 12px
