@@ -114,10 +114,10 @@ function aggiornaDashboard() {
   const sommaEta = atleti.reduce((acc, a) => acc + (a.dataNascita ? calcolaEta(a.dataNascita) : 0), 0);
   const etaMedia = totale > 0 ? (sommaEta / totale).toFixed(1) : 0;
 
-  document.querySelector("#tot-atleti span").textContent = totale;
-  document.querySelector("#tot-maschi span").textContent = maschi;
-  document.querySelector("#tot-femmine span").textContent = femmine;
-  document.querySelector("#eta-media span").textContent = etaMedia;
+  document.getElementById("tot-atleti").textContent = totale;
+  document.getElementById("tot-maschi").textContent = maschi;
+  document.getElementById("tot-femmine").textContent = femmine;
+  document.getElementById("eta-media").textContent = etaMedia;
 }
 
 function visualizzaAtleta(idx) {
