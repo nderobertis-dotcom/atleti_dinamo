@@ -174,3 +174,11 @@ li {
 input[type="date"]#scadenzaVisita, input[type="date"]#mod-scadenzaVisita {
   margin-bottom: 12px;
 }
+.visita-label {
+  display: block;
+  font-size: 0.95rem;
+  color: #0080ff;
+  font-weight: bold;
+  margin: 0 0 2px 1px;
+  letter-spacing: 0.5px;
+}
