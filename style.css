@@ -51,3 +51,16 @@ li {
   padding: 10px;
   border-radius: 6px;
 }
+.logo {
+  display: block;
+  margin: 0 auto 10px auto;
+  max-width: 120px;
+  height: auto;
+}
+header {
+  background: #0080ff;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+  position: relative;
+}
