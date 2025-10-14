@@ -86,16 +86,18 @@
     </section>
   </main>
 
+  <!-- Modal Visualizza -->
   <div id="modal" class="modal">
     <div class="modal-content">
-      <span class="close-btn">&times;</span>
+      <span class="close-btn" id="close-view">&times;</span>
       <div id="dettaglio-atleta"></div>
     </div>
   </div>
 
+  <!-- Modal Modifica -->
   <div id="modal-modifica" class="modal">
     <div class="modal-content">
-      <span class="close-btn-modifica">&times;</span>
+      <span class="close-btn-modifica" id="close-edit">&times;</span>
       <form id="modifica-form">
         <h2>Modifica Atleta</h2>
         <input type="text" id="mod-nome" required>
@@ -108,20 +110,4 @@
         <input type="date" id="mod-dataNascita" required>
         <select id="mod-ruolo" required>
           <option value="">Ruolo</option>
-          <option value="PALLEGGIATORE">PALLEGGIATORE</option>
-          <option value="SCHIACCIATORE">SCHIACCIATORE</option>
-          <option value="CENTRALE">CENTRALE</option>
-          <option value="LIBERO">LIBERO</option>
-          <option value="OPPOSTO">OPPOSTO</option>
-        </select>
-        <input type="text" id="mod-codiceFiscale" required maxlength="16">
-        <input type="tel" id="mod-cellulare" required>
-        <label for="mod-scadenzaVisita" class="visita-label">Scadenza visita medica</label>
-        <input type="date" id="mod-scadenzaVisita" required>
-        <button type="submit">Salva</button>
-      </form>
-    </div>
-  </div>
-  <script src="app.js"></script>
-</body>
-</html>
+          <option value
