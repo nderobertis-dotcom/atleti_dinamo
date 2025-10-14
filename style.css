@@ -23,7 +23,7 @@ input[type="text"], input[type="tel"], select {
 .logo { max-width: 80px; height: auto; display: block; }
 .main-header h1 { margin: 0; font-size: 2rem; }
 
-/* DASHBOARD STRIP E CARD (compatto, effetto carta di credito senza icona) */
+/* DASHBOARD STRIP E CARD (robusta e compatta) */
 .dashboard-strip {
   width: 100vw;
   display: flex;
