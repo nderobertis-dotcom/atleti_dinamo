@@ -1,22 +1,14 @@
 function caricaAtleti() {
   let atleti = [];
   try {
-    const dati = localStorage.getItem('atleti');
-    if (dati) {
-      atleti = JSON.parse(dati);
-      if (!Array.isArray(atleti)) atleti = [];
-    }
-  } catch {
-    atleti = [];
-  }
+    atleti = JSON.parse(localStorage.getItem('atleti')) || [];
+    if (!Array.isArray(atleti)) atleti = [];
+  } catch { atleti = []; }
   return atleti;
 }
 function salvaAtleti(atleti) {
-  try {
-    localStorage.setItem('atleti', JSON.stringify(atleti));
-  } catch {}
+  localStorage.setItem('atleti', JSON.stringify(atleti));
 }
-
 function generaIdAtleta() {
   return (
     Date.now().toString(36) +
@@ -28,32 +20,29 @@ function daysBetween(date1, date2) {
     const d1 = new Date(date1 + 'T00:00:00');
     const d2 = new Date(date2 + 'T00:00:00');
     return Math.floor((d1 - d2)/(1000*60*60*24));
-  } catch {
-    return 9999;
-  }
+  } catch { return 9999; }
 }
 function statoVisita(scadenza) {
   if (!scadenza) return 'ok';
   const oggi = new Date();
   const oggiStr = oggi.toISOString().slice(0, 10);
   const diff = daysBetween(scadenza, oggiStr);
-  if (diff < 0) return 'ok';
-  if (diff === 0) return 'scadenza';
-  if (diff <= 31) return 'scadenza';
-  return 'scaduta';
+  if (diff < 0) return 'scaduta';
+  if (diff === 0 || diff <= 31) return 'scadenza';
+  return 'ok';
 }
-function aggiornaDashboard() {
-  let atleti = caricaAtleti();
-  const totale = atleti.length;
-  const maschi = atleti.filter(a => a.sesso === "M").length;
-  const femmine = atleti.filter(a => a.sesso === "F").length;
+function aggiornaDashboard(filtrati=null) {
+  const atleti = caricaAtleti();
+  const list = filtrati || atleti;
   const oggi = new Date().toISOString().slice(0,10);
-  const scadute = atleti.filter(a => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) > 31).length;
-  const inScadenza = atleti.filter(a => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) >=0 && daysBetween(a.scadenzaVisita, oggi) <=31).length;
-  const sommaEta = atleti.reduce((acc, a) => acc + (a.dataNascita ? calcolaEta(a.dataNascita) : 0), 0);
+  const totale = list.length;
+  const maschi = list.filter(a => a.sesso === "M").length;
+  const femmine = list.filter(a => a.sesso === "F").length;
+  const scadute = list.filter(a => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) < 0).length;
+  const inScadenza = list.filter(a => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) >=0 && daysBetween(a.scadenzaVisita, oggi) <=31).length;
+  const sommaEta = list.reduce((acc, a) => acc + (a.dataNascita ? calcolaEta(a.dataNascita) : 0), 0);
   const etaMedia = totale > 0 ? (sommaEta / totale).toFixed(1) : 0;
-
-  document.getElementById("tot-atleti").textContent = totale;
+  document.getElementById("tot-atleti").textContent = caricaAtleti().length; // sempre totale
   document.getElementById("tot-maschi").textContent = maschi;
   document.getElementById("tot-femmine").textContent = femmine;
   document.getElementById("tot-in-scadenza").textContent = inScadenza;
@@ -61,23 +50,26 @@ function aggiornaDashboard() {
   document.getElementById("eta-media").textContent = etaMedia;
 }
 
-function mostraAtleti(filtroList='all') {
-  const atletiList = document.getElementById('atleti-list');
-  atletiList.innerHTML = '';
+function filtraAtleti(filtro) {
   let atleti = caricaAtleti();
-  let atletiOrdinati = [...atleti].sort((a, b) => {
+  atleti = [...atleti].sort((a, b) => {
     const ana = ((a.nome || "") + " " + (a.cognome || "")).toUpperCase();
     const anb = ((b.nome || "") + " " + (b.cognome || "")).toUpperCase();
     return ana.localeCompare(anb);
   });
-
   const oggi = new Date().toISOString().slice(0,10);
-  let visualizzati = [];
-  if(filtroList==='maschi') visualizzati = atletiOrdinati.filter(a=>a.sesso==="M");
-  else if(filtroList==='femmine') visualizzati = atletiOrdinati.filter(a=>a.sesso==="F");
-  else if(filtroList==='scadenza') visualizzati = atletiOrdinati.filter(a=>a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) >=0 && daysBetween(a.scadenzaVisita, oggi)<=31);
-  else if(filtroList==='scadute') visualizzati = atletiOrdinati.filter(a=>a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) > 31);
-  else visualizzati = atletiOrdinati; // default: all
+  if(filtro==='maschi') return atleti.filter(a=>a.sesso==="M");
+  if(filtro==='femmine') return atleti.filter(a=>a.sesso==="F");
+  if(filtro==='scadenza') return atleti.filter(a=>a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) >=0 && daysBetween(a.scadenzaVisita, oggi)<=31);
+  if(filtro==='scadute') return atleti.filter(a=>a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) < 0);
+  return atleti; // "all"
+}
+
+function mostraAtleti(filtroList='all') {
+  const atletiList = document.getElementById('atleti-list');
+  atletiList.innerHTML = '';
+  const visualizzati = filtraAtleti(filtroList);
+  aggiornaDashboard(visualizzati);
 
   if (visualizzati.length === 0) {
     const li = document.createElement('li');
@@ -142,13 +134,11 @@ function calcolaEta(dataNascita) {
   if (m < 0 || (m===0 && oggi.getDate() < nascita.getDate())) eta--;
   return eta;
 }
-
 function formattaData(dataIso) {
   if (!dataIso) return "";
   const [anno, mese, giorno] = dataIso.split("-");
   return `${giorno}/${mese}/${anno}`;
 }
-
 function visualizzaAtleta(id) {
   let atleti = caricaAtleti();
   let atleta = atleti.find(a => a.id === id) || {};
@@ -185,7 +175,6 @@ function cancellaAtleta(id) {
     atleti.splice(idx, 1);
     salvaAtleti(atleti);
     mostraAtleti(lastFiltro);
-    aggiornaDashboard();
   }
 }
 function avviaModificaAtleta(id) {
@@ -224,7 +213,6 @@ function avviaModificaAtleta(id) {
     salvaAtleti(atleti);
     document.getElementById('modal-modifica').style.display = 'none';
     mostraAtleti(lastFiltro);
-    aggiornaDashboard();
   };
 }
 let lastFiltro = "all";
@@ -256,8 +244,6 @@ document.addEventListener('DOMContentLoaded', function() {
     atleti.push(nuovoAtleta);
     salvaAtleti(atleti);
     mostraAtleti(lastFiltro);
-    aggiornaDashboard();
-    this.reset();
   });
 
   document.querySelectorAll('.dash-card[data-filter]').forEach(card => {
@@ -267,3 +253,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 });
+
