@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     atleti.push(atleta);
     localStorage.setItem('atleti', JSON.stringify(atleti));
-
     mostraAtleti();
     this.reset();
   });
@@ -46,15 +45,26 @@ function mostraAtleti() {
   } catch {
     atleti = [];
   }
+  if (!Array.isArray(atleti)) atleti = [];
+
   atleti.forEach((atleta, idx) => {
-    const dataFormattata = formattaData(atleta.dataNascita);
+    // Rende compatibile la presenza di campi mancanti
+    const nome = (atleta.nome || "").toUpperCase();
+    const cognome = (atleta.cognome || "").toUpperCase();
+    const sesso = (atleta.sesso || "");
+    const ruolo = (atleta.ruolo || "");
+    const dataNascita = atleta.dataNascita || "";
+    const codiceFiscale = (atleta.codiceFiscale || "");
+    const cellulare = (atleta.cellulare || "");
+    const dataFormattata = formattaData(dataNascita);
 
     const li = document.createElement('li');
     li.innerHTML = `
       <span>
-        ${atleta.nome} ${atleta.cognome} – ${atleta.sesso} – ${atleta.ruolo}
-        <br>nato il ${dataFormattata} – <strong>CF:</strong> ${atleta.codiceFiscale}
-        <br><strong>Cell:</strong> ${atleta.cellulare}
+        ${nome} ${cognome}${sesso ? ' – ' + sesso : ''}${ruolo ? ' – ' + ruolo : ''}
+        ${dataNascita ? `<br>nato il ${dataFormattata}` : ''}
+        ${codiceFiscale ? ` – <strong>CF:</strong> ${codiceFiscale}` : ''}
+        ${cellulare ? `<br><strong>Cell:</strong> ${cellulare}` : ''}
       </span>
       <div class="btn-group">
         <button class="btn-small btn-visualizza" title="Visualizza" data-idx="${idx}">V</button>
@@ -79,16 +89,16 @@ function mostraAtleti() {
 // Modal visualizza atleta
 function visualizzaAtleta(idx) {
   let atleti = JSON.parse(localStorage.getItem('atleti')) || [];
-  let atleta = atleti[idx];
-  const dataFormattata = formattaData(atleta.dataNascita);
+  let atleta = atleti[idx] || {};
+  const dataFormattata = formattaData(atleta.dataNascita || "");
 
   document.getElementById('dettaglio-atleta').innerHTML = `
-    <h2>${atleta.nome} ${atleta.cognome}</h2>
-    <p><strong>Sesso:</strong> ${atleta.sesso}</p>
-    <p><strong>Ruolo:</strong> ${atleta.ruolo}</p>
+    <h2>${(atleta.nome || "")} ${(atleta.cognome || "")}</h2>
+    <p><strong>Sesso:</strong> ${(atleta.sesso || "")}</p>
+    <p><strong>Ruolo:</strong> ${(atleta.ruolo || "")}</p>
     <p><strong>Data di Nascita:</strong> ${dataFormattata}</p>
-    <p><strong>Codice Fiscale:</strong> ${atleta.codiceFiscale}</p>
-    <p><strong>Cellulare:</strong> ${atleta.cellulare}</p>
+    <p><strong>Codice Fiscale:</strong> ${(atleta.codiceFiscale || "")}</p>
+    <p><strong>Cellulare:</strong> ${(atleta.cellulare || "")}</p>
   `;
   document.getElementById('modal').style.display = 'flex';
   document.querySelector('.close-btn').onclick = function() {
@@ -109,14 +119,14 @@ function cancellaAtleta(idx) {
 // Modifica atleta (modale)
 function avviaModificaAtleta(idx) {
   let atleti = JSON.parse(localStorage.getItem('atleti')) || [];
-  let atleta = atleti[idx];
-  document.getElementById('mod-nome').value = atleta.nome;
-  document.getElementById('mod-cognome').value = atleta.cognome;
-  document.getElementById('mod-sesso').value = atleta.sesso;
-  document.getElementById('mod-dataNascita').value = atleta.dataNascita;
-  document.getElementById('mod-ruolo').value = atleta.ruolo;
-  document.getElementById('mod-codiceFiscale').value = atleta.codiceFiscale;
-  document.getElementById('mod-cellulare').value = atleta.cellulare;
+  let atleta = atleti[idx] || {};
+  document.getElementById('mod-nome').value = (atleta.nome || "");
+  document.getElementById('mod-cognome').value = (atleta.cognome || "");
+  document.getElementById('mod-sesso').value = (atleta.sesso || "");
+  document.getElementById('mod-dataNascita').value = (atleta.dataNascita || "");
+  document.getElementById('mod-ruolo').value = (atleta.ruolo || "");
+  document.getElementById('mod-codiceFiscale').value = (atleta.codiceFiscale || "");
+  document.getElementById('mod-cellulare').value = (atleta.cellulare || "");
 
   document.getElementById('modal-modifica').style.display = 'flex';
 
