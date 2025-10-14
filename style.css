@@ -83,3 +83,39 @@ li {
   margin: 0 0 2px 1px;
   letter-spacing: 0.5px;
 }
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0; top: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.5);
+  justify-content: center; align-items: center;
+}
+.modal-content {
+  background: #fff;
+  padding: 32px 28px 28px 28px;
+  border-radius: 14px;
+  min-width: 285px;
+  max-width: 95vw;
+  max-height: 90vh;
+  margin: auto;
+  box-shadow: 0 8px 44px 0 rgba(0,0,0,0.18);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.close-btn, .close-btn-modifica {
+  position: absolute;
+  top: 12px; right: 18px;
+  color: #e63946;
+  font-size: 2.1rem;
+  font-weight: bold;
+  line-height: 1;
+  cursor: pointer;
+  background: none;
+  border: none;
+  z-index: 1002;
+}
+#dettaglio-atleta > h2 { margin-top: 2px; }
