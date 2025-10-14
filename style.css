@@ -78,7 +78,7 @@ li {
 .btn-small {
   width: 30px;
   height: 30px;
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: bold;
   border-radius: 50%;
   border: none;
@@ -120,6 +120,7 @@ li {
   border-radius: 10px;
   max-width: 350px;
   margin: auto;
+  position: relative;
 }
 .close-btn {
   position: absolute;
