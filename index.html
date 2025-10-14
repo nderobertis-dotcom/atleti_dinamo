@@ -16,28 +16,24 @@
     <div class="dashboard">
       <div class="dash-card">
         <div class="dash-card-inner">
-          <div class="dash-icon">👥</div>
-          <div class="dash-title">NUMERO ATLETI</div>
+          <div class="dash-title">ATLETI</div>
           <div class="dash-value" id="tot-atleti">0</div>
         </div>
       </div>
       <div class="dash-card">
         <div class="dash-card-inner">
-          <div class="dash-icon">♂️</div>
-          <div class="dash-title">NUMERO MASCHI</div>
+          <div class="dash-title">MASCHI</div>
           <div class="dash-value" id="tot-maschi">0</div>
         </div>
       </div>
       <div class="dash-card">
         <div class="dash-card-inner">
-          <div class="dash-icon">♀️</div>
-          <div class="dash-title">NUMERO DONNE</div>
+          <div class="dash-title">FEMMINE</div>
           <div class="dash-value" id="tot-femmine">0</div>
         </div>
       </div>
       <div class="dash-card">
         <div class="dash-card-inner">
-          <div class="dash-icon">📈</div>
           <div class="dash-title">ETÀ MEDIA</div>
           <div class="dash-value" id="eta-media">0</div>
         </div>
@@ -85,34 +81,4 @@
     </div>
   </div>
 
-  <!-- Modal Modifica -->
-  <div id="modal-modifica" class="modal">
-    <div class="modal-content">
-      <span class="close-btn-modifica">&times;</span>
-      <form id="modifica-form">
-        <h2>Modifica Atleta</h2>
-        <input type="text" id="mod-nome" required>
-        <input type="text" id="mod-cognome" required>
-        <select id="mod-sesso" required>
-          <option value="">Sesso</option>
-          <option value="M">MASCHIO</option>
-          <option value="F">FEMMINA</option>
-        </select>
-        <input type="date" id="mod-dataNascita" required>
-        <select id="mod-ruolo" required>
-          <option value="">Ruolo</option>
-          <option value="PALLEGGIATORE">PALLEGGIATORE</option>
-          <option value="SCHIACCIATORE">SCHIACCIATORE</option>
-          <option value="CENTRALE">CENTRALE</option>
-          <option value="LIBERO">LIBERO</option>
-          <option value="OPPOSTO">OPPOSTO</option>
-        </select>
-        <input type="text" id="mod-codiceFiscale" required maxlength="16">
-        <input type="tel" id="mod-cellulare" required>
-        <button type="submit">Salva</button>
-      </form>
-    </div>
-  </div>
-  <script src="app.js"></script>
-</body>
-</html>
+  <!--
