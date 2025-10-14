@@ -1,16 +1,37 @@
+// ------ GESTIONE LETTURA/SCRITTURA ROBUSTA ------
 function caricaAtleti() {
-  let atleti;
+  let atleti = [];
   try {
-    atleti = JSON.parse(localStorage.getItem('atleti') || '[]');
-    if (!Array.isArray(atleti)) atleti = [];
+    const dati = localStorage.getItem('atleti');
+    if (dati) {
+      atleti = JSON.parse(dati);
+      if (!Array.isArray(atleti)) atleti = [];
+    }
   } catch {
     atleti = [];
   }
   return atleti;
 }
-
 function salvaAtleti(atleti) {
-  localStorage.setItem('atleti', JSON.stringify(atleti));
+  try {
+    localStorage.setItem('atleti', JSON.stringify(atleti));
+  } catch {
+    // fallback: non salva nulla ma non cancella mai nulla
+  }
+}
+
+// ------ DASHBOARD & LISTA ------
+function aggiornaDashboard() {
+  let atleti = caricaAtleti();
+  const totale = atleti.length;
+  const maschi = atleti.filter(a => a.sesso === "M").length;
+  const femmine = atleti.filter(a => a.sesso === "F").length;
+  const sommaEta = atleti.reduce((acc, a) => acc + (a.dataNascita ? calcolaEta(a.dataNascita) : 0), 0);
+  const etaMedia = totale > 0 ? (sommaEta / totale).toFixed(1) : 0;
+  document.getElementById("tot-atleti").textContent = totale;
+  document.getElementById("tot-maschi").textContent = maschi;
+  document.getElementById("tot-femmine").textContent = femmine;
+  document.getElementById("eta-media").textContent = etaMedia;
 }
 
 function mostraAtleti() {
@@ -18,10 +39,8 @@ function mostraAtleti() {
   atletiList.innerHTML = '';
   let atleti = caricaAtleti();
 
-  atleti = atleti.slice(); // copia difensiva
-
-  // Ordina alfabeticamente per nome+cognome
-  atleti.sort((a, b) => {
+  // Ordina alfabeticamente
+  atleti = [...atleti].sort((a, b) => {
     const ana = ((a.nome || "") + " " + (a.cognome || "")).toUpperCase();
     const anb = ((b.nome || "") + " " + (b.cognome || "")).toUpperCase();
     return ana.localeCompare(anb);
@@ -65,20 +84,6 @@ function mostraAtleti() {
   });
 }
 
-function aggiornaDashboard() {
-  let atleti = caricaAtleti();
-  const totale = atleti.length;
-  const maschi = atleti.filter(a => a.sesso === "M").length;
-  const femmine = atleti.filter(a => a.sesso === "F").length;
-  const sommaEta = atleti.reduce((acc, a) => acc + (a.dataNascita ? calcolaEta(a.dataNascita) : 0), 0);
-  const etaMedia = totale > 0 ? (sommaEta / totale).toFixed(1) : 0;
-
-  document.getElementById("tot-atleti").textContent = totale;
-  document.getElementById("tot-maschi").textContent = maschi;
-  document.getElementById("tot-femmine").textContent = femmine;
-  document.getElementById("eta-media").textContent = etaMedia;
-}
-
 function calcolaEta(dataNascita) {
   if (!dataNascita) return "";
   const oggi = new Date();
@@ -118,6 +123,7 @@ function visualizzaAtleta(idx) {
   };
 }
 
+// ------- OPERAZIONI CRUD -------
 function cancellaAtleta(idx) {
   let atleti = caricaAtleti();
   if(confirm("Vuoi cancellare questo atleta?")) {
@@ -127,7 +133,6 @@ function cancellaAtleta(idx) {
     aggiornaDashboard();
   }
 }
-
 function avviaModificaAtleta(idx) {
   let atleti = caricaAtleti();
   let atleta = atleti[idx] || {};
@@ -163,7 +168,7 @@ function avviaModificaAtleta(idx) {
   };
 }
 
-// EVENTI INIZIALIZZAZIONE
+// ------- EVENTI INIZIALI -------
 document.addEventListener('DOMContentLoaded', function() {
   mostraAtleti();
   aggiornaDashboard();
