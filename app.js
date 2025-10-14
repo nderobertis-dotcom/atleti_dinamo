@@ -17,7 +17,6 @@ function salvaAtleti(atleti) {
   } catch {}
 }
 
-// Crea un identificatore unico (UUID-like) breve per ogni atleta
 function generaIdAtleta() {
   return (
     Date.now().toString(36) +
@@ -25,33 +24,70 @@ function generaIdAtleta() {
   );
 }
 
+// Utility per confronto date
+function daysBetween(date1, date2) {
+  // Restituisce giorni (interi) tra due date YYYY-MM-DD (date1 - date2)
+  try {
+    const d1 = new Date(date1 + 'T00:00:00');
+    const d2 = new Date(date2 + 'T00:00:00');
+    return Math.floor((d1 - d2)/(1000*60*60*24));
+  } catch {
+    return 9999;
+  }
+}
+
+// Dato uno stato visita, restituisce 'ok','scadenza','scaduta'
+function statoVisita(scadenza) {
+  if (!scadenza) return 'ok';
+  const oggi = new Date();
+  const oggiStr = oggi.toISOString().slice(0, 10);
+  const diff = daysBetween(scadenza, oggiStr);
+  if (diff < 0) return 'ok';
+  if (diff === 0) return 'scadenza';
+  if (diff <= 31) return 'scadenza';
+  return 'scaduta';
+}
+
 function aggiornaDashboard() {
   let atleti = caricaAtleti();
   const totale = atleti.length;
   const maschi = atleti.filter(a => a.sesso === "M").length;
   const femmine = atleti.filter(a => a.sesso === "F").length;
+  const oggi = new Date().toISOString().slice(0,10);
+  const scadute = atleti.filter(a => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) > 31).length;
+  const inScadenza = atleti.filter(a => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) >=0 && daysBetween(a.scadenzaVisita, oggi) <=31).length;
   const sommaEta = atleti.reduce((acc, a) => acc + (a.dataNascita ? calcolaEta(a.dataNascita) : 0), 0);
   const etaMedia = totale > 0 ? (sommaEta / totale).toFixed(1) : 0;
+
   document.getElementById("tot-atleti").textContent = totale;
   document.getElementById("tot-maschi").textContent = maschi;
   document.getElementById("tot-femmine").textContent = femmine;
+  document.getElementById("tot-in-scadenza").textContent = inScadenza;
+  document.getElementById("tot-scadute").textContent = scadute;
   document.getElementById("eta-media").textContent = etaMedia;
 }
 
-function mostraAtleti() {
+// filtroList: 'all' | 'maschi' | 'femmine' | 'scadenza' | 'scadute'
+function mostraAtleti(filtroList='all') {
   const atletiList = document.getElementById('atleti-list');
   atletiList.innerHTML = '';
   let atleti = caricaAtleti();
-
-  // Array ordinato alfabeticamente con ID univoco!
+  // Ordina
   let atletiOrdinati = [...atleti].sort((a, b) => {
     const ana = ((a.nome || "") + " " + (a.cognome || "")).toUpperCase();
     const anb = ((b.nome || "") + " " + (b.cognome || "")).toUpperCase();
     return ana.localeCompare(anb);
   });
 
+  // Filtri
+  const oggi = new Date().toISOString().slice(0,10);
+  if(filtroList==='maschi') atletiOrdinati = atletiOrdinati.filter(a=>a.sesso==="M");
+  if(filtroList==='femmine') atletiOrdinati = atletiOrdinati.filter(a=>a.sesso==="F");
+  if(filtroList==='scadenza') atletiOrdinati = atletiOrdinati.filter(a=>a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) >=0 && daysBetween(a.scadenzaVisita, oggi)<=31);
+  if(filtroList==='scadute') atletiOrdinati = atletiOrdinati.filter(a=>a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) > 31);
+
   atletiOrdinati.forEach((atleta) => {
-    if (!atleta.id) return; // sicurezza
+    if (!atleta.id) return;
     const nome = atleta.nome || "";
     const cognome = atleta.cognome || "";
     const sesso = atleta.sesso || "";
@@ -61,6 +97,14 @@ function mostraAtleti() {
     const cellulare = atleta.cellulare || "";
     const eta = dataNascita ? calcolaEta(dataNascita) : "";
     const dataFormattata = formattaData(dataNascita);
+    const scadenzaVisita = atleta.scadenzaVisita || "";
+    const scadenzaFormattata = formattaData(scadenzaVisita);
+
+    // classi per evidenziare visita
+    let classeVisita = "data-ok";
+    const stato = statoVisita(scadenzaVisita);
+    if (stato === 'scadenza') classeVisita = "data-scanza";
+    if (stato === 'scaduta') classeVisita = "data-scaduta";
 
     const li = document.createElement('li');
     li.innerHTML = `
@@ -68,6 +112,7 @@ function mostraAtleti() {
         ${nome} ${cognome} – ${sesso} – ${ruolo}
         <br>nato il ${dataFormattata} – <strong>ETA':</strong> ${eta} – <strong>CF:</strong> ${codiceFiscale}
         <br><strong>Cell:</strong> ${cellulare}
+        <br><span class="${classeVisita}">SCADENZA VISITA: ${scadenzaFormattata}</span>
       </span>
       <div class="btn-group">
         <button class="btn-small btn-visualizza" title="Visualizza" data-id="${atleta.id}">V</button>
@@ -95,9 +140,7 @@ function calcolaEta(dataNascita) {
   const nascita = new Date(dataNascita);
   let eta = oggi.getFullYear() - nascita.getFullYear();
   const m = oggi.getMonth() - nascita.getMonth();
-  if (m < 0 || (m === 0 && oggi.getDate() < nascita.getDate())) {
-    eta--;
-  }
+  if (m < 0 || (m===0 && oggi.getDate() < nascita.getDate())) eta--;
   return eta;
 }
 
@@ -112,6 +155,14 @@ function visualizzaAtleta(id) {
   let atleta = atleti.find(a => a.id === id) || {};
   const dataFormattata = formattaData(atleta.dataNascita || "");
   const eta = atleta.dataNascita ? calcolaEta(atleta.dataNascita) : "";
+  const scadenzaVisita = atleta.scadenzaVisita || "";
+  const scadenzaFormattata = formattaData(scadenzaVisita);
+
+  // classi per evidenziare visita
+  let classeVisita = "data-ok";
+  const stato = statoVisita(scadenzaVisita);
+  if (stato === 'scadenza') classeVisita = "data-scanza";
+  if (stato === 'scaduta') classeVisita = "data-scaduta";
 
   document.getElementById('dettaglio-atleta').innerHTML = `
     <h2>${(atleta.nome || "")} ${(atleta.cognome || "")}</h2>
@@ -121,6 +172,7 @@ function visualizzaAtleta(id) {
     <p><strong>Età:</strong> ${eta}</p>
     <p><strong>Codice Fiscale:</strong> ${(atleta.codiceFiscale || "")}</p>
     <p><strong>Cellulare:</strong> ${(atleta.cellulare || "")}</p>
+    <p><span class="${classeVisita}">SCADENZA VISITA: ${scadenzaFormattata}</span></p>
   `;
   document.getElementById('modal').style.display = 'flex';
   document.querySelector('.close-btn').onclick = function() {
@@ -128,7 +180,6 @@ function visualizzaAtleta(id) {
   };
 }
 
-// ------- OPERAZIONI CRUD -------
 function cancellaAtleta(id) {
   let atleti = caricaAtleti();
   const idx = atleti.findIndex(a => a.id === id);
@@ -136,7 +187,7 @@ function cancellaAtleta(id) {
   if(confirm("Vuoi cancellare questo atleta?")) {
     atleti.splice(idx, 1);
     salvaAtleti(atleti);
-    mostraAtleti();
+    mostraAtleti(lastFiltro); // ricarica la visualizzazione corrente
     aggiornaDashboard();
   }
 }
@@ -152,6 +203,7 @@ function avviaModificaAtleta(id) {
   document.getElementById('mod-ruolo').value = (atleta.ruolo || "");
   document.getElementById('mod-codiceFiscale').value = (atleta.codiceFiscale || "");
   document.getElementById('mod-cellulare').value = (atleta.cellulare || "");
+  document.getElementById('mod-scadenzaVisita').value = (atleta.scadenzaVisita || "");
 
   document.getElementById('modal-modifica').style.display = 'flex';
 
@@ -169,16 +221,18 @@ function avviaModificaAtleta(id) {
       dataNascita: document.getElementById('mod-dataNascita').value,
       ruolo: document.getElementById('mod-ruolo').value.toUpperCase(),
       codiceFiscale: document.getElementById('mod-codiceFiscale').value.trim().toUpperCase(),
-      cellulare: document.getElementById('mod-cellulare').value.trim()
+      cellulare: document.getElementById('mod-cellulare').value.trim(),
+      scadenzaVisita: document.getElementById('mod-scadenzaVisita').value
     };
     salvaAtleti(atleti);
     document.getElementById('modal-modifica').style.display = 'none';
-    mostraAtleti();
+    mostraAtleti(lastFiltro);
     aggiornaDashboard();
   };
 }
 
-// ------ INSERIMENTO --------
+// --- Query di filtro lista (dashboard)
+let lastFiltro = "all";
 document.addEventListener('DOMContentLoaded', function() {
   mostraAtleti();
   aggiornaDashboard();
@@ -192,8 +246,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const ruolo = document.getElementById('ruolo').value.toUpperCase();
     const codiceFiscale = document.getElementById('codiceFiscale').value.trim().toUpperCase();
     const cellulare = document.getElementById('cellulare').value.trim();
+    const scadenzaVisita = document.getElementById('scadenzaVisita').value;
 
-    if (!nome || !cognome || !sesso || !dataNascita || !ruolo || !codiceFiscale || !cellulare) {
+    if (!nome || !cognome || !sesso || !dataNascita || !ruolo || !codiceFiscale || !cellulare || !scadenzaVisita) {
       alert('Per favore compila tutti i campi.');
       return;
     }
@@ -201,12 +256,20 @@ document.addEventListener('DOMContentLoaded', function() {
     let atleti = caricaAtleti();
     const nuovoAtleta = {
       id: generaIdAtleta(),
-      nome, cognome, sesso, dataNascita, ruolo, codiceFiscale, cellulare
+      nome, cognome, sesso, dataNascita, ruolo, codiceFiscale, cellulare, scadenzaVisita
     };
     atleti.push(nuovoAtleta);
     salvaAtleti(atleti);
-    mostraAtleti();
+    mostraAtleti(lastFiltro);
     aggiornaDashboard();
     this.reset();
+  });
+
+  // Pulsanti dashboard (filtri)
+  document.querySelectorAll('.dash-card[data-filter]').forEach(card => {
+    card.addEventListener('click', function() {
+      lastFiltro = card.dataset.filter;
+      mostraAtleti(lastFiltro);
+    });
   });
 });
