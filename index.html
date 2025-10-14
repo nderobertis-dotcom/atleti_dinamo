@@ -11,12 +11,28 @@
     <h1>POLISPORTIVA DINAMO MOLFETTA</h1>
   </header>
 
-  <!-- DASHBOARD STATISTICHE -->
+  <!-- DASHBOARD STATISTICHE CARD -->
   <section class="dashboard">
-    <button id="tot-atleti" class="dash-btn">NUMERO ATLETI: <span>0</span></button>
-    <button id="tot-maschi" class="dash-btn">NUMERO MASCHI: <span>0</span></button>
-    <button id="tot-femmine" class="dash-btn">NUMERO DONNE: <span>0</span></button>
-    <button id="eta-media" class="dash-btn">ETÀ MEDIA: <span>0</span></button>
+    <div class="dash-card">
+      <div class="dash-icon">👥</div>
+      <div class="dash-title">NUMERO ATLETI</div>
+      <div class="dash-value" id="tot-atleti">0</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-icon">♂️</div>
+      <div class="dash-title">NUMERO MASCHI</div>
+      <div class="dash-value" id="tot-maschi">0</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-icon">♀️</div>
+      <div class="dash-title">NUMERO DONNE</div>
+      <div class="dash-value" id="tot-femmine">0</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-icon">📈</div>
+      <div class="dash-title">ETÀ MEDIA</div>
+      <div class="dash-value" id="eta-media">0</div>
+    </div>
   </section>
 
   <main>
@@ -83,4 +99,10 @@
         </select>
         <input type="text" id="mod-codiceFiscale" required maxlength="16">
         <input type="tel" id="mod-cellulare" required>
-        <button type="submit
+        <button type="submit">Salva</button>
+      </form>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
