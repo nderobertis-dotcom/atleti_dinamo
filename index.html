@@ -14,22 +14,34 @@
   <!-- DASHBOARD STATISTICHE CARTE -->
   <div class="dashboard-strip">
     <div class="dashboard">
-      <div class="dash-card">
+      <div class="dash-card dash-normal-btn" data-filter="all">
         <div class="dash-card-inner">
           <div class="dash-title">ATLETI</div>
           <div class="dash-value" id="tot-atleti">0</div>
         </div>
       </div>
-      <div class="dash-card">
+      <div class="dash-card dash-normal-btn" data-filter="maschi">
         <div class="dash-card-inner">
           <div class="dash-title">MASCHI</div>
           <div class="dash-value" id="tot-maschi">0</div>
         </div>
       </div>
-      <div class="dash-card">
+      <div class="dash-card dash-normal-btn" data-filter="femmine">
         <div class="dash-card-inner">
           <div class="dash-title">FEMMINE</div>
           <div class="dash-value" id="tot-femmine">0</div>
+        </div>
+      </div>
+      <div class="dash-card dash-scanza-btn" data-filter="scadenza">
+        <div class="dash-card-inner">
+          <div class="dash-title">VISITE IN SCADENZA</div>
+          <div class="dash-value" id="tot-in-scadenza">0</div>
+        </div>
+      </div>
+      <div class="dash-card dash-scadute-btn" data-filter="scadute">
+        <div class="dash-card-inner">
+          <div class="dash-title">VISITE SCADUTE</div>
+          <div class="dash-value" id="tot-scadute">0</div>
         </div>
       </div>
       <div class="dash-card">
@@ -63,6 +75,7 @@
         </select>
         <input type="text" id="codiceFiscale" placeholder="Codice Fiscale" required maxlength="16" autocomplete="off">
         <input type="tel" id="cellulare" placeholder="Cellulare" required>
+        <input type="date" id="scadenzaVisita" placeholder="Scadenza Visita Medica" required>
         <button type="submit">Aggiungi</button>
       </form>
     </section>
@@ -105,6 +118,7 @@
         </select>
         <input type="text" id="mod-codiceFiscale" required maxlength="16">
         <input type="tel" id="mod-cellulare" required>
+        <input type="date" id="mod-scadenzaVisita" required>
         <button type="submit">Salva</button>
       </form>
     </div>
