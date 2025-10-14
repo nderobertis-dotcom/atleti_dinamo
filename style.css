@@ -3,6 +3,11 @@ body {
   background: #f2f2f2;
   margin: 0;
   padding: 0;
+  text-transform: uppercase;
+}
+
+input[type="text"], input[type="tel"], select {
+  text-transform: uppercase;
 }
 
 .main-header {
@@ -28,7 +33,7 @@ body {
 }
 
 main {
-  max-width: 600px;
+  max-width: 700px;
   margin: 30px auto;
   background: #fff;
   padding: 30px;
@@ -45,6 +50,7 @@ form {
 input, select, button {
   padding: 10px;
   font-size: 1rem;
+  font-family: inherit;
 }
 
 button {
@@ -58,6 +64,7 @@ button {
 ul {
   list-style: none;
   padding: 0;
+  text-transform: uppercase;
 }
 
 li {
@@ -88,6 +95,7 @@ li {
   align-items: center;
   justify-content: center;
   padding: 0;
+  text-transform: uppercase;
 }
 
 .btn-visualizza {
@@ -117,12 +125,11 @@ li {
   background: #fff;
   padding: 30px;
   border-radius: 10px;
-  max-width: 350px;
+  max-width: 370px;
   margin: auto;
   position: relative;
 }
-.close-btn,
-.close-btn-modifica {
+.close-btn, .close-btn-modifica {
   position: absolute;
   top: 12px; right: 20px;
   color: #0080ff;
