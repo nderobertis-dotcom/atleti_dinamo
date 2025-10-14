@@ -27,22 +27,22 @@ function statoVisita(scadenza) {
   const oggi = new Date();
   const oggiStr = oggi.toISOString().slice(0, 10);
   const diff = daysBetween(scadenza, oggiStr);
-  if (diff < 0) return 'scaduta';
-  if (diff === 0 || diff <= 31) return 'scadenza';
-  return 'ok';
+  if (diff < 0) return 'scaduta';          // ROSSO
+  if (diff >= 0 && diff <= 31) return 'scanza'; // ARANCIONE
+  return 'ok';                             // VERDE
 }
 function aggiornaDashboard(filtrati=null) {
   const atleti = caricaAtleti();
   const list = filtrati || atleti;
   const oggi = new Date().toISOString().slice(0,10);
-  const totale = list.length;
-  const maschi = list.filter(a => a.sesso === "M").length;
-  const femmine = list.filter(a => a.sesso === "F").length;
-  const scadute = list.filter(a => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) < 0).length;
-  const inScadenza = list.filter(a => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) >=0 && daysBetween(a.scadenzaVisita, oggi) <=31).length;
-  const sommaEta = list.reduce((acc, a) => acc + (a.dataNascita ? calcolaEta(a.dataNascita) : 0), 0);
+  const totale = atleti.length;
+  const maschi = atleti.filter(a => a.sesso === "M").length;
+  const femmine = atleti.filter(a => a.sesso === "F").length;
+  const scadute = atleti.filter(a => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) < 0).length;
+  const inScadenza = atleti.filter(a => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) >=0 && daysBetween(a.scadenzaVisita, oggi) <=31).length;
+  const sommaEta = atleti.reduce((acc, a) => acc + (a.dataNascita ? calcolaEta(a.dataNascita) : 0), 0);
   const etaMedia = totale > 0 ? (sommaEta / totale).toFixed(1) : 0;
-  document.getElementById("tot-atleti").textContent = caricaAtleti().length; // sempre totale
+  document.getElementById("tot-atleti").textContent = totale;
   document.getElementById("tot-maschi").textContent = maschi;
   document.getElementById("tot-femmine").textContent = femmine;
   document.getElementById("tot-in-scadenza").textContent = inScadenza;
@@ -69,7 +69,7 @@ function mostraAtleti(filtroList='all') {
   const atletiList = document.getElementById('atleti-list');
   atletiList.innerHTML = '';
   const visualizzati = filtraAtleti(filtroList);
-  aggiornaDashboard(visualizzati);
+  aggiornaDashboard();
 
   if (visualizzati.length === 0) {
     const li = document.createElement('li');
@@ -94,7 +94,7 @@ function mostraAtleti(filtroList='all') {
 
     let classeVisita = "data-ok";
     const stato = statoVisita(scadenzaVisita);
-    if (stato === 'scadenza') classeVisita = "data-scanza";
+    if (stato === 'scanza') classeVisita = "data-scanza";
     if (stato === 'scaduta') classeVisita = "data-scaduta";
 
     const li = document.createElement('li');
@@ -149,7 +149,7 @@ function visualizzaAtleta(id) {
 
   let classeVisita = "data-ok";
   const stato = statoVisita(scadenzaVisita);
-  if (stato === 'scadenza') classeVisita = "data-scanza";
+  if (stato === 'scanza') classeVisita = "data-scanza";
   if (stato === 'scaduta') classeVisita = "data-scaduta";
 
   document.getElementById('dettaglio-atleta').innerHTML = `
@@ -253,4 +253,3 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 });
-
