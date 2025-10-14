@@ -103,7 +103,6 @@ li {
   color: #fff;
 }
 
-/* Modal stile */
 .modal {
   display: none;
   position: fixed;
@@ -122,7 +121,8 @@ li {
   margin: auto;
   position: relative;
 }
-.close-btn {
+.close-btn,
+.close-btn-modifica {
   position: absolute;
   top: 12px; right: 20px;
   color: #0080ff;
