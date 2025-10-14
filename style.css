@@ -5,110 +5,56 @@ body {
   padding: 0;
   text-transform: uppercase;
 }
-
-input[type="text"], input[type="tel"], select {
-  text-transform: uppercase;
-}
-
+input[type="text"], input[type="tel"], select { text-transform: uppercase; }
 .main-header {
-  background: #0080ff;
-  color: #fff;
-  padding: 16px 20px 6px 20px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 18px;
+  background: #0080ff; color: #fff; padding: 16px 20px 6px 20px;
+  display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 18px;
 }
 .logo { max-width: 80px; height: auto; display: block; }
 .main-header h1 { margin: 0; font-size: 2rem; }
-
 .dashboard-strip {
   width: 100vw;
-  display: flex;
-  justify-content: center;
-  background: transparent;
-  margin-top: 12px;
+  display: flex; justify-content: center; background: transparent; margin-top: 12px;
 }
 .dashboard {
-  display: flex;
-  gap: 16px;
-  justify-content: center;
-  align-items: stretch;
-  margin: 0 auto 18px auto;
+  display: flex; gap: 16px; justify-content: center; align-items: stretch; margin: 0 auto 18px auto;
 }
 .dash-card {
   border-radius: 14px;
   background: linear-gradient(145deg, #0080ff 75%, #a6d3fd 100%);
   box-shadow: 0 3px 16px 0 rgba(0,0,0,0.13);
-  min-width: 95px;
-  min-height: 65px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s;
-  cursor: pointer;
-  padding: 0;
+  min-width: 95px; min-height: 65px; display: flex; align-items: center; justify-content: center;
+  transition: transform 0.2s; cursor: pointer; padding: 0;
 }
 .dash-card.dash-scanza-btn { background: linear-gradient(145deg, #FFA500 65%, #fffbe6 100%); }
 .dash-card.dash-scadute-btn { background: linear-gradient(145deg, #e63946 65%, #ffcfcf 100%); }
 .dash-card:hover { transform: scale(1.045); }
 .dash-card-inner {
-  background: rgba(255,255,255,0.88);
-  border-radius: 10px;
-  padding: 10px 8px 8px 8px;
-  width: 90px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  background: rgba(255,255,255,0.88); border-radius: 10px; padding: 10px 8px 8px 8px;
+  width: 90px; text-align: center; display: flex; flex-direction: column; align-items: center;
 }
-.dash-title{
-  font-size: 0.91em;
-  font-weight: bold;
-  letter-spacing: 1px;
-  margin-bottom: 5px;
-  color: #0080ff;
-}
-.dash-card.dash-scanza-btn .dash-title {
-  color: #b25e00;
-}
-.dash-card.dash-scadute-btn .dash-title {
-  color: #aa2434;
-}
-.dash-value{
-  font-size: 1.4em;
-  font-weight: bolder;
-  color: #003974;
-  margin-bottom: 2px;
-}
+.dash-title { font-size: 0.91em; font-weight: bold; letter-spacing: 1px; margin-bottom: 5px; color: #0080ff; }
+.dash-card.dash-scanza-btn .dash-title { color: #b25e00; }
+.dash-card.dash-scadute-btn .dash-title { color: #aa2434; }
+.dash-value { font-size: 1.4em; font-weight: bolder; color: #003974; margin-bottom: 2px; }
 .dash-card.dash-scanza-btn .dash-value { color: #b25e00; }
 .dash-card.dash-scadute-btn .dash-value { color: #b91b2c; }
-
 main {
-  max-width: 700px;
-  margin: 10px auto 0 auto;
-  background: #fff;
-  padding: 30px;
-  border-radius: 12px;
+  max-width: 700px; margin: 10px auto 0 auto; background: #fff; padding: 30px; border-radius: 12px;
 }
 form { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
 input, select, button { padding: 10px; font-size: 1rem; font-family: inherit; }
 button {
-  background: #0080ff; color: #fff;
-  border: none; border-radius: 5px; cursor: pointer;
+  background: #0080ff; color: #fff; border: none; border-radius: 5px; cursor: pointer;
 }
 ul { list-style: none; padding: 0; }
 li {
-  background: #e6e6e6;
-  margin-bottom: 8px;
-  padding: 10px; border-radius: 6px;
+  background: #e6e6e6; margin-bottom: 8px; padding: 10px; border-radius: 6px;
   display: flex; align-items: center; justify-content: space-between;
 }
 .btn-group { display: flex; gap: 4px; }
 .btn-small {
-  width: 30px; height: 30px;
-  font-size: 1.1rem; font-weight: bold;
+  width: 30px; height: 30px; font-size: 1.1rem; font-weight: bold;
   border-radius: 50%; border: none; cursor: pointer; margin-left: 4px;
   display: flex; align-items: center; justify-content: center; padding: 0;
   text-transform: uppercase;
@@ -116,34 +62,19 @@ li {
 .btn-visualizza { background: #0080ff; color: #fff; }
 .btn-modifica { background: #ffe066; color: #333; }
 .btn-cancella { background: #e63946; color: #fff; }
-
-
 /* Evidenziazione scadenza visita */
 .data-ok {
-  background: #45d345;
-  color: #fff;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-weight: bold;
-  display: inline-block;
+  background: #45d345; color: #fff; padding: 6px 12px;
+  border-radius: 8px; font-weight: bold; display: inline-block;
 }
 .data-scanza {
-  background: #FFA500;
-  color: #fff;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-weight: bold;
-  display: inline-block;
+  background: #FFA500; color: #fff; padding: 6px 12px;
+  border-radius: 8px; font-weight: bold; display: inline-block;
 }
 .data-scaduta {
-  background: #e63946;
-  color: #fff;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-weight: bold;
-  display: inline-block;
+  background: #e63946; color: #fff; padding: 6px 12px;
+  border-radius: 8px; font-weight: bold; display: inline-block;
 }
-
 .visita-label {
   display: block;
   font-size: 0.95rem;
