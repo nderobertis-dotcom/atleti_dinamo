@@ -14,9 +14,15 @@ function caricaAtleti() {
 function salvaAtleti(atleti) {
   try {
     localStorage.setItem('atleti', JSON.stringify(atleti));
-  } catch {
-    // fallback: non salva nulla ma non cancella mai nulla
-  }
+  } catch {}
+}
+
+// Crea un identificatore unico (UUID-like) breve per ogni atleta
+function generaIdAtleta() {
+  return (
+    Date.now().toString(36) +
+    Math.random().toString(36).substr(2, 6)
+  );
 }
 
 function aggiornaDashboard() {
@@ -37,17 +43,15 @@ function mostraAtleti() {
   atletiList.innerHTML = '';
   let atleti = caricaAtleti();
 
-  // Aggiungi associato per ordinamento stabile
-  let atletiOrdinati = atleti
-    .map((a, idx) => ({ ...a, indiceReale: idx }))
-    .sort((a, b) => {
-      const ana = ((a.nome || "") + " " + (a.cognome || "")).toUpperCase();
-      const anb = ((b.nome || "") + " " + (b.cognome || "")).toUpperCase();
-      return ana.localeCompare(anb);
-    });
+  // Array ordinato alfabeticamente con ID univoco!
+  let atletiOrdinati = [...atleti].sort((a, b) => {
+    const ana = ((a.nome || "") + " " + (a.cognome || "")).toUpperCase();
+    const anb = ((b.nome || "") + " " + (b.cognome || "")).toUpperCase();
+    return ana.localeCompare(anb);
+  });
 
-  atletiOrdinati.forEach((atleta, vIdx) => {
-    const { indiceReale } = atleta;
+  atletiOrdinati.forEach((atleta) => {
+    if (!atleta.id) return; // sicurezza
     const nome = atleta.nome || "";
     const cognome = atleta.cognome || "";
     const sesso = atleta.sesso || "";
@@ -66,22 +70,22 @@ function mostraAtleti() {
         <br><strong>Cell:</strong> ${cellulare}
       </span>
       <div class="btn-group">
-        <button class="btn-small btn-visualizza" title="Visualizza" data-idx="${indiceReale}">V</button>
-        <button class="btn-small btn-modifica" title="Modifica" data-idx="${indiceReale}">M</button>
-        <button class="btn-small btn-cancella" title="Cancella" data-idx="${indiceReale}">C</button>
+        <button class="btn-small btn-visualizza" title="Visualizza" data-id="${atleta.id}">V</button>
+        <button class="btn-small btn-modifica" title="Modifica" data-id="${atleta.id}">M</button>
+        <button class="btn-small btn-cancella" title="Cancella" data-id="${atleta.id}">C</button>
       </div>
     `;
     atletiList.appendChild(li);
   });
 
   document.querySelectorAll('.btn-visualizza').forEach(btn => {
-    btn.onclick = function() { visualizzaAtleta(parseInt(this.dataset.idx)); };
+    btn.onclick = function() { visualizzaAtleta(this.dataset.id); };
   });
   document.querySelectorAll('.btn-cancella').forEach(btn => {
-    btn.onclick = function() { cancellaAtleta(parseInt(this.dataset.idx)); };
+    btn.onclick = function() { cancellaAtleta(this.dataset.id); };
   });
   document.querySelectorAll('.btn-modifica').forEach(btn => {
-    btn.onclick = function() { avviaModificaAtleta(parseInt(this.dataset.idx)); };
+    btn.onclick = function() { avviaModificaAtleta(this.dataset.id); };
   });
 }
 
@@ -103,9 +107,9 @@ function formattaData(dataIso) {
   return `${giorno}/${mese}/${anno}`;
 }
 
-function visualizzaAtleta(idx) {
+function visualizzaAtleta(id) {
   let atleti = caricaAtleti();
-  let atleta = atleti[idx] || {};
+  let atleta = atleti.find(a => a.id === id) || {};
   const dataFormattata = formattaData(atleta.dataNascita || "");
   const eta = atleta.dataNascita ? calcolaEta(atleta.dataNascita) : "";
 
@@ -125,8 +129,10 @@ function visualizzaAtleta(idx) {
 }
 
 // ------- OPERAZIONI CRUD -------
-function cancellaAtleta(idx) {
+function cancellaAtleta(id) {
   let atleti = caricaAtleti();
+  const idx = atleti.findIndex(a => a.id === id);
+  if(idx === -1) return;
   if(confirm("Vuoi cancellare questo atleta?")) {
     atleti.splice(idx, 1);
     salvaAtleti(atleti);
@@ -134,9 +140,11 @@ function cancellaAtleta(idx) {
     aggiornaDashboard();
   }
 }
-function avviaModificaAtleta(idx) {
+function avviaModificaAtleta(id) {
   let atleti = caricaAtleti();
-  let atleta = atleti[idx] || {};
+  const idx = atleti.findIndex(a => a.id === id);
+  if(idx === -1) return;
+  const atleta = atleti[idx] || {};
   document.getElementById('mod-nome').value = (atleta.nome || "");
   document.getElementById('mod-cognome').value = (atleta.cognome || "");
   document.getElementById('mod-sesso').value = (atleta.sesso || "");
@@ -154,6 +162,7 @@ function avviaModificaAtleta(idx) {
   document.getElementById('modifica-form').onsubmit = function(e) {
     e.preventDefault();
     atleti[idx] = {
+      ...atleti[idx],
       nome: document.getElementById('mod-nome').value.trim().toUpperCase(),
       cognome: document.getElementById('mod-cognome').value.trim().toUpperCase(),
       sesso: document.getElementById('mod-sesso').value.toUpperCase(),
@@ -169,6 +178,7 @@ function avviaModificaAtleta(idx) {
   };
 }
 
+// ------ INSERIMENTO --------
 document.addEventListener('DOMContentLoaded', function() {
   mostraAtleti();
   aggiornaDashboard();
@@ -189,7 +199,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     let atleti = caricaAtleti();
-    atleti.push({ nome, cognome, sesso, dataNascita, ruolo, codiceFiscale, cellulare });
+    const nuovoAtleta = {
+      id: generaIdAtleta(),
+      nome, cognome, sesso, dataNascita, ruolo, codiceFiscale, cellulare
+    };
+    atleti.push(nuovoAtleta);
     salvaAtleti(atleti);
     mostraAtleti();
     aggiornaDashboard();
