@@ -14,19 +14,25 @@
   <main>
     <section id="form-section">
       <h2>Aggiungi Atleta</h2>
-      <form id="atleta-form">
-        <input type="text" id="nome" placeholder="Nome" required>
-        <input type="text" id="cognome" placeholder="Cognome" required>
+      <form id="atleta-form" autocomplete="off">
+        <input type="text" id="nome" placeholder="Nome" required autocomplete="off">
+        <input type="text" id="cognome" placeholder="Cognome" required autocomplete="off">
+        <select id="sesso" required>
+          <option value="">Sesso</option>
+          <option value="M">MASCHIO</option>
+          <option value="F">FEMMINA</option>
+        </select>
         <input type="date" id="dataNascita" required>
         <select id="ruolo" required>
           <option value="">Ruolo</option>
-          <option value="Palleggiatore">Palleggiatore</option>
-          <option value="Schiacciatore">Schiacciatore</option>
-          <option value="Centrale">Centrale</option>
-          <option value="Libero">Libero</option>
-          <option value="Opposto">Opposto</option>
+          <option value="PALLEGGIATORE">PALLEGGIATORE</option>
+          <option value="SCHIACCIATORE">SCHIACCIATORE</option>
+          <option value="CENTRALE">CENTRALE</option>
+          <option value="LIBERO">LIBERO</option>
+          <option value="OPPOSTO">OPPOSTO</option>
         </select>
-        <input type="text" id="codiceFiscale" placeholder="Codice Fiscale" required maxlength="16">
+        <input type="text" id="codiceFiscale" placeholder="Codice Fiscale" required maxlength="16" autocomplete="off">
+        <input type="tel" id="cellulare" placeholder="Cellulare" required pattern="[0-9]{10}">
         <button type="submit">Aggiungi</button>
       </form>
     </section>
@@ -53,16 +59,22 @@
         <h2>Modifica Atleta</h2>
         <input type="text" id="mod-nome" required>
         <input type="text" id="mod-cognome" required>
+        <select id="mod-sesso" required>
+          <option value="">Sesso</option>
+          <option value="M">MASCHIO</option>
+          <option value="F">FEMMINA</option>
+        </select>
         <input type="date" id="mod-dataNascita" required>
         <select id="mod-ruolo" required>
           <option value="">Ruolo</option>
-          <option value="Palleggiatore">Palleggiatore</option>
-          <option value="Schiacciatore">Schiacciatore</option>
-          <option value="Centrale">Centrale</option>
-          <option value="Libero">Libero</option>
-          <option value="Opposto">Opposto</option>
+          <option value="PALLEGGIATORE">PALLEGGIATORE</option>
+          <option value="SCHIACCIATORE">SCHIACCIATORE</option>
+          <option value="CENTRALE">CENTRALE</option>
+          <option value="LIBERO">LIBERO</option>
+          <option value="OPPOSTO">OPPOSTO</option>
         </select>
         <input type="text" id="mod-codiceFiscale" required maxlength="16">
+        <input type="tel" id="mod-cellulare" required pattern="[0-9]{10}">
         <button type="submit">Salva</button>
       </form>
     </div>
