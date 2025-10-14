@@ -22,9 +22,40 @@ input[type="text"], input[type="tel"], select {
 }
 .logo { max-width: 80px; height: auto; display: block; }
 .main-header h1 { margin: 0; font-size: 2rem; }
+
+/* DASHBOARD */
+.dashboard {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  align-items: center;
+  margin: 26px auto 12px auto;
+}
+.dash-btn {
+  background: #fff;
+  border: 2px solid #0080ff;
+  color: #0080ff;
+  font-weight: bold;
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-size: 1.02rem;
+  min-width: 120px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.dash-btn span {
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.dash-btn:hover {
+  background: #0080ff;
+  color: #fff;
+}
+
 main {
   max-width: 700px;
-  margin: 30px auto;
+  margin: 18px auto 0 auto;
   background: #fff;
   padding: 30px;
   border-radius: 12px;
