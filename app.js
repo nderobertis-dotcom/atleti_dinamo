@@ -26,9 +26,9 @@ function statoVisita(scadenza) {
   if (!scadenza) return 'ok';
   const oggiStr = new Date().toISOString().slice(0, 10);
   const diff = daysBetween(scadenza, oggiStr);
-  if (diff < 0) return 'scaduta';            // ROSSO
-  if (diff >= 0 && diff <= 31) return 'scanza'; // ARANCIONE
-  return 'ok';                               // VERDE
+  if (diff < 0) return 'scaduta';
+  if (diff >= 0 && diff <= 31) return 'scanza';
+  return 'ok';
 }
 function aggiornaDashboard() {
   const atleti = caricaAtleti();
@@ -59,7 +59,7 @@ function filtraAtleti(filtro) {
   if(filtro==='femmine') return atleti.filter(a=>a.sesso==="F");
   if(filtro==='scadenza') return atleti.filter(a=>a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) >=0 && daysBetween(a.scadenzaVisita, oggi)<=31);
   if(filtro==='scadute') return atleti.filter(a=>a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) < 0);
-  return atleti; // "all"
+  return atleti;
 }
 function mostraAtleti(filtroList='all') {
   const atletiList = document.getElementById('atleti-list');
@@ -111,13 +111,19 @@ function mostraAtleti(filtroList='all') {
   });
 
   document.querySelectorAll('.btn-visualizza').forEach(btn => {
-    btn.onclick = function() { visualizzaAtleta(this.dataset.id); };
+    btn.onclick = function() {
+      document.getElementById('modal').style.display = 'flex';
+      visualizzaAtleta(this.dataset.id);
+    };
   });
   document.querySelectorAll('.btn-cancella').forEach(btn => {
     btn.onclick = function() { cancellaAtleta(this.dataset.id); };
   });
   document.querySelectorAll('.btn-modifica').forEach(btn => {
-    btn.onclick = function() { avviaModificaAtleta(this.dataset.id); };
+    btn.onclick = function() {
+      document.getElementById('modal-modifica').style.display = 'flex';
+      avviaModificaAtleta(this.dataset.id);
+    };
   });
 }
 function calcolaEta(dataNascita) {
@@ -157,11 +163,8 @@ function visualizzaAtleta(id) {
     <p><strong>Cellulare:</strong> ${(atleta.cellulare || "")}</p>
     <p><span class="${classeVisita}">SCADENZA VISITA: ${scadenzaFormattata}</span></p>
   `;
-  document.getElementById('modal').style.display = 'flex';
-  document.querySelector('.close-btn').onclick = function() {
-    document.getElementById('modal').style.display = 'none';
-  };
 }
+
 function cancellaAtleta(id) {
   let atleti = caricaAtleti();
   const idx = atleti.findIndex(a => a.id === id);
@@ -186,12 +189,6 @@ function avviaModificaAtleta(id) {
   document.getElementById('mod-cellulare').value = (atleta.cellulare || "");
   document.getElementById('mod-scadenzaVisita').value = (atleta.scadenzaVisita || "");
 
-  document.getElementById('modal-modifica').style.display = 'flex';
-
-  document.querySelector('.close-btn-modifica').onclick = function() {
-    document.getElementById('modal-modifica').style.display = 'none';
-  };
-
   document.getElementById('modifica-form').onsubmit = function(e) {
     e.preventDefault();
     atleti[idx] = {
@@ -214,6 +211,10 @@ let lastFiltro = "all";
 document.addEventListener('DOMContentLoaded', function() {
   mostraAtleti();
   aggiornaDashboard();
+
+  // Chiusura modali
+  document.getElementById('close-view').onclick = function() { document.getElementById('modal').style.display = 'none'; };
+  document.getElementById('close-edit').onclick = function() { document.getElementById('modal-modifica').style.display = 'none'; };
 
   document.getElementById('atleta-form').addEventListener('submit', function(event) {
     event.preventDefault();
