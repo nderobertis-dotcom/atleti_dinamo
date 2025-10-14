@@ -77,7 +77,7 @@ function mostraAtleti() {
   });
 }
 
-// Modal Visualizza Atleta
+// Visualizza atleta (modale)
 function visualizzaAtleta(idx) {
   let atleti = JSON.parse(localStorage.getItem('atleti')) || [];
   let atleta = atleti[idx];
@@ -96,7 +96,7 @@ function visualizzaAtleta(idx) {
   };
 }
 
-// Funzione per cancellare atleta
+// Cancella atleta
 function cancellaAtleta(idx) {
   let atleti = JSON.parse(localStorage.getItem('atleti')) || [];
   if(confirm("Vuoi cancellare questo atleta?")) {
@@ -106,7 +106,7 @@ function cancellaAtleta(idx) {
   }
 }
 
-// Funzione per modifica atleta
+// Modifica atleta (modale)
 function avviaModificaAtleta(idx) {
   let atleti = JSON.parse(localStorage.getItem('atleti')) || [];
   let atleta = atleti[idx];
