@@ -11,7 +11,7 @@
     <h1>POLISPORTIVA DINAMO MOLFETTA</h1>
   </header>
 
-  <!-- DASHBOARD STATISTICHE CARTE -->
+  <!-- DASHBOARD -->
   <div class="dashboard-strip">
     <div class="dashboard">
       <div class="dash-card dash-normal-btn" data-filter="all">
@@ -75,7 +75,8 @@
         </select>
         <input type="text" id="codiceFiscale" placeholder="Codice Fiscale" required maxlength="16" autocomplete="off">
         <input type="tel" id="cellulare" placeholder="Cellulare" required>
-        <input type="date" id="scadenzaVisita" placeholder="Scadenza Visita Medica" required>
+        <label for="scadenzaVisita" class="visita-label">Scadenza visita medica</label>
+        <input type="date" id="scadenzaVisita" required>
         <button type="submit">Aggiungi</button>
       </form>
     </section>
@@ -118,6 +119,7 @@
         </select>
         <input type="text" id="mod-codiceFiscale" required maxlength="16">
         <input type="tel" id="mod-cellulare" required>
+        <label for="mod-scadenzaVisita" class="visita-label">Scadenza visita medica</label>
         <input type="date" id="mod-scadenzaVisita" required>
         <button type="submit">Salva</button>
       </form>
