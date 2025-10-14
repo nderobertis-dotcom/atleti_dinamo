@@ -62,6 +62,13 @@ function mostraAtleti() {
     atleti = [];
   }
 
+  // Ordina alfabeticamente
+  atleti.sort((a, b) => {
+    const ana = (a.nome + " " + a.cognome).toUpperCase();
+    const anb = (b.nome + " " + b.cognome).toUpperCase();
+    return ana.localeCompare(anb);
+  });
+
   atleti.forEach((atleta, idx) => {
     const nome = (atleta.nome || "");
     const cognome = (atleta.cognome || "");
