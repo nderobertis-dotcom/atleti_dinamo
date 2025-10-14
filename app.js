@@ -1,10 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
   mostraAtleti();
+  aggiornaDashboard();
 
   document.getElementById('atleta-form').addEventListener('submit', function(event) {
     event.preventDefault();
-
-    // Leggi e trasforma in MAIUSCOLO i campi di testo
     const nome = document.getElementById('nome').value.trim().toUpperCase();
     const cognome = document.getElementById('cognome').value.trim().toUpperCase();
     const sesso = document.getElementById('sesso').value.toUpperCase();
@@ -22,7 +21,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let atleti = [];
     try {
       atleti = JSON.parse(localStorage.getItem('atleti')) || [];
-      // Correggi caso in cui localStorage è stringa vuota/null
       if (!Array.isArray(atleti)) atleti = [];
     } catch {
       atleti = [];
@@ -30,9 +28,22 @@ document.addEventListener('DOMContentLoaded', function() {
     atleti.push(atleta);
     localStorage.setItem('atleti', JSON.stringify(atleti));
     mostraAtleti();
+    aggiornaDashboard();
     this.reset();
   });
 });
+
+function calcolaEta(dataNascita) {
+  if (!dataNascita) return "";
+  const oggi = new Date();
+  const nascita = new Date(dataNascita);
+  let eta = oggi.getFullYear() - nascita.getFullYear();
+  const m = oggi.getMonth() - nascita.getMonth();
+  if (m < 0 || (m === 0 && oggi.getDate() < nascita.getDate())) {
+    eta--;
+  }
+  return eta;
+}
 
 function formattaData(dataIso) {
   if (!dataIso) return "";
@@ -59,13 +70,14 @@ function mostraAtleti() {
     const dataNascita = atleta.dataNascita || "";
     const codiceFiscale = (atleta.codiceFiscale || "");
     const cellulare = (atleta.cellulare || "");
+    const eta = dataNascita ? calcolaEta(dataNascita) : "";
     const dataFormattata = formattaData(dataNascita);
 
     const li = document.createElement('li');
     li.innerHTML = `
       <span>
         ${nome} ${cognome} – ${sesso} – ${ruolo}
-        <br>nato il ${dataFormattata} – <strong>CF:</strong> ${codiceFiscale}
+        <br>nato il ${dataFormattata} – <strong>ETA':</strong> ${eta} – <strong>CF:</strong> ${codiceFiscale}
         <br><strong>Cell:</strong> ${cellulare}
       </span>
       <div class="btn-group">
@@ -88,16 +100,38 @@ function mostraAtleti() {
   });
 }
 
+function aggiornaDashboard() {
+  let atleti = [];
+  try {
+    atleti = JSON.parse(localStorage.getItem('atleti')) || [];
+    if (!Array.isArray(atleti)) atleti = [];
+  } catch {
+    atleti = [];
+  }
+  const totale = atleti.length;
+  const maschi = atleti.filter(a => a.sesso === "M").length;
+  const femmine = atleti.filter(a => a.sesso === "F").length;
+  const sommaEta = atleti.reduce((acc, a) => acc + (a.dataNascita ? calcolaEta(a.dataNascita) : 0), 0);
+  const etaMedia = totale > 0 ? (sommaEta / totale).toFixed(1) : 0;
+
+  document.querySelector("#tot-atleti span").textContent = totale;
+  document.querySelector("#tot-maschi span").textContent = maschi;
+  document.querySelector("#tot-femmine span").textContent = femmine;
+  document.querySelector("#eta-media span").textContent = etaMedia;
+}
+
 function visualizzaAtleta(idx) {
   let atleti = JSON.parse(localStorage.getItem('atleti')) || [];
   let atleta = atleti[idx] || {};
   const dataFormattata = formattaData(atleta.dataNascita || "");
+  const eta = atleta.dataNascita ? calcolaEta(atleta.dataNascita) : "";
 
   document.getElementById('dettaglio-atleta').innerHTML = `
     <h2>${(atleta.nome || "")} ${(atleta.cognome || "")}</h2>
     <p><strong>Sesso:</strong> ${(atleta.sesso || "")}</p>
     <p><strong>Ruolo:</strong> ${(atleta.ruolo || "")}</p>
     <p><strong>Data di Nascita:</strong> ${dataFormattata}</p>
+    <p><strong>Età:</strong> ${eta}</p>
     <p><strong>Codice Fiscale:</strong> ${(atleta.codiceFiscale || "")}</p>
     <p><strong>Cellulare:</strong> ${(atleta.cellulare || "")}</p>
   `;
@@ -113,6 +147,7 @@ function cancellaAtleta(idx) {
     atleti.splice(idx, 1);
     localStorage.setItem('atleti', JSON.stringify(atleti));
     mostraAtleti();
+    aggiornaDashboard();
   }
 }
 
@@ -147,5 +182,6 @@ function avviaModificaAtleta(idx) {
     localStorage.setItem('atleti', JSON.stringify(atleti));
     document.getElementById('modal-modifica').style.display = 'none';
     mostraAtleti();
+    aggiornaDashboard();
   };
 }
