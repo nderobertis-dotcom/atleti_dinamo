@@ -1,71 +1,29 @@
-document.addEventListener('DOMContentLoaded', function() {
-  mostraAtleti();
-  aggiornaDashboard();
-
-  document.getElementById('atleta-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const nome = document.getElementById('nome').value.trim().toUpperCase();
-    const cognome = document.getElementById('cognome').value.trim().toUpperCase();
-    const sesso = document.getElementById('sesso').value.toUpperCase();
-    const dataNascita = document.getElementById('dataNascita').value;
-    const ruolo = document.getElementById('ruolo').value.toUpperCase();
-    const codiceFiscale = document.getElementById('codiceFiscale').value.trim().toUpperCase();
-    const cellulare = document.getElementById('cellulare').value.trim();
-
-    if (!nome || !cognome || !sesso || !dataNascita || !ruolo || !codiceFiscale || !cellulare) {
-      alert('Per favore compila tutti i campi.');
-      return;
-    }
-
-    const atleta = { nome, cognome, sesso, dataNascita, ruolo, codiceFiscale, cellulare };
-    let atleti = [];
-    try {
-      atleti = JSON.parse(localStorage.getItem('atleti')) || [];
-      if (!Array.isArray(atleti)) atleti = [];
-    } catch {
-      atleti = [];
-    }
-    atleti.push(atleta);
-    localStorage.setItem('atleti', JSON.stringify(atleti));
-    mostraAtleti();
-    aggiornaDashboard();
-    this.reset();
-  });
-});
-
-function calcolaEta(dataNascita) {
-  if (!dataNascita) return "";
-  const oggi = new Date();
-  const nascita = new Date(dataNascita);
-  let eta = oggi.getFullYear() - nascita.getFullYear();
-  const m = oggi.getMonth() - nascita.getMonth();
-  if (m < 0 || (m === 0 && oggi.getDate() < nascita.getDate())) {
-    eta--;
+function caricaAtleti() {
+  let atleti;
+  try {
+    atleti = JSON.parse(localStorage.getItem('atleti') || '[]');
+    if (!Array.isArray(atleti)) atleti = [];
+  } catch {
+    atleti = [];
   }
-  return eta;
+  return atleti;
 }
 
-function formattaData(dataIso) {
-  if (!dataIso) return "";
-  const [anno, mese, giorno] = dataIso.split("-");
-  return `${giorno}/${mese}/${anno}`;
+function salvaAtleti(atleti) {
+  localStorage.setItem('atleti', JSON.stringify(atleti));
 }
 
 function mostraAtleti() {
   const atletiList = document.getElementById('atleti-list');
   atletiList.innerHTML = '';
-  let atleti = [];
-  try {
-    atleti = JSON.parse(localStorage.getItem('atleti')) || [];
-    if (!Array.isArray(atleti)) atleti = [];
-  } catch {
-    atleti = [];
-  }
+  let atleti = caricaAtleti();
 
-  // Ordina alfabeticamente
+  atleti = atleti.slice(); // copia difensiva
+
+  // Ordina alfabeticamente per nome+cognome
   atleti.sort((a, b) => {
-    const ana = (a.nome + " " + a.cognome).toUpperCase();
-    const anb = (b.nome + " " + b.cognome).toUpperCase();
+    const ana = ((a.nome || "") + " " + (a.cognome || "")).toUpperCase();
+    const anb = ((b.nome || "") + " " + (b.cognome || "")).toUpperCase();
     return ana.localeCompare(anb);
   });
 
@@ -108,13 +66,7 @@ function mostraAtleti() {
 }
 
 function aggiornaDashboard() {
-  let atleti = [];
-  try {
-    atleti = JSON.parse(localStorage.getItem('atleti')) || [];
-    if (!Array.isArray(atleti)) atleti = [];
-  } catch {
-    atleti = [];
-  }
+  let atleti = caricaAtleti();
   const totale = atleti.length;
   const maschi = atleti.filter(a => a.sesso === "M").length;
   const femmine = atleti.filter(a => a.sesso === "F").length;
@@ -127,8 +79,26 @@ function aggiornaDashboard() {
   document.getElementById("eta-media").textContent = etaMedia;
 }
 
+function calcolaEta(dataNascita) {
+  if (!dataNascita) return "";
+  const oggi = new Date();
+  const nascita = new Date(dataNascita);
+  let eta = oggi.getFullYear() - nascita.getFullYear();
+  const m = oggi.getMonth() - nascita.getMonth();
+  if (m < 0 || (m === 0 && oggi.getDate() < nascita.getDate())) {
+    eta--;
+  }
+  return eta;
+}
+
+function formattaData(dataIso) {
+  if (!dataIso) return "";
+  const [anno, mese, giorno] = dataIso.split("-");
+  return `${giorno}/${mese}/${anno}`;
+}
+
 function visualizzaAtleta(idx) {
-  let atleti = JSON.parse(localStorage.getItem('atleti')) || [];
+  let atleti = caricaAtleti();
   let atleta = atleti[idx] || {};
   const dataFormattata = formattaData(atleta.dataNascita || "");
   const eta = atleta.dataNascita ? calcolaEta(atleta.dataNascita) : "";
@@ -149,17 +119,17 @@ function visualizzaAtleta(idx) {
 }
 
 function cancellaAtleta(idx) {
-  let atleti = JSON.parse(localStorage.getItem('atleti')) || [];
+  let atleti = caricaAtleti();
   if(confirm("Vuoi cancellare questo atleta?")) {
     atleti.splice(idx, 1);
-    localStorage.setItem('atleti', JSON.stringify(atleti));
+    salvaAtleti(atleti);
     mostraAtleti();
     aggiornaDashboard();
   }
 }
 
 function avviaModificaAtleta(idx) {
-  let atleti = JSON.parse(localStorage.getItem('atleti')) || [];
+  let atleti = caricaAtleti();
   let atleta = atleti[idx] || {};
   document.getElementById('mod-nome').value = (atleta.nome || "");
   document.getElementById('mod-cognome').value = (atleta.cognome || "");
@@ -186,9 +156,38 @@ function avviaModificaAtleta(idx) {
       codiceFiscale: document.getElementById('mod-codiceFiscale').value.trim().toUpperCase(),
       cellulare: document.getElementById('mod-cellulare').value.trim()
     };
-    localStorage.setItem('atleti', JSON.stringify(atleti));
+    salvaAtleti(atleti);
     document.getElementById('modal-modifica').style.display = 'none';
     mostraAtleti();
     aggiornaDashboard();
   };
 }
+
+// EVENTI INIZIALIZZAZIONE
+document.addEventListener('DOMContentLoaded', function() {
+  mostraAtleti();
+  aggiornaDashboard();
+
+  document.getElementById('atleta-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const nome = document.getElementById('nome').value.trim().toUpperCase();
+    const cognome = document.getElementById('cognome').value.trim().toUpperCase();
+    const sesso = document.getElementById('sesso').value.toUpperCase();
+    const dataNascita = document.getElementById('dataNascita').value;
+    const ruolo = document.getElementById('ruolo').value.toUpperCase();
+    const codiceFiscale = document.getElementById('codiceFiscale').value.trim().toUpperCase();
+    const cellulare = document.getElementById('cellulare').value.trim();
+
+    if (!nome || !cognome || !sesso || !dataNascita || !ruolo || !codiceFiscale || !cellulare) {
+      alert('Per favore compila tutti i campi.');
+      return;
+    }
+
+    let atleti = caricaAtleti();
+    atleti.push({ nome, cognome, sesso, dataNascita, ruolo, codiceFiscale, cellulare });
+    salvaAtleti(atleti);
+    mostraAtleti();
+    aggiornaDashboard();
+    this.reset();
+  });
+});
