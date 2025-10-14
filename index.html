@@ -26,6 +26,7 @@
           <option value="Libero">Libero</option>
           <option value="Opposto">Opposto</option>
         </select>
+        <input type="text" id="codiceFiscale" placeholder="Codice Fiscale" required maxlength="16">
         <button type="submit">Aggiungi</button>
       </form>
     </section>
@@ -36,10 +37,34 @@
     </section>
   </main>
 
+  <!-- Modal Visualizza -->
   <div id="modal" class="modal">
     <div class="modal-content">
       <span class="close-btn">&times;</span>
       <div id="dettaglio-atleta"></div>
+    </div>
+  </div>
+
+  <!-- Modal Modifica -->
+  <div id="modal-modifica" class="modal">
+    <div class="modal-content">
+      <span class="close-btn-modifica">&times;</span>
+      <form id="modifica-form">
+        <h2>Modifica Atleta</h2>
+        <input type="text" id="mod-nome" required>
+        <input type="text" id="mod-cognome" required>
+        <input type="date" id="mod-dataNascita" required>
+        <select id="mod-ruolo" required>
+          <option value="">Ruolo</option>
+          <option value="Palleggiatore">Palleggiatore</option>
+          <option value="Schiacciatore">Schiacciatore</option>
+          <option value="Centrale">Centrale</option>
+          <option value="Libero">Libero</option>
+          <option value="Opposto">Opposto</option>
+        </select>
+        <input type="text" id="mod-codiceFiscale" required maxlength="16">
+        <button type="submit">Salva</button>
+      </form>
     </div>
   </div>
 
