@@ -24,16 +24,14 @@ function daysBetween(date1, date2) {
 }
 function statoVisita(scadenza) {
   if (!scadenza) return 'ok';
-  const oggi = new Date();
-  const oggiStr = oggi.toISOString().slice(0, 10);
+  const oggiStr = new Date().toISOString().slice(0, 10);
   const diff = daysBetween(scadenza, oggiStr);
-  if (diff < 0) return 'scaduta';          // ROSSO
+  if (diff < 0) return 'scaduta';            // ROSSO
   if (diff >= 0 && diff <= 31) return 'scanza'; // ARANCIONE
-  return 'ok';                             // VERDE
+  return 'ok';                               // VERDE
 }
-function aggiornaDashboard(filtrati=null) {
+function aggiornaDashboard() {
   const atleti = caricaAtleti();
-  const list = filtrati || atleti;
   const oggi = new Date().toISOString().slice(0,10);
   const totale = atleti.length;
   const maschi = atleti.filter(a => a.sesso === "M").length;
@@ -49,7 +47,6 @@ function aggiornaDashboard(filtrati=null) {
   document.getElementById("tot-scadute").textContent = scadute;
   document.getElementById("eta-media").textContent = etaMedia;
 }
-
 function filtraAtleti(filtro) {
   let atleti = caricaAtleti();
   atleti = [...atleti].sort((a, b) => {
@@ -64,7 +61,6 @@ function filtraAtleti(filtro) {
   if(filtro==='scadute') return atleti.filter(a=>a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) < 0);
   return atleti; // "all"
 }
-
 function mostraAtleti(filtroList='all') {
   const atletiList = document.getElementById('atleti-list');
   atletiList.innerHTML = '';
@@ -124,7 +120,6 @@ function mostraAtleti(filtroList='all') {
     btn.onclick = function() { avviaModificaAtleta(this.dataset.id); };
   });
 }
-
 function calcolaEta(dataNascita) {
   if (!dataNascita) return "";
   const oggi = new Date();
