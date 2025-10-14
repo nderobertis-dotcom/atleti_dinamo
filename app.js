@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
   document.getElementById('atleta-form').addEventListener('submit', function(event) {
     event.preventDefault();
+
+    // Leggi e trasforma in MAIUSCOLO i campi di testo
     const nome = document.getElementById('nome').value.trim().toUpperCase();
     const cognome = document.getElementById('cognome').value.trim().toUpperCase();
     const sesso = document.getElementById('sesso').value.toUpperCase();
@@ -20,6 +22,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let atleti = [];
     try {
       atleti = JSON.parse(localStorage.getItem('atleti')) || [];
+      // Correggi caso in cui localStorage è stringa vuota/null
+      if (!Array.isArray(atleti)) atleti = [];
     } catch {
       atleti = [];
     }
@@ -42,15 +46,14 @@ function mostraAtleti() {
   let atleti = [];
   try {
     atleti = JSON.parse(localStorage.getItem('atleti')) || [];
+    if (!Array.isArray(atleti)) atleti = [];
   } catch {
     atleti = [];
   }
-  if (!Array.isArray(atleti)) atleti = [];
 
   atleti.forEach((atleta, idx) => {
-    // Rende compatibile la presenza di campi mancanti
-    const nome = (atleta.nome || "").toUpperCase();
-    const cognome = (atleta.cognome || "").toUpperCase();
+    const nome = (atleta.nome || "");
+    const cognome = (atleta.cognome || "");
     const sesso = (atleta.sesso || "");
     const ruolo = (atleta.ruolo || "");
     const dataNascita = atleta.dataNascita || "";
@@ -61,10 +64,9 @@ function mostraAtleti() {
     const li = document.createElement('li');
     li.innerHTML = `
       <span>
-        ${nome} ${cognome}${sesso ? ' – ' + sesso : ''}${ruolo ? ' – ' + ruolo : ''}
-        ${dataNascita ? `<br>nato il ${dataFormattata}` : ''}
-        ${codiceFiscale ? ` – <strong>CF:</strong> ${codiceFiscale}` : ''}
-        ${cellulare ? `<br><strong>Cell:</strong> ${cellulare}` : ''}
+        ${nome} ${cognome} – ${sesso} – ${ruolo}
+        <br>nato il ${dataFormattata} – <strong>CF:</strong> ${codiceFiscale}
+        <br><strong>Cell:</strong> ${cellulare}
       </span>
       <div class="btn-group">
         <button class="btn-small btn-visualizza" title="Visualizza" data-idx="${idx}">V</button>
@@ -86,7 +88,6 @@ function mostraAtleti() {
   });
 }
 
-// Modal visualizza atleta
 function visualizzaAtleta(idx) {
   let atleti = JSON.parse(localStorage.getItem('atleti')) || [];
   let atleta = atleti[idx] || {};
@@ -106,7 +107,6 @@ function visualizzaAtleta(idx) {
   };
 }
 
-// Cancella atleta
 function cancellaAtleta(idx) {
   let atleti = JSON.parse(localStorage.getItem('atleti')) || [];
   if(confirm("Vuoi cancellare questo atleta?")) {
@@ -116,7 +116,6 @@ function cancellaAtleta(idx) {
   }
 }
 
-// Modifica atleta (modale)
 function avviaModificaAtleta(idx) {
   let atleti = JSON.parse(localStorage.getItem('atleti')) || [];
   let atleta = atleti[idx] || {};
