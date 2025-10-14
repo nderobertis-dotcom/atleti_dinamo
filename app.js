@@ -23,10 +23,7 @@ function generaIdAtleta() {
     Math.random().toString(36).substr(2, 6)
   );
 }
-
-// Utility per confronto date
 function daysBetween(date1, date2) {
-  // Restituisce giorni (interi) tra due date YYYY-MM-DD (date1 - date2)
   try {
     const d1 = new Date(date1 + 'T00:00:00');
     const d2 = new Date(date2 + 'T00:00:00');
@@ -35,8 +32,6 @@ function daysBetween(date1, date2) {
     return 9999;
   }
 }
-
-// Dato uno stato visita, restituisce 'ok','scadenza','scaduta'
 function statoVisita(scadenza) {
   if (!scadenza) return 'ok';
   const oggi = new Date();
@@ -47,7 +42,6 @@ function statoVisita(scadenza) {
   if (diff <= 31) return 'scadenza';
   return 'scaduta';
 }
-
 function aggiornaDashboard() {
   let atleti = caricaAtleti();
   const totale = atleti.length;
@@ -67,26 +61,32 @@ function aggiornaDashboard() {
   document.getElementById("eta-media").textContent = etaMedia;
 }
 
-// filtroList: 'all' | 'maschi' | 'femmine' | 'scadenza' | 'scadute'
 function mostraAtleti(filtroList='all') {
   const atletiList = document.getElementById('atleti-list');
   atletiList.innerHTML = '';
   let atleti = caricaAtleti();
-  // Ordina
   let atletiOrdinati = [...atleti].sort((a, b) => {
     const ana = ((a.nome || "") + " " + (a.cognome || "")).toUpperCase();
     const anb = ((b.nome || "") + " " + (b.cognome || "")).toUpperCase();
     return ana.localeCompare(anb);
   });
 
-  // Filtri
   const oggi = new Date().toISOString().slice(0,10);
-  if(filtroList==='maschi') atletiOrdinati = atletiOrdinati.filter(a=>a.sesso==="M");
-  if(filtroList==='femmine') atletiOrdinati = atletiOrdinati.filter(a=>a.sesso==="F");
-  if(filtroList==='scadenza') atletiOrdinati = atletiOrdinati.filter(a=>a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) >=0 && daysBetween(a.scadenzaVisita, oggi)<=31);
-  if(filtroList==='scadute') atletiOrdinati = atletiOrdinati.filter(a=>a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) > 31);
+  let visualizzati = [];
+  if(filtroList==='maschi') visualizzati = atletiOrdinati.filter(a=>a.sesso==="M");
+  else if(filtroList==='femmine') visualizzati = atletiOrdinati.filter(a=>a.sesso==="F");
+  else if(filtroList==='scadenza') visualizzati = atletiOrdinati.filter(a=>a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) >=0 && daysBetween(a.scadenzaVisita, oggi)<=31);
+  else if(filtroList==='scadute') visualizzati = atletiOrdinati.filter(a=>a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) > 31);
+  else visualizzati = atletiOrdinati; // default: all
 
-  atletiOrdinati.forEach((atleta) => {
+  if (visualizzati.length === 0) {
+    const li = document.createElement('li');
+    li.innerHTML = `<span>Nessun atleta trovato</span>`;
+    atletiList.appendChild(li);
+    return;
+  }
+
+  visualizzati.forEach((atleta) => {
     if (!atleta.id) return;
     const nome = atleta.nome || "";
     const cognome = atleta.cognome || "";
@@ -100,7 +100,6 @@ function mostraAtleti(filtroList='all') {
     const scadenzaVisita = atleta.scadenzaVisita || "";
     const scadenzaFormattata = formattaData(scadenzaVisita);
 
-    // classi per evidenziare visita
     let classeVisita = "data-ok";
     const stato = statoVisita(scadenzaVisita);
     if (stato === 'scadenza') classeVisita = "data-scanza";
@@ -158,7 +157,6 @@ function visualizzaAtleta(id) {
   const scadenzaVisita = atleta.scadenzaVisita || "";
   const scadenzaFormattata = formattaData(scadenzaVisita);
 
-  // classi per evidenziare visita
   let classeVisita = "data-ok";
   const stato = statoVisita(scadenzaVisita);
   if (stato === 'scadenza') classeVisita = "data-scanza";
@@ -179,7 +177,6 @@ function visualizzaAtleta(id) {
     document.getElementById('modal').style.display = 'none';
   };
 }
-
 function cancellaAtleta(id) {
   let atleti = caricaAtleti();
   const idx = atleti.findIndex(a => a.id === id);
@@ -187,7 +184,7 @@ function cancellaAtleta(id) {
   if(confirm("Vuoi cancellare questo atleta?")) {
     atleti.splice(idx, 1);
     salvaAtleti(atleti);
-    mostraAtleti(lastFiltro); // ricarica la visualizzazione corrente
+    mostraAtleti(lastFiltro);
     aggiornaDashboard();
   }
 }
@@ -230,8 +227,6 @@ function avviaModificaAtleta(id) {
     aggiornaDashboard();
   };
 }
-
-// --- Query di filtro lista (dashboard)
 let lastFiltro = "all";
 document.addEventListener('DOMContentLoaded', function() {
   mostraAtleti();
@@ -265,7 +260,6 @@ document.addEventListener('DOMContentLoaded', function() {
     this.reset();
   });
 
-  // Pulsanti dashboard (filtri)
   document.querySelectorAll('.dash-card[data-filter]').forEach(card => {
     card.addEventListener('click', function() {
       lastFiltro = card.dataset.filter;
