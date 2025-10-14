@@ -1,43 +1,36 @@
-// Struttura dati atleti
-let athletes = [];
+// Carica atleti in pagina
+document.addEventListener('DOMContentLoaded', showAtleti);
 
-// Utility per aggiornare dashboard
-function updateDashboard() {
-    document.getElementById('total-athletes').textContent = athletes.length;
-    if (athletes.length > 0) {
-        let avgAge = (athletes.reduce((sum, a) => sum + a.age, 0) / athletes.length).toFixed(1);
-        document.getElementById('avg-age').textContent = avgAge;
-    } else {
-        document.getElementById('avg-age').textContent = '-';
-    }
-    document.getElementById('male-athletes').textContent = athletes.filter(a => a.gender === 'M').length;
-    document.getElementById('female-athletes').textContent = athletes.filter(a => a.gender === 'F').length;
-}
+document.getElementById('atleta-form').addEventListener('submit', function(event) {
+  event.preventDefault();
 
-// Utility per aggiornare lista atleti
-function updateAthleteList() {
-    const list = document.getElementById('athlete-list');
-    list.innerHTML = '';
-    // Ordine alfabetico per cognome, poi nome
-    athletes.sort((a, b) => a.last.localeCompare(b.last) || a.first.localeCompare(b.first));
-    athletes.forEach(a => {
-        const li = document.createElement('li');
-        li.textContent = `${a.last} ${a.first} (${a.gender}, ${a.age} anni)`;
-        list.appendChild(li);
-    });
-}
+  const nome = document.getElementById('nome').value.trim();
+  const cognome = document.getElementById('cognome').value.trim();
+  const dataNascita = document.getElementById('dataNascita').value;
+  const ruolo = document.getElementById('ruolo').value;
 
-document.getElementById('athlete-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const first = document.getElementById('first-name').value.trim();
-    const last = document.getElementById('last-name').value.trim();
-    const gender = document.getElementById('gender').value;
-    const age = parseInt(document.getElementById('age').value, 10);
+  if (!nome || !cognome || !dataNascita || !ruolo) {
+    alert('Per favore compila tutti i campi.');
+    return;
+  }
 
-    if (first && last && gender && age) {
-        athletes.push({ first, last, gender, age });
-        updateDashboard();
-        updateAthleteList();
-        this.reset();
-    }
+  const atleta = { nome, cognome, dataNascita, ruolo };
+  let atleti = JSON.parse(localStorage.getItem('atleti')) || [];
+  atleti.push(atleta);
+  localStorage.setItem('atleti', JSON.stringify(atleti));
+
+  showAtleti();
+  this.reset();
 });
+
+// Funzione per mostrare la lista atleti salvati
+function showAtleti() {
+  const atletiList = document.getElementById('atleti-list');
+  atletiList.innerHTML = '';
+  const atleti = JSON.parse(localStorage.getItem('atleti')) || [];
+  atleti.forEach((atleta, idx) => {
+    const li = document.createElement('li');
+    li.textContent = `${atleta.nome} ${atleta.cognome} – ${atleta.ruolo} (nato il ${atleta.dataNascita})`;
+    atletiList.appendChild(li);
+  });
+}
