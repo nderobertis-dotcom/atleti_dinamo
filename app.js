@@ -1,4 +1,3 @@
-// ------ GESTIONE LETTURA/SCRITTURA ROBUSTA ------
 function caricaAtleti() {
   let atleti = [];
   try {
@@ -20,7 +19,6 @@ function salvaAtleti(atleti) {
   }
 }
 
-// ------ DASHBOARD & LISTA ------
 function aggiornaDashboard() {
   let atleti = caricaAtleti();
   const totale = atleti.length;
@@ -39,21 +37,24 @@ function mostraAtleti() {
   atletiList.innerHTML = '';
   let atleti = caricaAtleti();
 
-  // Ordina alfabeticamente
-  atleti = [...atleti].sort((a, b) => {
-    const ana = ((a.nome || "") + " " + (a.cognome || "")).toUpperCase();
-    const anb = ((b.nome || "") + " " + (b.cognome || "")).toUpperCase();
-    return ana.localeCompare(anb);
-  });
+  // Aggiungi associato per ordinamento stabile
+  let atletiOrdinati = atleti
+    .map((a, idx) => ({ ...a, indiceReale: idx }))
+    .sort((a, b) => {
+      const ana = ((a.nome || "") + " " + (a.cognome || "")).toUpperCase();
+      const anb = ((b.nome || "") + " " + (b.cognome || "")).toUpperCase();
+      return ana.localeCompare(anb);
+    });
 
-  atleti.forEach((atleta, idx) => {
-    const nome = (atleta.nome || "");
-    const cognome = (atleta.cognome || "");
-    const sesso = (atleta.sesso || "");
-    const ruolo = (atleta.ruolo || "");
+  atletiOrdinati.forEach((atleta, vIdx) => {
+    const { indiceReale } = atleta;
+    const nome = atleta.nome || "";
+    const cognome = atleta.cognome || "";
+    const sesso = atleta.sesso || "";
+    const ruolo = atleta.ruolo || "";
     const dataNascita = atleta.dataNascita || "";
-    const codiceFiscale = (atleta.codiceFiscale || "");
-    const cellulare = (atleta.cellulare || "");
+    const codiceFiscale = atleta.codiceFiscale || "";
+    const cellulare = atleta.cellulare || "";
     const eta = dataNascita ? calcolaEta(dataNascita) : "";
     const dataFormattata = formattaData(dataNascita);
 
@@ -65,9 +66,9 @@ function mostraAtleti() {
         <br><strong>Cell:</strong> ${cellulare}
       </span>
       <div class="btn-group">
-        <button class="btn-small btn-visualizza" title="Visualizza" data-idx="${idx}">V</button>
-        <button class="btn-small btn-modifica" title="Modifica" data-idx="${idx}">M</button>
-        <button class="btn-small btn-cancella" title="Cancella" data-idx="${idx}">C</button>
+        <button class="btn-small btn-visualizza" title="Visualizza" data-idx="${indiceReale}">V</button>
+        <button class="btn-small btn-modifica" title="Modifica" data-idx="${indiceReale}">M</button>
+        <button class="btn-small btn-cancella" title="Cancella" data-idx="${indiceReale}">C</button>
       </div>
     `;
     atletiList.appendChild(li);
@@ -168,7 +169,6 @@ function avviaModificaAtleta(idx) {
   };
 }
 
-// ------- EVENTI INIZIALI -------
 document.addEventListener('DOMContentLoaded', function() {
   mostraAtleti();
   aggiornaDashboard();
