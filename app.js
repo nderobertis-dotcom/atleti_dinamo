@@ -29,7 +29,12 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-// Funzione per mostrare la lista atleti salvati
+function formattaData(dataIso) {
+  // dataIso: formato "YYYY-MM-DD"
+  const [anno, mese, giorno] = dataIso.split("-");
+  return `${giorno}/${mese}/${anno}`;
+}
+
 function mostraAtleti() {
   const atletiList = document.getElementById('atleti-list');
   atletiList.innerHTML = '';
@@ -40,12 +45,9 @@ function mostraAtleti() {
     atleti = [];
   }
   atleti.forEach((atleta, idx) => {
-    const li = document.createElement('li');
-    let dataObj = new Date(atleta.dataNascita);
-    let dataFormattata = ("0" + dataObj.getDate()).slice(-2) + "/"
-      + ("0" + (dataObj.getMonth() + 1)).slice(-2) + "/"
-      + dataObj.getFullYear();
+    const dataFormattata = formattaData(atleta.dataNascita);
 
+    const li = document.createElement('li');
     li.innerHTML = `
       <span>${atleta.nome} ${atleta.cognome} –
         ${atleta.ruolo} (nato il ${dataFormattata})</span>
@@ -58,7 +60,6 @@ function mostraAtleti() {
     atletiList.appendChild(li);
   });
 
-  // Eventi pulsanti
   document.querySelectorAll('.btn-visualizza').forEach(btn => {
     btn.onclick = function() {
       visualizzaAtleta(parseInt(this.dataset.idx));
@@ -76,14 +77,10 @@ function mostraAtleti() {
   });
 }
 
-// Modal Visualizza Atleta
 function visualizzaAtleta(idx) {
   let atleti = JSON.parse(localStorage.getItem('atleti')) || [];
   let atleta = atleti[idx];
-  let dataObj = new Date(atleta.dataNascita);
-  let dataFormattata = ("0" + dataObj.getDate()).slice(-2) + "/"
-    + ("0" + (dataObj.getMonth() + 1)).slice(-2) + "/"
-    + dataObj.getFullYear();
+  const dataFormattata = formattaData(atleta.dataNascita);
 
   document.getElementById('dettaglio-atleta').innerHTML = `
     <h2>${atleta.nome} ${atleta.cognome}</h2>
@@ -98,7 +95,6 @@ function visualizzaAtleta(idx) {
   };
 }
 
-// Funzione per cancellare atleta
 function cancellaAtleta(idx) {
   let atleti = JSON.parse(localStorage.getItem('atleti')) || [];
   if(confirm("Vuoi cancellare questo atleta?")) {
@@ -108,7 +104,6 @@ function cancellaAtleta(idx) {
   }
 }
 
-// (Stub) Funzione per modificare atleta
 function modificaAtleta(idx) {
   alert("Funzionalità di modifica in sviluppo!");
 }
