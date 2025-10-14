@@ -50,7 +50,7 @@ input[type="text"], input[type="tel"], select {
   cursor: pointer;
   padding: 0;
 }
-.dash-card.dash-scanza-btn { background: linear-gradient(145deg, #ffe066 65%, #fffbe6 100%); }
+.dash-card.dash-scanza-btn { background: linear-gradient(145deg, #FFA500 65%, #fffbe6 100%); }
 .dash-card.dash-scadute-btn { background: linear-gradient(145deg, #e63946 65%, #ffcfcf 100%); }
 .dash-card:hover { transform: scale(1.045); }
 .dash-card-inner {
@@ -71,7 +71,7 @@ input[type="text"], input[type="tel"], select {
   color: #0080ff;
 }
 .dash-card.dash-scanza-btn .dash-title {
-  color: #ac9100;
+  color: #b25e00;
 }
 .dash-card.dash-scadute-btn .dash-title {
   color: #aa2434;
@@ -82,7 +82,7 @@ input[type="text"], input[type="tel"], select {
   color: #003974;
   margin-bottom: 2px;
 }
-.dash-card.dash-scanza-btn .dash-value { color: #c49c08; }
+.dash-card.dash-scanza-btn .dash-value { color: #b25e00; }
 .dash-card.dash-scadute-btn .dash-value { color: #b91b2c; }
 
 main {
@@ -98,7 +98,6 @@ button {
   background: #0080ff; color: #fff;
   border: none; border-radius: 5px; cursor: pointer;
 }
-
 ul { list-style: none; padding: 0; }
 li {
   background: #e6e6e6;
@@ -118,29 +117,19 @@ li {
 .btn-modifica { background: #ffe066; color: #333; }
 .btn-cancella { background: #e63946; color: #fff; }
 
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  left: 0; top: 0;
-  width: 100vw; height: 100vh;
-  background: rgba(0,0,0,0.5);
-  justify-content: center; align-items: center;
-}
-.modal-content {
-  background: #fff;
-  padding: 30px; border-radius: 10px; max-width: 370px; margin: auto; position: relative;
-}
-.close-btn, .close-btn-modifica {
-  position: absolute;
-  top: 12px; right: 20px;
-  color: #0080ff;
-  font-size: 2rem;
-  cursor: pointer;
+
+/* Evidenziazione scadenza visita */
+.data-ok {
+  background: #45d345;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  display: inline-block;
 }
 .data-scanza {
-  background: #ffe066;
-  color: #665400;
+  background: #FFA500;
+  color: #fff;
   padding: 6px 12px;
   border-radius: 8px;
   font-weight: bold;
@@ -154,26 +143,7 @@ li {
   font-weight: bold;
   display: inline-block;
 }
-.data-ok {
-  background: #45d345;
-  color: #fff;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-weight: bold;
-  display: inline-block;
-}
-.visita-label {
-  display: block;
-  font-size: 0.95rem;
-  color: #0080ff;
-  font-weight: bold;
-  margin: 0 0 2px 1px;
-  letter-spacing: 0.5px;
-}
 
-input[type="date"]#scadenzaVisita, input[type="date"]#mod-scadenzaVisita {
-  margin-bottom: 12px;
-}
 .visita-label {
   display: block;
   font-size: 0.95rem;
