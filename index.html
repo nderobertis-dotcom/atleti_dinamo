@@ -1,46 +1,40 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestione Atleti - Pallavolo</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Gestione Associazione Pallavolo</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>Gestione Atleti - Pallavolo</h1>
-        <img src="logo.png" alt="Logo Società" class="logo">
-    </header>
+  <header>
+    <h1>Dati Associazione Pallavolo</h1>
+  </header>
 
-    <main>
-        <section class="dashboard">
-            <div class="stat-card">Totale Atleti: <span id="total-athletes">0</span></div>
-            <div class="stat-card">Media Età: <span id="avg-age">-</span></div>
-            <div class="stat-card">Maschi: <span id="male-athletes">0</span></div>
-            <div class="stat-card">Femmine: <span id="female-athletes">0</span></div>
-        </section>
+  <main>
+    <section id="form-section">
+      <h2>Aggiungi Atleta</h2>
+      <form id="atleta-form">
+        <input type="text" id="nome" placeholder="Nome" required>
+        <input type="text" id="cognome" placeholder="Cognome" required>
+        <input type="date" id="dataNascita" placeholder="Data di Nascita" required>
+        <select id="ruolo" required>
+          <option value="">Ruolo</option>
+          <option value="Palleggiatore">Palleggiatore</option>
+          <option value="Schiacciatore">Schiacciatore</option>
+          <option value="Centrale">Centrale</option>
+          <option value="Libero">Libero</option>
+          <option value="Opposto">Opposto</option>
+        </select>
+        <button type="submit">Aggiungi</button>
+      </form>
+    </section>
 
-        <section id="athlete-form-section">
-            <h2>Aggiungi Atleta</h2>
-            <form id="athlete-form">
-                <input type="text" id="first-name" placeholder="Nome" required>
-                <input type="text" id="last-name" placeholder="Cognome" required>
-                <select id="gender" required>
-                    <option value="">Genere</option>
-                    <option value="M">M</option>
-                    <option value="F">F</option>
-                </select>
-                <input type="number" id="age" placeholder="Età" min="5" max="80" required>
-                <button type="submit">Aggiungi</button>
-            </form>
-        </section>
+    <section id="list-section">
+      <h2>Lista Atleti</h2>
+      <ul id="atleti-list"></ul>
+    </section>
+  </main>
 
-        <section id="athlete-list-section">
-            <h2>Elenco Atleti</h2>
-            <ul id="athlete-list"></ul>
-        </section>
-    </main>
-
-    <script src="app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
