@@ -23,7 +23,6 @@ input[type="text"], input[type="tel"], select {
 .logo { max-width: 80px; height: auto; display: block; }
 .main-header h1 { margin: 0; font-size: 2rem; }
 
-/* DASHBOARD STRIP E CARD (robusta e compatta) */
 .dashboard-strip {
   width: 100vw;
   display: flex;
@@ -33,7 +32,7 @@ input[type="text"], input[type="tel"], select {
 }
 .dashboard {
   display: flex;
-  gap: 20px;
+  gap: 16px;
   justify-content: center;
   align-items: stretch;
   margin: 0 auto 18px auto;
@@ -51,30 +50,40 @@ input[type="text"], input[type="tel"], select {
   cursor: pointer;
   padding: 0;
 }
+.dash-card.dash-scanza-btn { background: linear-gradient(145deg, #ffe066 65%, #fffbe6 100%); }
+.dash-card.dash-scadute-btn { background: linear-gradient(145deg, #e63946 65%, #ffcfcf 100%); }
 .dash-card:hover { transform: scale(1.045); }
 .dash-card-inner {
   background: rgba(255,255,255,0.88);
   border-radius: 10px;
   padding: 10px 8px 8px 8px;
-  width: 85px;
+  width: 90px;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 .dash-title{
-  font-size: 0.92em;
+  font-size: 0.91em;
   font-weight: bold;
   letter-spacing: 1px;
   margin-bottom: 5px;
   color: #0080ff;
 }
+.dash-card.dash-scanza-btn .dash-title {
+  color: #ac9100;
+}
+.dash-card.dash-scadute-btn .dash-title {
+  color: #aa2434;
+}
 .dash-value{
-  font-size: 1.42em;
+  font-size: 1.4em;
   font-weight: bolder;
   color: #003974;
   margin-bottom: 2px;
 }
+.dash-card.dash-scanza-btn .dash-value { color: #c49c08; }
+.dash-card.dash-scadute-btn .dash-value { color: #b91b2c; }
 
 main {
   max-width: 700px;
@@ -128,4 +137,28 @@ li {
   color: #0080ff;
   font-size: 2rem;
   cursor: pointer;
+}
+.data-scanza {
+  background: #ffe066;
+  color: #665400;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  display: inline-block;
+}
+.data-scaduta {
+  background: #e63946;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  display: inline-block;
+}
+.data-ok {
+  background: #45d345;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  display: inline-block;
 }
