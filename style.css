@@ -107,18 +107,18 @@ main {
   padding: 30px;
   border-radius: 12px;
 }
+.form-row-condensed {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
 .form-row {
   display: flex;
   flex-direction: row;
   gap: 12px;
   margin-bottom: 10px;
   flex-wrap: wrap;
-}
-.form-row-col {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-bottom: 12px;
 }
 .form-row-due-campi {
   display: flex;
@@ -132,9 +132,9 @@ main {
   flex: 1 1 45%;
 }
 @media (max-width: 600px) {
-  .form-row {
+  .form-row,
+  .form-row-condensed {
     flex-direction: column;
-    gap: 8px;
   }
   .form-row-due-campi {
     flex-direction: column;
@@ -142,10 +142,6 @@ main {
   .form-col {
     flex: 1 1 100%;
   }
-}
-
-form {
-  margin-bottom: 20px;
 }
 input,
 select,
