@@ -26,9 +26,9 @@ function statoVisita(scadenza) {
   if (!scadenza) return 'ok';
   const oggiStr = new Date().toISOString().slice(0, 10);
   const diff = daysBetween(scadenza, oggiStr);
-  if (diff < 0) return 'scaduta';
-  if (diff >= 0 && diff <= 31) return 'scanza';
-  return 'ok';
+  if (diff < 0) return 'scaduta';            // ROSSO
+  if (diff >= 0 && diff <= 31) return 'scanza'; // ARANCIONE
+  return 'ok';                               // VERDE
 }
 function aggiornaDashboard() {
   const atleti = caricaAtleti();
@@ -164,7 +164,6 @@ function visualizzaAtleta(id) {
     <p><span class="${classeVisita}">SCADENZA VISITA: ${scadenzaFormattata}</span></p>
   `;
 }
-
 function cancellaAtleta(id) {
   let atleti = caricaAtleti();
   const idx = atleti.findIndex(a => a.id === id);
@@ -207,12 +206,44 @@ function avviaModificaAtleta(id) {
     mostraAtleti(lastFiltro);
   };
 }
+function esportaAtleti() {
+  const data = JSON.stringify(caricaAtleti(), null, 2);
+  const blob = new Blob([data], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'atleti-backup.json';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
+}
+function importaAtleti(json) {
+  try {
+    const arr = JSON.parse(json);
+    if (Array.isArray(arr)) {
+      const current = caricaAtleti();
+      const all = [...current];
+      arr.forEach(newA => {
+        const idx = all.findIndex(a => a.id === newA.id);
+        if (idx > -1) all[idx] = newA;
+        else all.push(newA);
+      });
+      salvaAtleti(all);
+      mostraAtleti(lastFiltro);
+      aggiornaDashboard();
+      alert("Importazione dati andata a buon fine!");
+    } else {
+      alert("Formato file non valido.");
+    }
+  } catch {
+    alert("File non valido o danneggiato.");
+  }
+}
 let lastFiltro = "all";
 document.addEventListener('DOMContentLoaded', function() {
   mostraAtleti();
   aggiornaDashboard();
 
-  // Chiusura modali
   document.getElementById('close-view').onclick = function() { document.getElementById('modal').style.display = 'none'; };
   document.getElementById('close-edit').onclick = function() { document.getElementById('modal-modifica').style.display = 'none'; };
 
@@ -247,5 +278,20 @@ document.addEventListener('DOMContentLoaded', function() {
       lastFiltro = card.dataset.filter;
       mostraAtleti(lastFiltro);
     });
+  });
+
+  document.getElementById('export-btn').onclick = esportaAtleti;
+  document.getElementById('import-btn').onclick = function() {
+    document.getElementById('import-file').click();
+  };
+  document.getElementById('import-file').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      importaAtleti(ev.target.result);
+    };
+    reader.readAsText(file);
+    e.target.value = '';
   });
 });
