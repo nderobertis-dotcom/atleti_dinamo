@@ -1,4 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('atleta-form');
+  const lista = document.getElementById('atleti-list');
+  let lastFiltro = 'all';
+
   function caricaAtleti() {
     try {
       let dati = localStorage.getItem('atleti');
@@ -52,67 +56,62 @@ document.addEventListener('DOMContentLoaded', function() {
     const sommaEta = atleti.reduce((acc, a) => acc + (a.dataNascita ? calcolaEta(a.dataNascita) : 0), 0);
     document.getElementById('eta-media').textContent = atleti.length ? (sommaEta / atleti.length).toFixed(1) : 0;
   }
-  function formattaData(dataIso) {
-    if (!dataIso) return '';
-    const [anno, mese, giorno] = dataIso.split('-');
+  function formattaData(dataIso){
+    if(!dataIso) return '';
+    const [anno,mese,giorno]=dataIso.split('-');
     return `${giorno}/${mese}/${anno}`;
   }
-  function filtraAtleti(filtro) {
+  function filtraAtleti(filtro){
     let atleti = caricaAtleti();
-    atleti = [...atleti].sort((a, b) => ((a.nome || "") + (a.cognome || "")).toUpperCase().localeCompare(((b.nome || "") + (b.cognome || "")).toUpperCase()));
-    const oggi = new Date().toISOString().slice(0, 10);
-    if (filtro === 'maschi') atleti = atleti.filter(a => a.sesso === 'M');
-    else if (filtro === 'femmine') atleti = atleti.filter(a => a.sesso === 'F');
-    else if (filtro === 'scadenza') atleti = atleti.filter(a => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) >= 0 && daysBetween(a.scadenzaVisita, oggi) <= 31);
-    else if (filtro === 'scadute') atleti = atleti.filter(a => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) < 0);
+    atleti=[...atleti].sort((a,b)=>((a.nome||'')+(a.cognome||'')).toUpperCase().localeCompare(((b.nome||'')+(b.cognome||'')).toUpperCase()));
+    const oggi=new Date().toISOString().slice(0,10);
+    if(filtro==='maschi') atleti=atleti.filter(a=>a.sesso==='M');
+    if(filtro==='femmine') atleti=atleti.filter(a=>a.sesso==='F');
+    if(filtro==='scadenza') atleti=atleti.filter(a=>a.scadenzaVisita&&daysBetween(a.scadenzaVisita,oggi)>=0&&daysBetween(a.scadenzaVisita,oggi)<=31);
+    if(filtro==='scadute') atleti=atleti.filter(a=>a.scadenzaVisita&&daysBetween(a.scadenzaVisita,oggi)<0);
     return atleti;
   }
-  function mostraAtleti(filtro='all') {
-    const atleti = filtraAtleti(filtro);
+  function mostraAtleti(filtro='all'){
+    const atletiList=document.getElementById('atleti-list');
+    const atleti=filtraAtleti(filtro);
     aggiornaDashboard();
-    const listaDom = document.getElementById('atleti-list');
-    listaDom.innerHTML = '';
-    if (atleti.length===0) {
-      const li = document.createElement('li'); li.textContent='Nessun atleta trovato'; listaDom.appendChild(li); return;
+    atletiList.innerHTML='';
+    if(atleti.length===0){
+      const li=document.createElement('li');
+      li.textContent='Nessun atleta trovato';
+      atletiList.appendChild(li);
+      return;
     }
-    atleti.forEach(a => {
-      const eta = calcolaEta(a.dataNascita);
-      const stato = statoVisita(a.scadenzaVisita);
-      const classVisita = {ok:'data-ok',scanza:'data-scanza',scaduta:'data-scaduta'}[stato]||'data-ok';
-
-      const li = document.createElement('li');
-      li.innerHTML = `
-        <span>
-          <strong>${a.codiceAtleta}</strong> - ${a.nome} ${a.cognome} – ${a.sesso} – ${a.ruolo}
-          <br>nato il ${formattaData(a.dataNascita)} – ETA': ${eta} – CF: ${a.codiceFiscale}
-          <br>Cell: ${a.cellulare}
-          <br><span class="${classVisita}">SCADENZA VISITA: ${formattaData(a.scadenzaVisita)}</span>
-        </span>
-        <div class="btn-group">
-          <button class="btn-small btn-visualizza" data-id="${a.id}">V</button>
-          <button class="btn-small btn-modifica" data-id="${a.id}">M</button>
-          <button class="btn-small btn-cancella" data-id="${a.id}">C</button>
-        </div>
-      `;
-      listaDom.appendChild(li);
+    atleti.forEach(a=>{
+      const eta=a.dataNascita ? calcolaEta(a.dataNascita) : '';
+      const stato=statoVisita(a.scadenzaVisita);
+      const classVisita={ok:'data-ok',scanza:'data-scanza',scaduta:'data-scaduta'}[stato]||'data-ok';
+      const li=document.createElement('li');
+      li.innerHTML=`
+      <span>
+        <strong>${a.codiceAtleta}</strong> - ${a.nome} ${a.cognome} – ${a.sesso} – ${a.ruolo}
+        <br>nato il ${formattaData(a.dataNascita)} – ETA': ${eta} – CF: ${a.codiceFiscale}
+        <br>Cell: ${a.cellulare}
+        <br><span class="${classVisita}">SCADENZA VISITA: ${formattaData(a.scadenzaVisita)}</span>
+      </span>
+      <div class="btn-group">
+        <button class="btn-small btn-visualizza" data-id="${a.id}">V</button>
+        <button class="btn-small btn-modifica" data-id="${a.id}">M</button>
+        <button class="btn-small btn-cancella" data-id="${a.id}">C</button>
+      </div>`;
+      atletiList.appendChild(li);
     });
-    document.querySelectorAll('.btn-visualizza').forEach(b=> b.onclick= () => {
-      document.getElementById('modal').style.display = 'flex'; visualizzaAtleta(b.dataset.id);
-    });
-    document.querySelectorAll('.btn-modifica').forEach(b=> b.onclick= () => {
-      document.getElementById('modal-modifica').style.display = 'flex'; avviaModificaAtleta(b.dataset.id);
-    });
-    document.querySelectorAll('.btn-cancella').forEach(b=> b.onclick= () => cancellaAtleta(b.dataset.id));
+    document.querySelectorAll('.btn-visualizza').forEach(b=>b.onclick=()=>{document.getElementById('modal').style.display='flex';visualizzaAtleta(b.dataset.id);});
+    document.querySelectorAll('.btn-modifica').forEach(b=>b.onclick=()=>{document.getElementById('modal-modifica').style.display='flex';avviaModificaAtleta(b.dataset.id);});
+    document.querySelectorAll('.btn-cancella').forEach(b=>b.onclick=()=>cancellaAtleta(b.dataset.id));
   }
-
   function visualizzaAtleta(id) {
     const atleti=caricaAtleti();
-    const a=atleti.find(x=>x.id===id) || {};
-    const eta = a.dataNascita ? calcolaEta(a.dataNascita) : '';
-    const stato = statoVisita(a.scadenzaVisita);
-    const classVisita = {ok:'data-ok', scanza:'data-scanza', scaduta:'data-scaduta'}[stato] || 'data-ok';
-
-    document.getElementById('dettaglio-atleta').innerHTML = `
+    const a=atleti.find(x=>x.id===id)||{};
+    const eta=a.dataNascita?calcolaEta(a.dataNascita):'';
+    const stato=statoVisita(a.scadenzaVisita);
+    const classVisita={ok:'data-ok',scanza:'data-scanza',scaduta:'data-scaduta'}[stato]||'data-ok';
+    document.getElementById('dettaglio-atleta').innerHTML=`
       <h2>${a.codiceAtleta} - ${a.nome} ${a.cognome}</h2>
       <p><strong>Sesso:</strong> ${a.sesso}</p>
       <p><strong>Ruolo:</strong> ${a.ruolo}</p>
@@ -123,94 +122,82 @@ document.addEventListener('DOMContentLoaded', function() {
       <p><span class="${classVisita}">SCADENZA VISITA: ${formattaData(a.scadenzaVisita)}</span></p>
     `;
   }
-
   function avviaModificaAtleta(id) {
     const atleti=caricaAtleti();
-    const a=atleti.find(x=>x.id===id) || {};
-
-    document.getElementById('mod-codiceAtleta').value = a.codiceAtleta || '';
-    document.getElementById('mod-nome').value = a.nome || '';
-    document.getElementById('mod-cognome').value = a.cognome || '';
-    document.getElementById('mod-sesso').value = a.sesso || '';
-    document.getElementById('mod-dataNascita').value = a.dataNascita || '';
-    document.getElementById('mod-ruolo').value = a.ruolo || '';
-    document.getElementById('mod-codiceFiscale').value = a.codiceFiscale || '';
-    document.getElementById('mod-cellulare').value = a.cellulare || '';
-    document.getElementById('mod-scadenzaVisita').value = a.scadenzaVisita || '';
-
-    document.getElementById('modifica-form').dataset.editId = id;
+    const a=atleti.find(x=>x.id===id)||{};
+    document.getElementById('mod-codiceAtleta').value=a.codiceAtleta||'';
+    document.getElementById('mod-nome').value=a.nome||'';
+    document.getElementById('mod-cognome').value=a.cognome||'';
+    document.getElementById('mod-sesso').value=a.sesso||'';
+    document.getElementById('mod-dataNascita').value=a.dataNascita||'';
+    document.getElementById('mod-ruolo').value=a.ruolo||'';
+    document.getElementById('mod-codiceFiscale').value=a.codiceFiscale||'';
+    document.getElementById('mod-cellulare').value=a.cellulare||'';
+    document.getElementById('mod-scadenzaVisita').value=a.scadenzaVisita||'';
+    document.getElementById('modifica-form').dataset.editId=id;
   }
-
-  document.getElementById('modifica-form').onsubmit = function(e) {
+  document.getElementById('modifica-form').onsubmit=function(e){
     e.preventDefault();
-    const id = this.dataset.editId;
-    if (!id) return alert('ID atleta mancante per modifica');
-
-    const codiceAtleta = document.getElementById('mod-codiceAtleta').value.trim();
-    if (!/^\d{7}$/.test(codiceAtleta)) {
-      alert("Il Codice Atleta deve essere un numero di 7 cifre");
+    const id=this.dataset.editId;
+    if(!id){
+      alert('ID atleta mancante');
       return;
     }
-
-    let atleti = caricaAtleti();
-    if (atleti.some(a => a.codiceAtleta === codiceAtleta && a.id !== id)) {
-      alert("Codice Atleta duplicato, inserisci un codice univoco");
+    const codiceAtleta=document.getElementById('mod-codiceAtleta').value.trim();
+    if(!/^\d{7}$/.test(codiceAtleta)){
+      alert('Codice Atleta deve essere 7 cifre');
       return;
     }
-
-    const idx = atleti.findIndex(a => a.id === id);
-    if (idx === -1) return;
-
-    atleti[idx] = {
+    const atleti=caricaAtleti();
+    if(atleti.some(a=>a.codiceAtleta===codiceAtleta && a.id!==id)){
+      alert('Codice Atleta duplicato');
+      return;
+    }
+    const idx=atleti.findIndex(a=>a.id===id);
+    if(idx===-1)return;
+    atleti[idx]={
       ...atleti[idx],
       codiceAtleta,
-      nome: document.getElementById('mod-nome').value.trim().toUpperCase(),
-      cognome: document.getElementById('mod-cognome').value.trim().toUpperCase(),
-      sesso: document.getElementById('mod-sesso').value.toUpperCase(),
-      dataNascita: document.getElementById('mod-dataNascita').value,
-      ruolo: document.getElementById('mod-ruolo').value.toUpperCase(),
-      codiceFiscale: document.getElementById('mod-codiceFiscale').value.trim().toUpperCase(),
-      cellulare: document.getElementById('mod-cellulare').value.trim(),
-      scadenzaVisita: document.getElementById('mod-scadenzaVisita').value
+      nome:document.getElementById('mod-nome').value.trim().toUpperCase(),
+      cognome:document.getElementById('mod-cognome').value.trim().toUpperCase(),
+      sesso:document.getElementById('mod-sesso').value.toUpperCase(),
+      dataNascita:document.getElementById('mod-dataNascita').value,
+      ruolo:document.getElementById('mod-ruolo').value.toUpperCase(),
+      codiceFiscale:document.getElementById('mod-codiceFiscale').value.trim().toUpperCase(),
+      cellulare:document.getElementById('mod-cellulare').value.trim(),
+      scadenzaVisita:document.getElementById('mod-scadenzaVisita').value
     };
-
     salvaAtleti(atleti);
-    this.closest('.modal').style.display = 'none';
+    this.closest('.modal').style.display='none';
     mostraAtleti(lastFiltro);
     aggiornaDashboard();
   };
-
-  form.addEventListener('submit', function(e) {
+  form.addEventListener('submit',function(e){
     e.preventDefault();
     const codiceAtleta = form.codiceAtleta.value.trim();
-
-    if (!/^\d{7}$/.test(codiceAtleta)) {
-      alert("Il Codice Atleta deve essere un numero di 7 cifre");
+    if(!/^\d{7}$/.test(codiceAtleta)){
+      alert('Codice Atleta deve essere 7 cifre');
       return;
     }
-
-    let atleti = caricaAtleti();
-    if (atleti.some(a => a.codiceAtleta === codiceAtleta)) {
-      alert("Codice Atleta duplicato, inserisci un codice diverso");
+    let atleti=caricaAtleti();
+    if(atleti.some(a=>a.codiceAtleta===codiceAtleta)){
+      alert('Codice Atleta duplicato');
       return;
     }
-
-    const nome = form.nome.value.trim().toUpperCase();
-    const cognome = form.cognome.value.trim().toUpperCase();
-    const sesso = form.sesso.value.toUpperCase();
-    const dataNascita = form.dataNascita.value;
-    const ruolo = form.ruolo.value.toUpperCase();
-    const codiceFiscale = form.codiceFiscale.value.trim().toUpperCase();
-    const cellulare = form.cellulare.value.trim();
-    const scadenzaVisita = form.scadenzaVisita.value;
-
-    if (!nome || !cognome || !sesso || !dataNascita || !ruolo || !codiceFiscale || !cellulare || !scadenzaVisita) {
+    const nome=form.nome.value.trim().toUpperCase();
+    const cognome=form.cognome.value.trim().toUpperCase();
+    const sesso=form.sesso.value.toUpperCase();
+    const dataNascita=form.dataNascita.value;
+    const ruolo=form.ruolo.value.toUpperCase();
+    const codiceFiscale=form.codiceFiscale.value.trim().toUpperCase();
+    const cellulare=form.cellulare.value.trim();
+    const scadenzaVisita=form.scadenzaVisita.value;
+    if(!nome || !cognome || !sesso || !dataNascita || !ruolo || !codiceFiscale || !cellulare || !scadenzaVisita){
       alert('Per favore compila tutti i campi.');
       return;
     }
-
     atleti.push({
-      id: generaId(),
+      id:generaId(),
       codiceAtleta,
       nome,
       cognome,
@@ -221,102 +208,79 @@ document.addEventListener('DOMContentLoaded', function() {
       cellulare,
       scadenzaVisita
     });
-
     salvaAtleti(atleti);
     mostraAtleti(lastFiltro);
     form.reset();
   });
-
-  document.querySelectorAll('.dash-card[data-filter]').forEach(card => {
-    card.addEventListener('click', () => {
-      lastFiltro = card.dataset.filter;
-      mostraAtleti(lastFiltro);
-    });
-  });
-
-  document.getElementById('close-view').onclick = () => {
-    document.getElementById('modal').style.display = 'none';
-  };
-
-  document.getElementById('close-edit').onclick = () => {
-    document.getElementById('modal-modifica').style.display = 'none';
-  };
-
-  document.getElementById('export-btn').onclick = () => {
-    const data = JSON.stringify(caricaAtleti(), null, 2);
-    const blob = new Blob([data], {type: 'application/json'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'atleti-backup.json';
+  document.querySelectorAll('.dash-card[data-filter]').forEach(card => card.addEventListener('click',()=>{
+    lastFiltro=card.dataset.filter;
+    mostraAtleti(lastFiltro);
+  }));
+  document.getElementById('close-view').onclick=()=>document.getElementById('modal').style.display='none';
+  document.getElementById('close-edit').onclick=()=>document.getElementById('modal-modifica').style.display='none';
+  document.getElementById('export-btn').onclick=()=>{
+    const data=JSON.stringify(caricaAtleti(),null,2);
+    const blob=new Blob([data],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;
+    a.download='backup-atleti.json';
     document.body.appendChild(a);
     a.click();
     setTimeout(() => {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-    }, 100);
+    },100);
   };
-
-  document.getElementById('import-btn').onclick = () => {
-    document.getElementById('import-file').click();
-  };
-
-  document.getElementById('import-file').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = function(ev) {
-      try {
-        const arr = JSON.parse(ev.target.result);
-        if (!Array.isArray(arr)) throw new Error('Formato JSON non valido');
-        const current = caricaAtleti();
-        const all = [...current];
-        arr.forEach(newA => {
-          const idx = all.findIndex(a => a.id === newA.id);
-          if (idx > -1) all[idx] = newA;
-          else all.push(newA);
+  document.getElementById('import-btn').onclick=()=>document.getElementById('import-file').click();
+  document.getElementById('import-file').onchange=function(e){
+    const file=e.target.files[0];
+    if(!file) return;
+    const reader=new FileReader();
+    reader.onload=function(ev){
+      try{
+        const arr=JSON.parse(ev.target.result);
+        if(!Array.isArray(arr)) throw new Error('Formato JSON non valido');
+        const current=caricaAtleti();
+        const all=[...current];
+        arr.forEach(nuovo=>{
+          const idx=all.findIndex(a=>a.id===nuovo.id);
+          if(idx>-1) all[idx]=nuovo;
+          else all.push(nuovo);
         });
         salvaAtleti(all);
         mostraAtleti(lastFiltro);
         aggiornaDashboard();
-        alert('Importazione dati avvenuta con successo!');
-      } catch (err) {
-        alert('Errore importazione dati: ' + err.message);
-      }
+        alert('Dati importati');
+      }catch(e){alert('Errore importazione dati');}
     };
     reader.readAsText(file);
-    e.target.value = '';
-  });
-
-  // Nuova funzione stampa: stampa lista attuale visualizzata
-  document.getElementById('print-btn').onclick = () => {
-    const atleti = filtraAtleti(lastFiltro);
-    let contenuto = '<h1>Lista Atleti</h1><table border="1" cellspacing="0" cellpadding="6"><thead><tr><th>Codice Atleta</th><th>Nome</th><th>Cognome</th><th>Sesso</th><th>Ruolo</th><th>Data Nascita</th><th>Codice Fiscale</th><th>Cellulare</th><th>Scadenza Visita</th></tr></thead><tbody>';
-
-    atleti.forEach(a => {
-      contenuto += `<tr>
-        <td>${a.codiceAtleta || ''}</td>
-        <td>${a.nome || ''}</td>
-        <td>${a.cognome || ''}</td>
-        <td>${a.sesso || ''}</td>
-        <td>${a.ruolo || ''}</td>
+    this.value='';
+  };
+  document.getElementById('print-btn').onclick=()=>{
+    const atleti=filtraAtleti(lastFiltro);
+    let contenuto='<h1>Lista Atleti</h1><table border="1" cellspacing="0" cellpadding="6"><thead><tr><th>Codice Atleta</th><th>Nome</th><th>Cognome</th><th>Sesso</th><th>Ruolo</th><th>Data Nascita</th><th>Codice Fiscale</th><th>Cellulare</th><th>Scadenza Visita</th></tr></thead><tbody>';
+    atleti.forEach(a=>{
+      contenuto+=`<tr>
+        <td>${a.codiceAtleta||''}</td>
+        <td>${a.nome||''}</td>
+        <td>${a.cognome||''}</td>
+        <td>${a.sesso||''}</td>
+        <td>${a.ruolo||''}</td>
         <td>${formattaData(a.dataNascita)}</td>
-        <td>${a.codiceFiscale || ''}</td>
-        <td>${a.cellulare || ''}</td>
+        <td>${a.codiceFiscale||''}</td>
+        <td>${a.cellulare||''}</td>
         <td>${formattaData(a.scadenzaVisita)}</td>
       </tr>`;
     });
-    contenuto += '</tbody></table>';
-
-    const w = window.open('', '_blank');
+    contenuto+='</tbody></table>';
+    const w=window.open('','_blank');
     w.document.write(`<html><head><title>Stampa Atleti</title></head><body>${contenuto}</body></html>`);
     w.document.close();
     w.focus();
     w.print();
     w.close();
   };
-
   mostraAtleti();
   aggiornaDashboard();
 });
