@@ -63,61 +63,67 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('eta-media').textContent = atleti.length ? (sommaEta / atleti.length).toFixed(1) : 0;
   }
 
-  function formattaData(dataIso){
-    if(!dataIso) return '';
-    const [anno,mese,giorno]=dataIso.split('-');
+  function formattaData(dataIso) {
+    if (!dataIso) return '';
+    const [anno, mese, giorno] = dataIso.split('-');
     return `${giorno}/${mese}/${anno}`;
   }
 
-  function filtraAtleti(filtro){
+  function filtraAtleti(filtro) {
     let atleti = caricaAtleti();
 
-    atleti.sort((a,b)=>{
-      const cognA = (a.cognome||'').toUpperCase();
-      const cognB = (b.cognome||'').toUpperCase();
-      if(cognA<cognB) return -1;
-      if(cognA>cognB) return 1;
-      const nomeA = (a.nome||'').toUpperCase();
-      const nomeB = (b.nome||'').toUpperCase();
-      if(nomeA<nomeB) return -1;
-      if(nomeA>nomeB) return 1;
+    atleti.sort((a, b) => {
+      const cognA = (a.cognome || '').toUpperCase();
+      const cognB = (b.cognome || '').toUpperCase();
+      if (cognA < cognB) return -1;
+      if (cognA > cognB) return 1;
+      const nomeA = (a.nome || '').toUpperCase();
+      const nomeB = (b.nome || '').toUpperCase();
+      if (nomeA < nomeB) return -1;
+      if (nomeA > nomeB) return 1;
       return 0;
     });
 
-    const oggi=new Date().toISOString().slice(0,10);
-    if(filtro==='maschi') atleti=atleti.filter(a=>a.sesso==='M');
-    if(filtro==='femmine') atleti=atleti.filter(a=>a.sesso==='F');
-    if(filtro==='scadenza') atleti=atleti.filter(a=>a.scadenzaVisita&&daysBetween(a.scadenzaVisita,oggi)>=0&&daysBetween(a.scadenzaVisita,oggi)<=31);
-    if(filtro==='scadute') atleti=atleti.filter(a=>a.scadenzaVisita&&daysBetween(a.scadenzaVisita,oggi)<0);
+    const oggi = new Date().toISOString().slice(0, 10);
+
+    if (filtro === 'maschi') atleti = atleti.filter(a => a.sesso === 'M');
+    if (filtro === 'femmine') atleti = atleti.filter(a => a.sesso === 'F');
+    if (filtro === 'scadenza') atleti = atleti.filter(a => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) >= 0 && daysBetween(a.scadenzaVisita, oggi) <= 31);
+    if (filtro === 'scadute') atleti = atleti.filter(a => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) < 0);
 
     return atleti;
   }
 
-  function mostraAtleti(filtro='all'){
-    const atletiList=document.getElementById('atleti-list');
-    const atleti=filtraAtleti(filtro);
-    aggiornaDashboard();
-    atletiList.innerHTML='';
+  function mostraAtleti(filtro = 'all') {
+    const atletiList = document.getElementById('atleti-list');
+    const atleti = filtraAtleti(filtro);
 
-    if(atleti.length===0){
-      const li=document.createElement('li');
-      li.textContent='Nessun atleta trovato';
+    aggiornaDashboard();
+
+    atletiList.innerHTML = '';
+
+    if (atleti.length === 0) {
+      const li = document.createElement('li');
+      li.textContent = 'Nessun atleta trovato';
       atletiList.appendChild(li);
       return;
     }
 
-    atleti.forEach(a=>{
-      const eta = calcolaEta(a.dataNascita);
+    atleti.forEach(a => {
+      const eta = a.dataNascita ? calcolaEta(a.dataNascita) : '';
       const stato = statoVisita(a.scadenzaVisita);
-      const classVisita = {ok:'data-ok',scanza:'data-scanza',scaduta:'data-scaduta'}[stato] || 'data-ok';
+      const classVisita = { ok: 'data-ok', scanza: 'data-scanza', scaduta: 'data-scaduta' }[stato] || 'data-ok';
 
-      const li=document.createElement('li');
-      li.innerHTML=`
+      const certificatoPresente = a.certificatoMedico ? "(Certificato caricato)" : "(Nessun certificato)";
+
+      const li = document.createElement('li');
+      li.innerHTML = `
         <span>
           <strong>${a.codiceAtleta}</strong> - ${a.nome} ${a.cognome} – ${a.sesso} – ${a.ruolo}
           <br>nato il ${formattaData(a.dataNascita)} – ETA': ${eta} – CF: ${a.codiceFiscale}
           <br>Cell: ${a.cellulare}
           <br><span class="${classVisita}">SCADENZA VISITA: ${formattaData(a.scadenzaVisita)}</span>
+          <br>${certificatoPresente}
         </span>
         <div class="btn-group">
           <button class="btn-small btn-visualizza" data-id="${a.id}">V</button>
@@ -152,9 +158,15 @@ document.addEventListener('DOMContentLoaded', function() {
   function visualizzaAtleta(id) {
     const atleti = caricaAtleti();
     const a = atleti.find(x => x.id === id) || {};
+
     const eta = a.dataNascita ? calcolaEta(a.dataNascita) : '';
     const stato = statoVisita(a.scadenzaVisita);
-    const classVisita = {ok:'data-ok',scanza:'data-scanza',scaduta:'data-scaduta'}[stato] || 'data-ok';
+    const classVisita = { ok: 'data-ok', scanza: 'data-scanza', scaduta: 'data-scaduta' }[stato] || 'data-ok';
+
+    const certificatoInfo = a.certificatoMedico
+      ? `<p><a href="${a.certificatoMedico}" target="_blank" rel="noopener noreferrer">Visualizza certificato medico</a></p>`
+      : `<p>(Nessun certificato medico caricato)</p>`;
+
     document.getElementById('dettaglio-atleta').innerHTML = `
       <h2>${a.codiceAtleta} - ${a.nome} ${a.cognome}</h2>
       <p><strong>Sesso:</strong> ${a.sesso}</p>
@@ -164,12 +176,14 @@ document.addEventListener('DOMContentLoaded', function() {
       <p><strong>Codice Fiscale:</strong> ${a.codiceFiscale}</p>
       <p><strong>Cellulare:</strong> ${a.cellulare}</p>
       <p><span class="${classVisita}">SCADENZA VISITA: ${formattaData(a.scadenzaVisita)}</span></p>
+      ${certificatoInfo}
     `;
   }
 
   function avviaModificaAtleta(id) {
     const atleti = caricaAtleti();
     const a = atleti.find(x => x.id === id) || {};
+
     document.getElementById('mod-codiceAtleta').value = a.codiceAtleta || '';
     document.getElementById('mod-nome').value = a.nome || '';
     document.getElementById('mod-cognome').value = a.cognome || '';
@@ -179,25 +193,33 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('mod-codiceFiscale').value = a.codiceFiscale || '';
     document.getElementById('mod-cellulare').value = a.cellulare || '';
     document.getElementById('mod-scadenzaVisita').value = a.scadenzaVisita || '';
+
+    // Non si può impostare valore file input per motivi sicurezza
+    document.getElementById('mod-certificatoMedico').value = '';
+
     document.getElementById('modifica-form').dataset.editId = id;
   }
 
-  function cancellaAtleta(id) {
-    let atleti = caricaAtleti();
-    const idx = atleti.findIndex(a => a.id === id);
-    if (idx === -1) return;
-    if (confirm('Vuoi cancellare questo atleta?')) {
-      atleti.splice(idx, 1);
-      salvaAtleti(atleti);
-      mostraAtleti(lastFiltro);
-      aggiornaDashboard();
-    }
+  async function leggiFilePdf(fileInput) {
+    return new Promise((resolve, reject) => {
+      const file = fileInput.files[0];
+      if (!file) resolve(null);
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        resolve(e.target.result);
+      };
+      reader.onerror = function() {
+        reject('Errore nella lettura del file');
+      };
+      reader.readAsDataURL(file);
+    });
   }
 
-  document.getElementById('modifica-form').onsubmit = function (e) {
+  document.getElementById('modifica-form').onsubmit = async function(e) {
     e.preventDefault();
     const id = this.dataset.editId;
     if (!id) return alert('ID atleta mancante');
+
     const codiceAtleta = document.getElementById('mod-codiceAtleta').value.trim();
     if (!/^\d{7}$/.test(codiceAtleta)) {
       alert('Codice Atleta deve essere 7 cifre');
@@ -210,6 +232,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     const idx = atleti.findIndex(a => a.id === id);
     if (idx === -1) return;
+
+    // Leggi PDF facoltativo in modifica
+    let pdfData = atleti[idx].certificatoMedico || null;
+    const fileInput = document.getElementById('mod-certificatoMedico');
+    if (fileInput.files.length > 0) {
+      try {
+        pdfData = await leggiFilePdf(fileInput);
+      } catch (error) { alert(error); return; }
+    }
+
     atleti[idx] = {
       ...atleti[idx],
       codiceAtleta,
@@ -221,6 +253,7 @@ document.addEventListener('DOMContentLoaded', function() {
       codiceFiscale: document.getElementById('mod-codiceFiscale').value.trim().toUpperCase(),
       cellulare: document.getElementById('mod-cellulare').value.trim(),
       scadenzaVisita: document.getElementById('mod-scadenzaVisita').value,
+      certificatoMedico: pdfData
     };
     salvaAtleti(atleti);
     this.closest('.modal').style.display = 'none';
@@ -228,7 +261,7 @@ document.addEventListener('DOMContentLoaded', function() {
     aggiornaDashboard();
   };
 
-  form.addEventListener('submit', function (e) {
+  form.addEventListener('submit', async function(e) {
     e.preventDefault();
     const codiceAtleta = form.codiceAtleta.value.trim();
     if (!/^\d{7}$/.test(codiceAtleta)) {
@@ -248,10 +281,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const codiceFiscale = form.codiceFiscale.value.trim().toUpperCase();
     const cellulare = form.cellulare.value.trim();
     const scadenzaVisita = form.scadenzaVisita.value;
+
     if (!nome || !cognome || !sesso || !dataNascita || !ruolo || !codiceFiscale || !cellulare || !scadenzaVisita) {
       alert('Per favore compila tutti i campi.');
       return;
     }
+
+    // Leggi PDF facoltativo in inserimento
+    let pdfData = null;
+    const fileInput = document.getElementById('certificatoMedico');
+    if (fileInput.files.length > 0) {
+      try {
+        pdfData = await leggiFilePdf(fileInput);
+      } catch (error) { alert(error); return; }
+    }
+
     atleti.push({
       id: generaId(),
       codiceAtleta,
@@ -263,6 +307,7 @@ document.addEventListener('DOMContentLoaded', function() {
       codiceFiscale,
       cellulare,
       scadenzaVisita,
+      certificatoMedico: pdfData
     });
     salvaAtleti(atleti);
     mostraAtleti(lastFiltro);
@@ -276,8 +321,8 @@ document.addEventListener('DOMContentLoaded', function() {
     })
   );
 
-  document.getElementById('close-view').onclick = () => (document.getElementById('modal').style.display = 'none');
-  document.getElementById('close-edit').onclick = () => (document.getElementById('modal-modifica').style.display = 'none');
+  document.getElementById('close-view').onclick = () => document.getElementById('modal').style.display = 'none';
+  document.getElementById('close-edit').onclick = () => document.getElementById('modal-modifica').style.display = 'none';
 
   document.getElementById('export-btn').onclick = () => {
     const data = JSON.stringify(caricaAtleti(), null, 2);
@@ -296,11 +341,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
   document.getElementById('import-btn').onclick = () => document.getElementById('import-file').click();
 
-  document.getElementById('import-file').addEventListener('change', function (e) {
+  document.getElementById('import-file').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = function (ev) {
+    reader.onload = function(ev) {
       try {
         const arr = JSON.parse(ev.target.result);
         if (!Array.isArray(arr)) throw new Error('Formato JSON non valido');
