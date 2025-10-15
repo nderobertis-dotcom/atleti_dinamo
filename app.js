@@ -32,33 +32,96 @@ document.addEventListener('DOMContentLoaded', function() {
     return età;
   }
 
-  function mostraAtleti(filtro = 'all') {
+  function daysBetween(d1, d2) {
+    try {
+      const date1 = new Date(d1 + 'T00:00:00');
+      const date2 = new Date(d2 + 'T00:00:00');
+      return Math.floor((date1 - date2) / (1000 * 60 * 60 * 24));
+    } catch {
+      return 9999;
+    }
+  }
+
+  function statoVisita(scadenza) {
+    if (!scadenza) return 'ok';
+    const oggiStr = new Date().toISOString().slice(0, 10);
+    const diff = daysBetween(scadenza, oggiStr);
+    if (diff < 0) return 'scaduta'; // rosso
+    if (diff >= 0 && diff <= 31) return 'scanza'; // arancione
+    return 'ok'; // verde
+  }
+
+  function aggiornaDashboard() {
+    const atleti = caricaAtleti();
+    const oggiStr = new Date().toISOString().slice(0, 10);
+    document.getElementById('tot-atleti').textContent = atleti.length;
+    document.getElementById('tot-maschi').textContent = atleti.filter(a => a.sesso === 'M').length;
+    document.getElementById('tot-femmine').textContent = atleti.filter(a => a.sesso === 'F').length;
+    document.getElementById('tot-in-scadenza').textContent = atleti.filter(a => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggiStr) >= 0 && daysBetween(a.scadenzaVisita, oggiStr) <= 31).length;
+    document.getElementById('tot-scadute').textContent = atleti.filter(a => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggiStr) < 0).length;
+    const sommaEta = atleti.reduce((acc, a) => acc + (a.dataNascita ? calcolaEta(a.dataNascita) : 0), 0);
+    document.getElementById('eta-media').textContent = atleti.length ? (sommaEta / atleti.length).toFixed(1) : 0;
+  }
+
+  function filtraAtleti(filtro) {
     let atleti = caricaAtleti();
-
-    atleti.sort((a,b) => ((a.nome||"")+(a.cognome||"")).toUpperCase().localeCompare(((b.nome||"")+(b.cognome||"")).toUpperCase()));
-
+    atleti = [...atleti].sort((a, b) => ((a.nome || "") + (a.cognome || "")).toUpperCase().localeCompare(((b.nome || "") + (b.cognome || "")).toUpperCase()));
+    const oggi = new Date().toISOString().slice(0, 10);
     if (filtro === 'maschi') atleti = atleti.filter(a => a.sesso === 'M');
     else if (filtro === 'femmine') atleti = atleti.filter(a => a.sesso === 'F');
+    else if (filtro === 'scadenza') atleti = atleti.filter(a => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) >= 0 && daysBetween(a.scadenzaVisita, oggi) <= 31);
+    else if (filtro === 'scadute') atleti = atleti.filter(a => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) < 0);
+    return atleti;
+  }
 
-    lista.innerHTML = '';
-    if (atleti.length === 0) {
-      lista.innerHTML = '<li>Nessun atleta trovato</li>';
+  function mostraAtleti(filtro = 'all') {
+    const atletiList = document.getElementById('atleti-list');
+    atletiList.innerHTML = '';
+    const visualizzati = filtraAtleti(filtro);
+    aggiornaDashboard();
+
+    if (!visualizzati.length) {
+      const li = document.createElement('li');
+      li.textContent = 'Nessun atleta trovato';
+      atletiList.appendChild(li);
       return;
     }
 
-    for (const a of atleti) {
-      const eta = calcolaEta(a.dataNascita);
+    visualizzati.forEach(atleta => {
+      if (!atleta.id) return;
+      const nome = atleta.nome || "";
+      const cognome = atleta.cognome || "";
+      const sesso = atleta.sesso || "";
+      const ruolo = atleta.ruolo || "";
+      const dataNascita = atleta.dataNascita || "";
+      const codiceFiscale = atleta.codiceFiscale || "";
+      const cellulare = atleta.cellulare || "";
+      const eta = dataNascita ? calcolaEta(dataNascita) : "";
+      const dataFormattata = formattaData(dataNascita);
+      const scadenzaVisita = atleta.scadenzaVisita || "";
+      const scadenzaFormattata = formattaData(scadenzaVisita);
+
+      let classeVisita = "data-ok";
+      const stato = statoVisita(scadenzaVisita);
+      if (stato === 'scanza') classeVisita = "data-scanza";
+      if (stato === 'scaduta') classeVisita = "data-scaduta";
+
       const li = document.createElement('li');
       li.innerHTML = `
-       <span>${a.nome || ''} ${a.cognome || ''} - Sesso: ${a.sesso || ''} - Età: ${eta}</span>
-       <div class="btn-group">
-         <button class="btn-small btn-visualizza" data-id="${a.id}">V</button>
-         <button class="btn-small btn-modifica" data-id="${a.id}">M</button>
-         <button class="btn-small btn-cancella" data-id="${a.id}">C</button>
-       </div>
+        <span>
+          ${nome} ${cognome} – ${sesso} – ${ruolo}
+          <br>nato il ${dataFormattata} – <strong>ETA':</strong> ${eta} – <strong>CF:</strong> ${codiceFiscale}
+          <br><strong>Cell:</strong> ${cellulare}
+          <br><span class="${classeVisita}">SCADENZA VISITA: ${scadenzaFormattata}</span>
+        </span>
+        <div class="btn-group">
+          <button class="btn-small btn-visualizza" title="Visualizza" data-id="${atleta.id}">V</button>
+          <button class="btn-small btn-modifica" title="Modifica" data-id="${atleta.id}">M</button>
+          <button class="btn-small btn-cancella" title="Cancella" data-id="${atleta.id}">C</button>
+        </div>
       `;
-      lista.appendChild(li);
-    }
+      atletiList.appendChild(li);
+    });
 
     document.querySelectorAll('.btn-visualizza').forEach(btn => {
       btn.onclick = function() {
@@ -79,11 +142,24 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+  function formattaData(dataIso) {
+    if (!dataIso) return '';
+    const [anno, mese, giorno] = dataIso.split('-');
+    return `${giorno}/${mese}/${anno}`;
+  }
+
   function visualizzaAtleta(id) {
     let atleti = caricaAtleti();
     let atleta = atleti.find(a => a.id === id) || {};
     const dataFormattata = formattaData(atleta.dataNascita || "");
     const eta = atleta.dataNascita ? calcolaEta(atleta.dataNascita) : "";
+    const scadenzaVisita = atleta.scadenzaVisita || "";
+    const scadenzaFormattata = formattaData(scadenzaVisita);
+
+    let classeVisita = "data-ok";
+    const stato = statoVisita(scadenzaVisita);
+    if (stato === 'scanza') classeVisita = "data-scanza";
+    if (stato === 'scaduta') classeVisita = "data-scaduta";
 
     document.getElementById('dettaglio-atleta').innerHTML = `
       <h2>${(atleta.nome || '')} ${(atleta.cognome || '')}</h2>
@@ -93,8 +169,19 @@ document.addEventListener('DOMContentLoaded', function() {
       <p><strong>Età:</strong> ${eta}</p>
       <p><strong>Codice Fiscale:</strong> ${(atleta.codiceFiscale || '')}</p>
       <p><strong>Cellulare:</strong> ${(atleta.cellulare || '')}</p>
-      <p><strong>Scadenza Visita Medica:</strong> ${(atleta.scadenzaVisita || '')}</p>
+      <p><span class="${classeVisita}">SCADENZA VISITA: ${scadenzaFormattata}</span></p>
     `;
+  }
+
+  function cancellaAtleta(id) {
+    let atleti = caricaAtleti();
+    const idx = atleti.findIndex(a => a.id === id);
+    if (idx === -1) return;
+    if (confirm('Vuoi cancellare questo atleta?')) {
+      atleti.splice(idx, 1);
+      salvaAtleti(atleti);
+      mostraAtleti(lastFiltro);
+    }
   }
 
   function avviaModificaAtleta(id) {
@@ -111,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('mod-cellulare').value = (atleta.cellulare || '');
     document.getElementById('mod-scadenzaVisita').value = (atleta.scadenzaVisita || '');
 
-    document.getElementById('modifica-form').onsubmit = function(e) {
+    document.getElementById('modifica-form').onsubmit = function (e) {
       e.preventDefault();
       atleti[idx] = {
         ...atleti[idx],
@@ -128,45 +215,6 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('modal-modifica').style.display = 'none';
       mostraAtleti(lastFiltro);
     };
-  }
-
-  function cancellaAtleta(id) {
-    let atleti = caricaAtleti();
-    const idx = atleti.findIndex(a => a.id === id);
-    if (idx === -1) return;
-    if (confirm('Vuoi cancellare questo atleta?')) {
-      atleti.splice(idx, 1);
-      salvaAtleti(atleti);
-      mostraAtleti(lastFiltro);
-    }
-  }
-
-  function formattaData(dataIso) {
-    if (!dataIso) return '';
-    const [anno, mese, giorno] = dataIso.split('-');
-    return `${giorno}/${mese}/${anno}`;
-  }
-
-  function aggiornaDashboard() {
-    const atleti = caricaAtleti();
-    const oggiStr = new Date().toISOString().slice(0,10);
-    document.getElementById('tot-atleti').textContent = atleti.length;
-    document.getElementById('tot-maschi').textContent = atleti.filter(a => a.sesso === 'M').length;
-    document.getElementById('tot-femmine').textContent = atleti.filter(a => a.sesso === 'F').length;
-    document.getElementById('tot-in-scadenza').textContent = atleti.filter(a => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggiStr) >= 0 && daysBetween(a.scadenzaVisita, oggiStr) <= 31).length;
-    document.getElementById('tot-scadute').textContent = atleti.filter(a => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggiStr) < 0).length;
-    const sommaEta = atleti.reduce((acc, a) => acc + (a.dataNascita ? calcolaEta(a.dataNascita) : 0), 0);
-    document.getElementById('eta-media').textContent = atleti.length ? (sommaEta / atleti.length).toFixed(1) : 0;
-  }
-
-  function daysBetween(d1, d2) {
-    try {
-      const date1 = new Date(d1 + 'T00:00:00');
-      const date2 = new Date(d2 + 'T00:00:00');
-      return Math.floor((date1 - date2) / (1000 * 60 * 60 * 24));
-    } catch {
-      return 9999;
-    }
   }
 
   form.addEventListener('submit', function (e) {
@@ -187,8 +235,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     let atleti = caricaAtleti();
-    if (!Array.isArray(atleti)) atleti = [];
-
     atleti.push({
       id: generaId(),
       nome,
@@ -212,8 +258,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  document.getElementById('close-view').onclick = () => (document.getElementById('modal').style.display = 'none');
-  document.getElementById('close-edit').onclick = () => (document.getElementById('modal-modifica').style.display = 'none');
+  document.getElementById('close-view').onclick = () => {
+    document.getElementById('modal').style.display = 'none';
+  };
+  document.getElementById('close-edit').onclick = () => {
+    document.getElementById('modal-modifica').style.display = 'none';
+  };
 
   document.getElementById('export-btn').onclick = () => {
     const data = JSON.stringify(caricaAtleti(), null, 2);
