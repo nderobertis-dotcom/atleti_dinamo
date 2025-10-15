@@ -314,3 +314,125 @@ document.addEventListener('DOMContentLoaded', function() {
   mostraAtleti();
   aggiornaDashboard();
 });
+document.addEventListener('DOMContentLoaded', function() {
+  // ...tutte le altre funzioni rimangono uguali...
+
+  function mostraAtleti(filtro = 'all') {
+    const atletiList = document.getElementById('atleti-list');
+    atletiList.innerHTML = '';
+    const visualizzati = filtraAtleti(filtro);
+    aggiornaDashboard();
+
+    if (!visualizzati.length) {
+      const li = document.createElement('li');
+      li.textContent = 'Nessun atleta trovato';
+      atletiList.appendChild(li);
+      return;
+    }
+
+    visualizzati.forEach(atleta => {
+      if (!atleta.id) return;
+      const nome = atleta.nome || "";
+      const cognome = atleta.cognome || "";
+      const sesso = atleta.sesso || "";
+      const ruolo = atleta.ruolo || "";
+      const dataNascita = atleta.dataNascita || "";
+      const codiceFiscale = atleta.codiceFiscale || "";
+      const cellulare = atleta.cellulare || "";
+      const eta = dataNascita ? calcolaEta(dataNascita) : "";
+      const dataFormattata = formattaData(dataNascita);
+      const scadenzaVisita = atleta.scadenzaVisita || "";
+      const scadenzaFormattata = formattaData(scadenzaVisita);
+
+      let classeVisita = "data-ok";
+      const stato = statoVisita(scadenzaVisita);
+      if (stato === 'scanza') classeVisita = "data-scanza";
+      if (stato === 'scaduta') classeVisita = "data-scaduta";
+
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <span>
+          ${nome} ${cognome} – ${sesso} – ${ruolo}
+          <br>nato il ${dataFormattata} – <strong>ETA':</strong> ${eta} – <strong>CF:</strong> ${codiceFiscale}
+          <br><strong>Cell:</strong> ${cellulare}
+          <br><span class="${classeVisita}">SCADENZA VISITA: ${scadenzaFormattata}</span>
+        </span>
+        <div class="btn-group">
+          <button class="btn-small btn-visualizza" title="Visualizza" data-id="${atleta.id}">V</button>
+          <button class="btn-small btn-modifica" title="Modifica" data-id="${atleta.id}">M</button>
+          <button class="btn-small btn-cancella" title="Cancella" data-id="${atleta.id}">C</button>
+        </div>
+      `;
+      atletiList.appendChild(li);
+    });
+
+    // CLICK bottoni come prima...
+  }
+
+  function visualizzaAtleta(id) {
+    let atleti = caricaAtleti();
+    let atleta = atleti.find(a => a.id === id) || {};
+    const dataFormattata = formattaData(atleta.dataNascita || "");
+    const eta = atleta.dataNascita ? calcolaEta(atleta.dataNascita) : "";
+    const scadenzaVisita = atleta.scadenzaVisita || "";
+    const scadenzaFormattata = formattaData(scadenzaVisita);
+
+    let classeVisita = "data-ok";
+    const stato = statoVisita(scadenzaVisita);
+    if (stato === 'scanza') classeVisita = "data-scanza";
+    if (stato === 'scaduta') classeVisita = "data-scaduta";
+
+    document.getElementById('dettaglio-atleta').innerHTML = `
+      <h2>${(atleta.nome || '')} ${(atleta.cognome || '')}</h2>
+      <p><strong>Sesso:</strong> ${(atleta.sesso || '')}</p>
+      <p><strong>Ruolo:</strong> ${(atleta.ruolo || '')}</p>
+      <p><strong>Data di Nascita:</strong> ${dataFormattata}</p>
+      <p><strong>Età:</strong> ${eta}</p>
+      <p><strong>Codice Fiscale:</strong> ${(atleta.codiceFiscale || '')}</p>
+      <p><strong>Cellulare:</strong> ${(atleta.cellulare || '')}</p>
+      <p><span class="${classeVisita}">SCADENZA VISITA: ${scadenzaFormattata}</span></p>
+    `;
+  }
+
+  function avviaModificaAtleta(id) {
+    let atleti = caricaAtleti();
+    const idx = atleti.findIndex(a => a.id === id);
+    if (idx === -1) return;
+    const atleta = atleti[idx] || {};
+    document.getElementById('mod-nome').value = (atleta.nome || '');
+    document.getElementById('mod-cognome').value = (atleta.cognome || '');
+    document.getElementById('mod-sesso').value = (atleta.sesso || '');
+    document.getElementById('mod-dataNascita').value = (atleta.dataNascita || '');
+    document.getElementById('mod-ruolo').value = (atleta.ruolo || '');
+    document.getElementById('mod-codiceFiscale').value = (atleta.codiceFiscale || '');
+    document.getElementById('mod-cellulare').value = (atleta.cellulare || '');
+    document.getElementById('mod-scadenzaVisita').value = (atleta.scadenzaVisita || '');
+  }
+
+  // Modifica form submit aggiorna e evidenzia scadenza con colore dinamico
+  document.getElementById('modifica-form').onsubmit = function(e) {
+    e.preventDefault();
+    let atleti = caricaAtleti();
+    let id = document.querySelector('.btn-modifica-active')?.dataset.id;
+    const idx = atleti.findIndex(a => a.id === id);
+    if(idx === -1) return;
+    atleti[idx] = {
+      ...atleti[idx],
+      nome: document.getElementById('mod-nome').value.trim().toUpperCase(),
+      cognome: document.getElementById('mod-cognome').value.trim().toUpperCase(),
+      sesso: document.getElementById('mod-sesso').value.toUpperCase(),
+      dataNascita: document.getElementById('mod-dataNascita').value,
+      ruolo: document.getElementById('mod-ruolo').value.toUpperCase(),
+      codiceFiscale: document.getElementById('mod-codiceFiscale').value.trim().toUpperCase(),
+      cellulare: document.getElementById('mod-cellulare').value.trim(),
+      scadenzaVisita: document.getElementById('mod-scadenzaVisita').value
+    };
+    salvaAtleti(atleti);
+    this.closest('.modal').style.display = 'none';
+    mostraAtleti(lastFiltro);
+    aggiornaDashboard();
+  };
+
+  // ...Il resto del codice normale (inserimento, cancellazione, import/export, filtri)...
+
+});
