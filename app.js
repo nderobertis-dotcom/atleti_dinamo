@@ -41,7 +41,6 @@ document.addEventListener('DOMContentLoaded', function() {
     else if (filtro === 'femmine') atleti = atleti.filter(a => a.sesso === 'F');
 
     lista.innerHTML = '';
-
     if (atleti.length === 0) {
       lista.innerHTML = '<li>Nessun atleta trovato</li>';
       return;
@@ -143,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function formattaData(dataIso) {
-    if (!dataIso) return "";
+    if (!dataIso) return '';
     const [anno, mese, giorno] = dataIso.split('-');
     return `${giorno}/${mese}/${anno}`;
   }
@@ -151,36 +150,28 @@ document.addEventListener('DOMContentLoaded', function() {
   function aggiornaDashboard() {
     const atleti = caricaAtleti();
     const oggiStr = new Date().toISOString().slice(0,10);
-    document.getElementById("tot-atleti").textContent = atleti.length;
-    document.getElementById("tot-maschi").textContent = atleti.filter(a => a.sesso === "M").length;
-    document.getElementById("tot-femmine").textContent = atleti.filter(a => a.sesso === "F").length;
-    document.getElementById("tot-in-scadenza").textContent = atleti.filter(a => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggiStr) >= 0 && daysBetween(a.scadenzaVisita, oggiStr) <= 31).length;
-    document.getElementById("tot-scadute").textContent = atleti.filter(a => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggiStr) < 0).length;
+    document.getElementById('tot-atleti').textContent = atleti.length;
+    document.getElementById('tot-maschi').textContent = atleti.filter(a => a.sesso === 'M').length;
+    document.getElementById('tot-femmine').textContent = atleti.filter(a => a.sesso === 'F').length;
+    document.getElementById('tot-in-scadenza').textContent = atleti.filter(a => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggiStr) >= 0 && daysBetween(a.scadenzaVisita, oggiStr) <= 31).length;
+    document.getElementById('tot-scadute').textContent = atleti.filter(a => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggiStr) < 0).length;
     const sommaEta = atleti.reduce((acc, a) => acc + (a.dataNascita ? calcolaEta(a.dataNascita) : 0), 0);
-    document.getElementById("eta-media").textContent = atleti.length? (sommaEta / atleti.length).toFixed(1) : 0;
+    document.getElementById('eta-media').textContent = atleti.length ? (sommaEta / atleti.length).toFixed(1) : 0;
   }
 
   function daysBetween(d1, d2) {
     try {
       const date1 = new Date(d1 + 'T00:00:00');
       const date2 = new Date(d2 + 'T00:00:00');
-      return Math.floor((date1 - date2) / (1000*60*60*24));
+      return Math.floor((date1 - date2) / (1000 * 60 * 60 * 24));
     } catch {
       return 9999;
     }
   }
 
-  function statoVisita(scadenza) {
-    if (!scadenza) return 'ok';
-    const oggiStr = new Date().toISOString().slice(0, 10);
-    const diff = daysBetween(scadenza, oggiStr);
-    if (diff < 0) return 'scaduta';
-    if (diff >= 0 && diff <= 31) return 'scanza';
-    return 'ok';
-  }
-
-  form.addEventListener('submit', function(e){
+  form.addEventListener('submit', function (e) {
     e.preventDefault();
+
     const nome = form.nome.value.trim().toUpperCase();
     const cognome = form.cognome.value.trim().toUpperCase();
     const sesso = form.sesso.value.toUpperCase();
@@ -191,13 +182,27 @@ document.addEventListener('DOMContentLoaded', function() {
     const scadenzaVisita = form.scadenzaVisita.value;
 
     if (!nome || !cognome || !sesso || !dataNascita || !ruolo || !codiceFiscale || !cellulare || !scadenzaVisita) {
-      alert('Compila tutti i campi.');
+      alert('Per favore compila tutti i campi.');
       return;
     }
+
     let atleti = caricaAtleti();
-    atleti.push({ id: generaId(), nome, cognome, sesso, dataNascita, ruolo, codiceFiscale, cellulare, scadenzaVisita });
+    if (!Array.isArray(atleti)) atleti = [];
+
+    atleti.push({
+      id: generaId(),
+      nome,
+      cognome,
+      sesso,
+      dataNascita,
+      ruolo,
+      codiceFiscale,
+      cellulare,
+      scadenzaVisita,
+    });
     salvaAtleti(atleti);
-    mostraAtleti();
+    mostraAtleti(lastFiltro);
+    form.reset();
   });
 
   document.querySelectorAll('.dash-card[data-filter]').forEach(card => {
@@ -207,10 +212,54 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  document.getElementById('close-view').onclick = () => { document.getElementById('modal').style.display = 'none'; };
-  document.getElementById('close-edit').onclick = () => { document.getElementById('modal-modifica').style.display = 'none'; };
+  document.getElementById('close-view').onclick = () => (document.getElementById('modal').style.display = 'none');
+  document.getElementById('close-edit').onclick = () => (document.getElementById('modal-modifica').style.display = 'none');
 
-  // Eventuali import/export, o altre funzionalità aggiuntive...
+  document.getElementById('export-btn').onclick = () => {
+    const data = JSON.stringify(caricaAtleti(), null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'atleti-backup.json';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 100);
+  };
+
+  document.getElementById('import-btn').onclick = () => {
+    document.getElementById('import-file').click();
+  };
+
+  document.getElementById('import-file').addEventListener('change', function (e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function (ev) {
+      try {
+        const arr = JSON.parse(ev.target.result);
+        if (!Array.isArray(arr)) throw new Error('Formato JSON non valido');
+        const current = caricaAtleti();
+        const all = [...current];
+        arr.forEach(newA => {
+          const idx = all.findIndex(a => a.id === newA.id);
+          if (idx > -1) all[idx] = newA;
+          else all.push(newA);
+        });
+        salvaAtleti(all);
+        mostraAtleti(lastFiltro);
+        aggiornaDashboard();
+        alert('Importazione dati avvenuta con successo!');
+      } catch (err) {
+        alert('Errore importazione dati: ' + err.message);
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  });
 
   mostraAtleti();
   aggiornaDashboard();
