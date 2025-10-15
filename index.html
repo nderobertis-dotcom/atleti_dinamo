@@ -13,42 +13,13 @@
 
   <div class="dashboard-strip">
     <div class="dashboard">
-      <div class="dash-card dash-normal-btn" data-filter="all">
-        <div class="dash-card-inner">
-          <div class="dash-title">ATLETI</div>
-          <div class="dash-value" id="tot-atleti">0</div>
-        </div>
-      </div>
-      <div class="dash-card dash-normal-btn" data-filter="maschi">
-        <div class="dash-card-inner">
-          <div class="dash-title">MASCHI</div>
-          <div class="dash-value" id="tot-maschi">0</div>
-        </div>
-      </div>
-      <div class="dash-card dash-normal-btn" data-filter="femmine">
-        <div class="dash-card-inner">
-          <div class="dash-title">FEMMINE</div>
-          <div class="dash-value" id="tot-femmine">0</div>
-        </div>
-      </div>
-      <div class="dash-card dash-scanza-btn" data-filter="scadenza">
-        <div class="dash-card-inner">
-          <div class="dash-title">VISITE IN SCADENZA</div>
-          <div class="dash-value" id="tot-in-scadenza">0</div>
-        </div>
-      </div>
-      <div class="dash-card dash-scadute-btn" data-filter="scadute">
-        <div class="dash-card-inner">
-          <div class="dash-title">VISITE SCADUTE</div>
-          <div class="dash-value" id="tot-scadute">0</div>
-        </div>
-      </div>
-      <div class="dash-card">
-        <div class="dash-card-inner">
-          <div class="dash-title">ETÀ MEDIA</div>
-          <div class="dash-value" id="eta-media">0</div>
-        </div>
-      </div>
+      <!-- ...dashboard come sopra... -->
+      <div class="dash-card dash-normal-btn" data-filter="all"><div class="dash-card-inner"><div class="dash-title">ATLETI</div><div class="dash-value" id="tot-atleti">0</div></div></div>
+      <div class="dash-card dash-normal-btn" data-filter="maschi"><div class="dash-card-inner"><div class="dash-title">MASCHI</div><div class="dash-value" id="tot-maschi">0</div></div></div>
+      <div class="dash-card dash-normal-btn" data-filter="femmine"><div class="dash-card-inner"><div class="dash-title">FEMMINE</div><div class="dash-value" id="tot-femmine">0</div></div></div>
+      <div class="dash-card dash-scanza-btn" data-filter="scadenza"><div class="dash-card-inner"><div class="dash-title">VISITE IN SCADENZA</div><div class="dash-value" id="tot-in-scadenza">0</div></div></div>
+      <div class="dash-card dash-scadute-btn" data-filter="scadute"><div class="dash-card-inner"><div class="dash-title">VISITE SCADUTE</div><div class="dash-value" id="tot-scadute">0</div></div></div>
+      <div class="dash-card"><div class="dash-card-inner"><div class="dash-title">ETÀ MEDIA</div><div class="dash-value" id="eta-media">0</div></div></div>
     </div>
   </div>
 
@@ -85,7 +56,6 @@
         <button type="submit">Aggiungi</button>
       </form>
     </section>
-
     <section id="list-section">
       <h2>Lista Atleti</h2>
       <div class="import-export-bar">
@@ -103,7 +73,6 @@
       <div id="dettaglio-atleta"></div>
     </div>
   </div>
-
   <div id="modal-modifica" class="modal">
     <div class="modal-content">
       <span class="close-btn-modifica" id="close-edit">&times;</span>
@@ -122,4 +91,17 @@
           <option value="PALLEGGIATORE">PALLEGGIATORE</option>
           <option value="SCHIACCIATORE">SCHIACCIATORE</option>
           <option value="CENTRALE">CENTRALE</option>
-          <
+          <option value="LIBERO">LIBERO</option>
+          <option value="OPPOSTO">OPPOSTO</option>
+        </select>
+        <input type="text" id="mod-codiceFiscale" required maxlength="16">
+        <input type="tel" id="mod-cellulare" required>
+        <label for="mod-scadenzaVisita" class="visita-label">Scadenza visita medica</label>
+        <input type="date" id="mod-scadenzaVisita" required>
+        <button type="submit">Salva</button>
+      </form>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
