@@ -56,26 +56,32 @@
     <section id="form-section">
       <h2>Aggiungi Atleta</h2>
       <form id="atleta-form" autocomplete="off">
-        <input type="text" id="nome" placeholder="Nome" required autocomplete="off">
-        <input type="text" id="cognome" placeholder="Cognome" required autocomplete="off">
-        <select id="sesso" required>
-          <option value="">Sesso</option>
-          <option value="M">MASCHIO</option>
-          <option value="F">FEMMINA</option>
-        </select>
-        <input type="date" id="dataNascita" required>
-        <select id="ruolo" required>
-          <option value="">Ruolo</option>
-          <option value="PALLEGGIATORE">PALLEGGIATORE</option>
-          <option value="SCHIACCIATORE">SCHIACCIATORE</option>
-          <option value="CENTRALE">CENTRALE</option>
-          <option value="LIBERO">LIBERO</option>
-          <option value="OPPOSTO">OPPOSTO</option>
-        </select>
-        <input type="text" id="codiceFiscale" placeholder="Codice Fiscale" required maxlength="16" autocomplete="off">
-        <input type="tel" id="cellulare" placeholder="Cellulare" required>
-        <label for="scadenzaVisita" class="visita-label">Scadenza visita medica</label>
-        <input type="date" id="scadenzaVisita" required>
+        <div class="form-row">
+          <input type="text" id="nome" placeholder="Nome" required autocomplete="off">
+          <input type="text" id="cognome" placeholder="Cognome" required autocomplete="off">
+          <select id="sesso" required>
+            <option value="">Sesso</option>
+            <option value="M">MASCHIO</option>
+            <option value="F">FEMMINA</option>
+          </select>
+          <input type="date" id="dataNascita" required>
+        </div>
+        <div class="form-row">
+          <select id="ruolo" required>
+            <option value="">Ruolo</option>
+            <option value="PALLEGGIATORE">PALLEGGIATORE</option>
+            <option value="SCHIACCIATORE">SCHIACCIATORE</option>
+            <option value="CENTRALE">CENTRALE</option>
+            <option value="LIBERO">LIBERO</option>
+            <option value="OPPOSTO">OPPOSTO</option>
+          </select>
+          <input type="text" id="codiceFiscale" placeholder="Codice Fiscale" required maxlength="16" autocomplete="off">
+          <input type="tel" id="cellulare" placeholder="Cellulare" required>
+        </div>
+        <div class="form-row-col">
+          <label for="scadenzaVisita" class="visita-label">Scadenza visita medica</label>
+          <input type="date" id="scadenzaVisita" required>
+        </div>
         <button type="submit">Aggiungi</button>
       </form>
     </section>
@@ -86,7 +92,6 @@
     </section>
   </main>
 
-  <!-- Modal Visualizza -->
   <div id="modal" class="modal">
     <div class="modal-content">
       <span class="close-btn" id="close-view">&times;</span>
@@ -94,36 +99,5 @@
     </div>
   </div>
 
-  <!-- Modal Modifica -->
   <div id="modal-modifica" class="modal">
     <div class="modal-content">
-      <span class="close-btn-modifica" id="close-edit">&times;</span>
-      <form id="modifica-form">
-        <h2>Modifica Atleta</h2>
-        <input type="text" id="mod-nome" required>
-        <input type="text" id="mod-cognome" required>
-        <select id="mod-sesso" required>
-          <option value="">Sesso</option>
-          <option value="M">MASCHIO</option>
-          <option value="F">FEMMINA</option>
-        </select>
-        <input type="date" id="mod-dataNascita" required>
-        <select id="mod-ruolo" required>
-          <option value="">Ruolo</option>
-          <option value="PALLEGGIATORE">PALLEGGIATORE</option>
-          <option value="SCHIACCIATORE">SCHIACCIATORE</option>
-          <option value="CENTRALE">CENTRALE</option>
-          <option value="LIBERO">LIBERO</option>
-          <option value="OPPOSTO">OPPOSTO</option>
-        </select>
-        <input type="text" id="mod-codiceFiscale" required maxlength="16">
-        <input type="tel" id="mod-cellulare" required>
-        <label for="mod-scadenzaVisita" class="visita-label">Scadenza visita medica</label>
-        <input type="date" id="mod-scadenzaVisita" required>
-        <button type="submit">Salva</button>
-      </form>
-    </div>
-  </div>
-  <script src="app.js"></script>
-</body>
-</html>
