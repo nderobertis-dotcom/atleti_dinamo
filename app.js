@@ -49,10 +49,15 @@ function aggiornaDashboard() {
 }
 function filtraAtleti(filtro) {
   let atleti = caricaAtleti();
-  atleti = [...atleti].sort((a, b) => {
-    const ana = ((a.nome || "") + " " + (a.cognome || "")).toUpperCase();
-    const anb = ((b.nome || "") + " " + (b.cognome || "")).toUpperCase();
-    return ana.localeCompare(anb);
+if (!Array.isArray(atleti)) atleti = []; // correzione robusta!
+const nuovoAtleta = {
+  id: generaIdAtleta(),
+  nome, cognome, sesso, dataNascita, ruolo, codiceFiscale, cellulare, scadenzaVisita
+};
+atleti.push(nuovoAtleta);
+salvaAtleti(atleti);
+mostraAtleti(lastFiltro);
+
   });
   const oggi = new Date().toISOString().slice(0,10);
   if(filtro==='maschi') return atleti.filter(a=>a.sesso==="M");
