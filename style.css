@@ -329,3 +329,38 @@ li {
   }
 }
 /* ... il resto del CSS senza modifiche ... */
+/* mantieni tutto il CSS esistente e aggiungi: */
+
+.form-row-date-pdf {
+  display: flex;
+  gap: 12px;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.form-row-date-pdf .form-col-small {
+  flex: 1 1 48%;
+}
+
+.form-row-date-pdf .form-col-pdf-upload {
+  flex: 1 1 48%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* adatta il label del file per avere breve margine in basso */
+.form-col-pdf-upload label {
+  margin-bottom: 4px;
+}
+
+/* su schermi stretti fallback a colonna */
+@media (max-width: 600px) {
+  .form-row-date-pdf {
+    flex-wrap: wrap;
+  }
+  .form-row-date-pdf .form-col-small,
+  .form-row-date-pdf .form-col-pdf-upload {
+    flex: 1 1 100%;
+  }
+}
