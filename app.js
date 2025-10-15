@@ -89,27 +89,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
     visualizzati.forEach(atleta => {
       if (!atleta.id) return;
-      const nome = atleta.nome || "";
-      const cognome = atleta.cognome || "";
-      const sesso = atleta.sesso || "";
-      const ruolo = atleta.ruolo || "";
-      const dataNascita = atleta.dataNascita || "";
-      const codiceFiscale = atleta.codiceFiscale || "";
-      const cellulare = atleta.cellulare || "";
-      const eta = dataNascita ? calcolaEta(dataNascita) : "";
+      const codiceAtleta = atleta.codiceAtleta || '';
+      const nome = atleta.nome || '';
+      const cognome = atleta.cognome || '';
+      const sesso = atleta.sesso || '';
+      const ruolo = atleta.ruolo || '';
+      const dataNascita = atleta.dataNascita || '';
+      const codiceFiscale = atleta.codiceFiscale || '';
+      const cellulare = atleta.cellulare || '';
+      const eta = dataNascita ? calcolaEta(dataNascita) : '';
       const dataFormattata = formattaData(dataNascita);
-      const scadenzaVisita = atleta.scadenzaVisita || "";
+      const scadenzaVisita = atleta.scadenzaVisita || '';
       const scadenzaFormattata = formattaData(scadenzaVisita);
 
-      let classeVisita = "data-ok";
+      let classeVisita = 'data-ok';
       const stato = statoVisita(scadenzaVisita);
-      if (stato === 'scanza') classeVisita = "data-scanza";
-      if (stato === 'scaduta') classeVisita = "data-scaduta";
+      if (stato === 'scanza') classeVisita = 'data-scanza';
+      if (stato === 'scaduta') classeVisita = 'data-scaduta';
 
       const li = document.createElement('li');
       li.innerHTML = `
         <span>
-          ${nome} ${cognome} – ${sesso} – ${ruolo}
+          <strong>${codiceAtleta}</strong> - ${nome} ${cognome} – ${sesso} – ${ruolo}
           <br>nato il ${dataFormattata} – <strong>ETA':</strong> ${eta} – <strong>CF:</strong> ${codiceFiscale}
           <br><strong>Cell:</strong> ${cellulare}
           <br><span class="${classeVisita}">SCADENZA VISITA: ${scadenzaFormattata}</span>
@@ -123,90 +124,92 @@ document.addEventListener('DOMContentLoaded', function() {
       atletiList.appendChild(li);
     });
 
-    document.querySelectorAll('.btn-visualizza').forEach(btn => {
-      btn.onclick = function() {
+    // Event handlers...
+    document.querySelectorAll('.btn-visualizza').forEach(btn =>
+      btn.onclick = () => {
         document.getElementById('modal').style.display = 'flex';
-        visualizzaAtleta(this.dataset.id);
-      };
-    });
-    document.querySelectorAll('.btn-modifica').forEach(btn => {
-      btn.onclick = function() {
+        visualizzaAtleta(btn.dataset.id);
+      }
+    );
+    document.querySelectorAll('.btn-modifica').forEach(btn =>
+      btn.onclick = () => {
         document.getElementById('modal-modifica').style.display = 'flex';
-        avviaModificaAtleta(this.dataset.id);
-      };
-    });
-    document.querySelectorAll('.btn-cancella').forEach(btn => {
-      btn.onclick = function() {
-        cancellaAtleta(this.dataset.id);
-      };
-    });
-  }
-
-  function formattaData(dataIso) {
-    if (!dataIso) return '';
-    const [anno, mese, giorno] = dataIso.split('-');
-    return `${giorno}/${mese}/${anno}`;
+        avviaModificaAtleta(btn.dataset.id);
+      }
+    );
+    document.querySelectorAll('.btn-cancella').forEach(btn =>
+      btn.onclick = () => {
+        cancellaAtleta(btn.dataset.id);
+      }
+    );
   }
 
   function visualizzaAtleta(id) {
     let atleti = caricaAtleti();
     let atleta = atleti.find(a => a.id === id) || {};
-    const dataFormattata = formattaData(atleta.dataNascita || "");
-    const eta = atleta.dataNascita ? calcolaEta(atleta.dataNascita) : "";
-    const scadenzaVisita = atleta.scadenzaVisita || "";
+    const dataFormattata = formattaData(atleta.dataNascita || '');
+    const eta = atleta.dataNascita ? calcolaEta(atleta.dataNascita) : '';
+    const scadenzaVisita = atleta.scadenzaVisita || '';
     const scadenzaFormattata = formattaData(scadenzaVisita);
+    const codiceAtleta = atleta.codiceAtleta || '';
 
-    let classeVisita = "data-ok";
+    let classeVisita = 'data-ok';
     const stato = statoVisita(scadenzaVisita);
-    if (stato === 'scanza') classeVisita = "data-scanza";
-    if (stato === 'scaduta') classeVisita = "data-scaduta";
+    if (stato === 'scanza') classeVisita = 'data-scanza';
+    if (stato === 'scaduta') classeVisita = 'data-scaduta';
 
     document.getElementById('dettaglio-atleta').innerHTML = `
-      <h2>${(atleta.nome || '')} ${(atleta.cognome || '')}</h2>
-      <p><strong>Sesso:</strong> ${(atleta.sesso || '')}</p>
-      <p><strong>Ruolo:</strong> ${(atleta.ruolo || '')}</p>
+      <h2>${codiceAtleta} - ${atleta.nome || ''} ${atleta.cognome || ''}</h2>
+      <p><strong>Sesso:</strong> ${atleta.sesso || ''}</p>
+      <p><strong>Ruolo:</strong> ${atleta.ruolo || ''}</p>
       <p><strong>Data di Nascita:</strong> ${dataFormattata}</p>
       <p><strong>Età:</strong> ${eta}</p>
-      <p><strong>Codice Fiscale:</strong> ${(atleta.codiceFiscale || '')}</p>
-      <p><strong>Cellulare:</strong> ${(atleta.cellulare || '')}</p>
+      <p><strong>Codice Fiscale:</strong> ${atleta.codiceFiscale || ''}</p>
+      <p><strong>Cellulare:</strong> ${atleta.cellulare || ''}</p>
       <p><span class="${classeVisita}">SCADENZA VISITA: ${scadenzaFormattata}</span></p>
     `;
   }
 
-  function cancellaAtleta(id) {
-    let atleti = caricaAtleti();
-    const idx = atleti.findIndex(a => a.id === id);
-    if (idx === -1) return;
-    if (confirm('Vuoi cancellare questo atleta?')) {
-      atleti.splice(idx, 1);
-      salvaAtleti(atleti);
-      mostraAtleti(lastFiltro);
-    }
-  }
 
   function avviaModificaAtleta(id) {
     let atleti = caricaAtleti();
     const idx = atleti.findIndex(a => a.id === id);
     if (idx === -1) return;
     const atleta = atleti[idx] || {};
-    document.getElementById('mod-nome').value = (atleta.nome || '');
-    document.getElementById('mod-cognome').value = (atleta.cognome || '');
-    document.getElementById('mod-sesso').value = (atleta.sesso || '');
-    document.getElementById('mod-dataNascita').value = (atleta.dataNascita || '');
-    document.getElementById('mod-ruolo').value = (atleta.ruolo || '');
-    document.getElementById('mod-codiceFiscale').value = (atleta.codiceFiscale || '');
-    document.getElementById('mod-cellulare').value = (atleta.cellulare || '');
-    document.getElementById('mod-scadenzaVisita').value = (atleta.scadenzaVisita || '');
+    document.getElementById('mod-codiceAtleta').value = atleta.codiceAtleta || '';
+    document.getElementById('mod-nome').value = atleta.nome || '';
+    document.getElementById('mod-cognome').value = atleta.cognome || '';
+    document.getElementById('mod-sesso').value = atleta.sesso || '';
+    document.getElementById('mod-dataNascita').value = atleta.dataNascita || '';
+    document.getElementById('mod-ruolo').value = atleta.ruolo || '';
+    document.getElementById('mod-codiceFiscale').value = atleta.codiceFiscale || '';
+    document.getElementById('mod-cellulare').value = atleta.cellulare || '';
+    document.getElementById('mod-scadenzaVisita').value = atleta.scadenzaVisita || '';
   }
 
   document.getElementById('modifica-form').onsubmit = function(e) {
     e.preventDefault();
+
     let atleti = caricaAtleti();
-    const id = document.querySelector('.btn-modifica-active')?.dataset.id;
+    const id = document.querySelector('.btn-modifica-active')?.dataset.id || ''; // if you track id differently update accordingly
+    const codiceAtleta = document.getElementById('mod-codiceAtleta').value.trim();
+    const codiceAtletaValido = /^\d{7}$/.test(codiceAtleta);
+    if (!codiceAtletaValido) {
+      alert("Il Codice Atleta deve essere un numero di 7 cifre");
+      return;
+    }
+    const duplicate = atleti.some((a, i) => a.codiceAtleta === codiceAtleta && i !== atleti.findIndex(x => x.id === id));
+    if(duplicate) {
+      alert("Codice Atleta duplicato, inserisci un codice univoco");
+      return;
+    }
+
     const idx = atleti.findIndex(a => a.id === id);
-    if (idx === -1) return;
+    if(idx === -1) return;
+
     atleti[idx] = {
       ...atleti[idx],
+      codiceAtleta,
       nome: document.getElementById('mod-nome').value.trim().toUpperCase(),
       cognome: document.getElementById('mod-cognome').value.trim().toUpperCase(),
       sesso: document.getElementById('mod-sesso').value.toUpperCase(),
@@ -214,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function() {
       ruolo: document.getElementById('mod-ruolo').value.toUpperCase(),
       codiceFiscale: document.getElementById('mod-codiceFiscale').value.trim().toUpperCase(),
       cellulare: document.getElementById('mod-cellulare').value.trim(),
-      scadenzaVisita: document.getElementById('mod-scadenzaVisita').value,
+      scadenzaVisita: document.getElementById('mod-scadenzaVisita').value
     };
     salvaAtleti(atleti);
     this.closest('.modal').style.display = 'none';
@@ -224,6 +227,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
   form.addEventListener('submit', function(e) {
     e.preventDefault();
+
+    const codiceAtleta = form.codiceAtleta.value.trim();
+    if (!/^\d{7}$/.test(codiceAtleta)) {
+      alert("Il Codice Atleta deve essere un numero di 7 cifre");
+      return;
+    }
+    let atleti = caricaAtleti();
+    if(atleti.some(a => a.codiceAtleta === codiceAtleta)) {
+      alert("Codice Atleta duplicato, inserisci un codice diverso");
+      return;
+    }
 
     const nome = form.nome.value.trim().toUpperCase();
     const cognome = form.cognome.value.trim().toUpperCase();
@@ -239,9 +253,9 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
 
-    let atleti = caricaAtleti();
     atleti.push({
       id: generaId(),
+      codiceAtleta,
       nome,
       cognome,
       sesso,
