@@ -110,4 +110,20 @@
         <input type="date" id="mod-dataNascita" required>
         <select id="mod-ruolo" required>
           <option value="">Ruolo</option>
-          <option value
+          <option value="PALLEGGIATORE">PALLEGGIATORE</option>
+          <option value="SCHIACCIATORE">SCHIACCIATORE</option>
+          <option value="CENTRALE">CENTRALE</option>
+          <option value="LIBERO">LIBERO</option>
+          <option value="OPPOSTO">OPPOSTO</option>
+        </select>
+        <input type="text" id="mod-codiceFiscale" required maxlength="16">
+        <input type="tel" id="mod-cellulare" required>
+        <label for="mod-scadenzaVisita" class="visita-label">Scadenza visita medica</label>
+        <input type="date" id="mod-scadenzaVisita" required>
+        <button type="submit">Salva</button>
+      </form>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
