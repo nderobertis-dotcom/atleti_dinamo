@@ -63,7 +63,15 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   function filtraAtleti(filtro){
     let atleti = caricaAtleti();
-    atleti=[...atleti].sort((a,b)=>((a.nome||'')+(a.cognome||'')).toUpperCase().localeCompare(((b.nome||'')+(b.cognome||'')).toUpperCase()));
+    atleti=[...atleti].sort((a,b)=>{
+      const cognA=(a.cognome||'').toUpperCase();
+      const cognB=(b.cognome||'').toUpperCase();
+      if(cognA<cognB) return -1;
+      if(cognA>cognB) return 1;
+      const nomeA=(a.nome||'').toUpperCase();
+      const nomeB=(b.nome||'').toUpperCase();
+      return nomeA.localeCompare(nomeB);
+    });
     const oggi=new Date().toISOString().slice(0,10);
     if(filtro==='maschi') atleti=atleti.filter(a=>a.sesso==='M');
     if(filtro==='femmine') atleti=atleti.filter(a=>a.sesso==='F');
@@ -83,7 +91,6 @@ document.addEventListener('DOMContentLoaded', function() {
       const eta = a.dataNascita ? calcolaEta(a.dataNascita) : '';
       const stato = statoVisita(a.scadenzaVisita);
       const classVisita = {ok:'data-ok',scanza:'data-scanza',scaduta:'data-scaduta'}[stato]||'data-ok';
-
       const li=document.createElement('li');
       li.innerHTML=`
       <span>
@@ -134,6 +141,17 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('mod-scadenzaVisita').value=a.scadenzaVisita||'';
     document.getElementById('modifica-form').dataset.editId=id;
   }
+  function cancellaAtleta(id){
+    let atleti=caricaAtleti();
+    const idx=atleti.findIndex(a=>a.id===id);
+    if(idx===-1) return;
+    if(confirm('Vuoi cancellare questo atleta?')){
+      atleti.splice(idx,1);
+      salvaAtleti(atleti);
+      mostraAtleti(lastFiltro);
+      aggiornaDashboard();
+    }
+  }
   document.getElementById('modifica-form').onsubmit=function(e){
     e.preventDefault();
     const id=this.dataset.editId;
@@ -161,7 +179,6 @@ document.addEventListener('DOMContentLoaded', function() {
     mostraAtleti(lastFiltro);
     aggiornaDashboard();
   };
-
   form.addEventListener('submit',function(e){
     e.preventDefault();
     const codiceAtleta=form.codiceAtleta.value.trim();
@@ -196,15 +213,12 @@ document.addEventListener('DOMContentLoaded', function() {
     mostraAtleti(lastFiltro);
     form.reset();
   });
-
   document.querySelectorAll('.dash-card[data-filter]').forEach(card=>card.addEventListener('click',()=>{
     lastFiltro=card.dataset.filter;
     mostraAtleti(lastFiltro);
   }));
-
   document.getElementById('close-view').onclick=()=>document.getElementById('modal').style.display='none';
   document.getElementById('close-edit').onclick=()=>document.getElementById('modal-modifica').style.display='none';
-
   document.getElementById('export-btn').onclick=()=>{
     const data=JSON.stringify(caricaAtleti(),null,2);
     const blob=new Blob([data],{type:'application/json'});
@@ -214,59 +228,47 @@ document.addEventListener('DOMContentLoaded', function() {
     a.download='backup-atleti.json';
     document.body.appendChild(a);
     a.click();
-    setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(url);},100);
+    setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},100);
   };
-
-  document.getElementById('import-btn').onclick = ()=>document.getElementById('import-file').click();
-
-  document.getElementById('import-file').addEventListener('change', function(e){
+  document.getElementById('import-btn').onclick=()=>document.getElementById('import-file').click();
+  document.getElementById('import-file').addEventListener('change',function(e){
     const file = e.target.files[0];
     if(!file) return;
     const reader = new FileReader();
-    reader.onload = function(ev){
+    reader.onload=function(ev){
       try{
-        const arr = JSON.parse(ev.target.result);
+        const arr=JSON.parse(ev.target.result);
         if(!Array.isArray(arr)) throw new Error('Formato JSON non valido');
-        const current = caricaAtleti();
-        const all = [...current];
-        arr.forEach(nuovo => {
-          const idx = all.findIndex(a => a.id === nuovo.id);
-          if (idx > -1) all[idx] = nuovo;
+        const current=caricaAtleti();
+        const all=[...current];
+        arr.forEach(nuovo=>{
+          const idx=all.findIndex(a=>a.id===nuovo.id);
+          if(idx>-1) all[idx]=nuovo;
           else all.push(nuovo);
         });
         salvaAtleti(all);
         mostraAtleti(lastFiltro);
         aggiornaDashboard();
         alert('Dati importati');
-      } catch(e) {
-        alert('Errore importazione dati');
-      }
-    }
+      }catch(e){alert('Errore importazione dati');}
+    };
     reader.readAsText(file);
-    e.target.value = '';
+    e.target.value='';
   });
-
-  // Pulsante stampa
-  document.getElementById('print-btn').onclick = () => {
-    const atleti = filtraAtleti(lastFiltro);
-    let html = `<h1>Lista Atleti</h1><table border="1" cellspacing="0" cellpadding="6"><thead>
-    <tr><th>Codice Atleta</th><th>Nome</th><th>Cognome</th><th>Sesso</th><th>Ruolo</th><th>Data Nascita</th><th>CF</th><th>Cellulare</th><th>Scadenza Visita</th></tr></thead><tbody>`;
-    atleti.forEach(a => {
-      html += `<tr>
-        <td>${a.codiceAtleta||''}</td><td>${a.nome||''}</td><td>${a.cognome||''}</td><td>${a.sesso||''}</td><td>${a.ruolo||''}</td>
-        <td>${formattaData(a.dataNascita)}</td><td>${a.codiceFiscale||''}</td><td>${a.cellulare||''}</td><td>${formattaData(a.scadenzaVisita)}</td>
-      </tr>`;
+  document.getElementById('print-btn').onclick=()=>{
+    const atleti=filtraAtleti(lastFiltro);
+    let html='<h1>Lista Atleti</h1><table border="1" cellspacing="0" cellpadding="6"><thead><tr><th>Codice Atleta</th><th>Nome</th><th>Cognome</th><th>Sesso</th><th>Ruolo</th><th>Data Nascita</th><th>Codice Fiscale</th><th>Cellulare</th><th>Scadenza Visita</th></tr></thead><tbody>';
+    atleti.forEach(a=>{
+      html+=`<tr><td>${a.codiceAtleta||''}</td><td>${a.nome||''}</td><td>${a.cognome||''}</td><td>${a.sesso||''}</td><td>${a.ruolo||''}</td><td>${formattaData(a.dataNascita)}</td><td>${a.codiceFiscale||''}</td><td>${a.cellulare||''}</td><td>${formattaData(a.scadenzaVisita)}</td></tr>`;
     });
-    html += '</tbody></table>';
-
-    let printWindow = window.open('', '', 'width=900,height=700');
-    printWindow.document.write(`<html><head><title>Stampa Atleti</title></head><body>${html}</body></html>`);
-    printWindow.document.close();
-    printWindow.focus();
-    printWindow.print();
-    printWindow.close();
+    html+='</tbody></table>';
+    let w = window.open('','_blank','width=900,height=700');
+    w.document.write(`<html><head><title>Stampa Atleti</title></head><body>${html}</body></html>`);
+    w.document.close();
+    w.focus();
+    w.print();
+    w.close();
   };
-
   mostraAtleti();
   aggiornaDashboard();
 });
