@@ -59,6 +59,16 @@
         <div class="form-row">
           <input
             type="text"
+            id="codiceAtleta"
+            placeholder="CODICE ATLETA (7 cifre)"
+            pattern="\d{7}"
+            maxlength="7"
+            required
+            autocomplete="off"
+            title="Inserisci un codice di 7 cifre"
+          />
+          <input
+            type="text"
             id="nome"
             placeholder="Nome"
             required
@@ -137,6 +147,15 @@
       <span class="close-btn-modifica" id="close-edit">&times;</span>
       <form id="modifica-form">
         <h2>Modifica Atleta</h2>
+        <input
+          type="text"
+          id="mod-codiceAtleta"
+          placeholder="CODICE ATLETA (7 cifre)"
+          pattern="\d{7}"
+          maxlength="7"
+          required
+          title="Inserisci un codice di 7 cifre"
+        />
         <input type="text" id="mod-nome" required />
         <input type="text" id="mod-cognome" required />
         <select id="mod-sesso" required>
