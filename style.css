@@ -110,7 +110,7 @@ main {
 .form-row-condensed {
   display: flex;
   gap: 10px;
-  flex-wrap: nowrap;
+  flex-wrap: nowrap; /* keep on same line if space available */
   margin-bottom: 10px;
 }
 .form-row-condensed > * {
@@ -119,7 +119,7 @@ main {
 }
 @media (max-width: 600px) {
   .form-row-condensed {
-    flex-wrap: wrap;
+    flex-wrap: wrap; /* allow wrap on small screens */
   }
 }
 .form-row {
