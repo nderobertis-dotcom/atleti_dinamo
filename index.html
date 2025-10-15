@@ -55,7 +55,7 @@
 <main>
 <section id="form-section">
   <h2>Aggiungi Atleta</h2>
-  <form id="atleta-form" autocomplete="off">
+  <form id="atleta-form" autocomplete="off" enctype="multipart/form-data">
     <div class="form-row-condensed">
       <input type="text" id="codiceAtleta" placeholder="CODICE ATLETA (7 cifre)" pattern="\d{7}" maxlength="7" required title="Inserisci un codice di 7 cifre" />
       <input type="text" id="nome" placeholder="Nome" required />
@@ -65,6 +65,21 @@
         <option value="M">MASCHIO</option>
         <option value="F">FEMMINA</option>
       </select>
+    </div>
+
+    <div class="form-row-date-pdf">
+      <div class="form-col-small">
+        <label for="dataNascita" class="visita-label">Data di nascita</label>
+        <input type="date" id="dataNascita" required />
+      </div>
+      <div class="form-col-small">
+        <label for="scadenzaVisita" class="visita-label">Scadenza visita medica</label>
+        <input type="date" id="scadenzaVisita" required />
+      </div>
+      <div class="form-col-pdf-upload">
+        <label for="certificatoMedico" class="visita-label">Certificato medico (PDF) (facoltativo)</label>
+        <input type="file" id="certificatoMedico" accept="application/pdf" />
+      </div>
     </div>
 
     <div class="form-row">
@@ -80,16 +95,6 @@
       <input type="tel" id="cellulare" placeholder="Cellulare" required />
     </div>
 
-    <div class="form-row-due-campi">
-      <div class="form-col">
-        <label for="dataNascita" class="visita-label">Data di nascita</label>
-        <input type="date" id="dataNascita" required />
-      </div>
-      <div class="form-col">
-        <label for="scadenzaVisita" class="visita-label">Scadenza visita medica</label>
-        <input type="date" id="scadenzaVisita" required />
-      </div>
-    </div>
     <button type="submit">Aggiungi</button>
   </form>
 </section>
@@ -116,7 +121,7 @@
 <div id="modal-modifica" class="modal">
   <div class="modal-content">
     <span class="close-btn-modifica" id="close-edit">&times;</span>
-    <form id="modifica-form">
+    <form id="modifica-form" enctype="multipart/form-data">
       <h2>Modifica Atleta</h2>
       <input type="text" id="mod-codiceAtleta" placeholder="CODICE ATLETA (7 cifre)" pattern="\d{7}" maxlength="7" required title="Inserisci un codice di 7 cifre" />
       <input type="text" id="mod-nome" required />
@@ -137,8 +142,16 @@
       </select>
       <input type="text" id="mod-codiceFiscale" required maxlength="16" />
       <input type="tel" id="mod-cellulare" required />
-      <label for="mod-scadenzaVisita" class="visita-label">Scadenza visita medica</label>
-      <input type="date" id="mod-scadenzaVisita" required />
+      <div class="form-row-date-pdf">
+        <div class="form-col-small">
+          <label for="mod-scadenzaVisita" class="visita-label">Scadenza visita medica</label>
+          <input type="date" id="mod-scadenzaVisita" required />
+        </div>
+        <div class="form-col-pdf-upload">
+          <label for="mod-certificatoMedico" class="visita-label">Certificato medico (PDF) (facoltativo)</label>
+          <input type="file" id="mod-certificatoMedico" accept="application/pdf" />
+        </div>
+      </div>
       <button type="submit">Salva</button>
     </form>
   </div>
