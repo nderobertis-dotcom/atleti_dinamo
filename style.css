@@ -68,7 +68,7 @@ select {
 .dash-card-inner {
   background: rgba(255, 255, 255, 0.88);
   border-radius: 10px;
-  padding: 10px 8px 8px 8px;
+  padding: 10px 8px;
   width: 90px;
   text-align: center;
   display: flex;
@@ -107,18 +107,17 @@ main {
   padding: 30px;
   border-radius: 12px;
 }
-.form-row-condensed {
+.form-row, .form-row-condensed {
   display: flex;
-  gap: 10px;
   flex-wrap: wrap;
+  gap: 10px;
   margin-bottom: 10px;
 }
-.form-row {
-  display: flex;
+.form-row-condensed {
   flex-direction: row;
-  gap: 12px;
-  margin-bottom: 10px;
-  flex-wrap: wrap;
+}
+.form-row {
+  flex-direction: row;
 }
 .form-row-due-campi {
   display: flex;
@@ -131,12 +130,8 @@ main {
   flex-direction: column;
   flex: 1 1 45%;
 }
-@media (max-width: 600px) {
-  .form-row,
-  .form-row-condensed {
-    flex-direction: column;
-  }
-  .form-row-due-campi {
+@media(max-width:600px){
+  .form-row, .form-row-condensed {
     flex-direction: column;
   }
   .form-col {
@@ -148,7 +143,6 @@ select,
 button {
   padding: 10px;
   font-size: 1rem;
-  font-family: inherit;
 }
 button {
   background: #0080ff;
@@ -182,25 +176,16 @@ li {
   border-radius: 50%;
   border: none;
   cursor: pointer;
-  margin-left: 4px;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
   text-transform: uppercase;
 }
-.btn-visualizza {
-  background: #0080ff;
-  color: #fff;
-}
-.btn-modifica {
-  background: #ffe066;
-  color: #333;
-}
-.btn-cancella {
-  background: #e63946;
-  color: #fff;
-}
+.btn-visualizza { background:#0080ff; color:#fff; }
+.btn-modifica { background:#ffe066; color:#333; }
+.btn-cancella { background:#e63946; color:#fff; }
+
 .data-ok {
   background: #45d345;
   color: #fff;
@@ -226,71 +211,9 @@ li {
   display: inline-block;
 }
 .visita-label {
-  display: block;
   font-size: 0.95rem;
   color: #0080ff;
   font-weight: bold;
   margin: 0 0 2px 1px;
   letter-spacing: 0.5px;
-}
-.import-export-bar {
-  display: flex;
-  gap: 14px;
-  margin-bottom: 22px;
-  align-items: center;
-}
-#import-btn,
-#export-btn {
-  background: #45d345;
-  color: #fff;
-  font-weight: bold;
-  font-size: 1em;
-}
-#import-btn:hover,
-#export-btn:hover {
-  background: #0080ff;
-  color: #fff;
-}
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  justify-content: center;
-  align-items: center;
-}
-.modal-content {
-  background: #fff;
-  padding: 32px 28px 28px 28px;
-  border-radius: 14px;
-  min-width: 285px;
-  max-width: 95vw;
-  max-height: 90vh;
-  margin: auto;
-  box-shadow: 0 8px 44px 0 rgba(0, 0, 0, 0.18);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-.close-btn,
-.close-btn-modifica {
-  position: absolute;
-  top: 12px;
-  right: 18px;
-  color: #e63946;
-  font-size: 2.1rem;
-  font-weight: bold;
-  line-height: 1;
-  cursor: pointer;
-  background: none;
-  border: none;
-  z-index: 1002;
-}
-#dettaglio-atleta > h2 {
-  margin-top: 2px;
 }
