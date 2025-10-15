@@ -124,24 +124,21 @@ document.addEventListener('DOMContentLoaded', function() {
       atletiList.appendChild(li);
     });
 
-    // Event handlers...
-    document.querySelectorAll('.btn-visualizza').forEach(btn =>
+    document.querySelectorAll('.btn-visualizza').forEach(btn => {
       btn.onclick = () => {
         document.getElementById('modal').style.display = 'flex';
         visualizzaAtleta(btn.dataset.id);
-      }
-    );
-    document.querySelectorAll('.btn-modifica').forEach(btn =>
+      };
+    });
+    document.querySelectorAll('.btn-modifica').forEach(btn => {
       btn.onclick = () => {
         document.getElementById('modal-modifica').style.display = 'flex';
         avviaModificaAtleta(btn.dataset.id);
-      }
-    );
-    document.querySelectorAll('.btn-cancella').forEach(btn =>
-      btn.onclick = () => {
-        cancellaAtleta(btn.dataset.id);
-      }
-    );
+      };
+    });
+    document.querySelectorAll('.btn-cancella').forEach(btn => {
+      btn.onclick = () => cancellaAtleta(btn.dataset.id);
+    });
   }
 
   function visualizzaAtleta(id) {
@@ -170,7 +167,6 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
   }
 
-
   function avviaModificaAtleta(id) {
     let atleti = caricaAtleti();
     const idx = atleti.findIndex(a => a.id === id);
@@ -191,14 +187,15 @@ document.addEventListener('DOMContentLoaded', function() {
     e.preventDefault();
 
     let atleti = caricaAtleti();
-    const id = document.querySelector('.btn-modifica-active')?.dataset.id || ''; // if you track id differently update accordingly
+    const id = document.querySelector('.btn-modifica-active')?.dataset.id;
+    if (!id) { alert("Errore interno: id atleta non trovato."); return; }
+
     const codiceAtleta = document.getElementById('mod-codiceAtleta').value.trim();
-    const codiceAtletaValido = /^\d{7}$/.test(codiceAtleta);
-    if (!codiceAtletaValido) {
+    if (!/^\d{7}$/.test(codiceAtleta)) {
       alert("Il Codice Atleta deve essere un numero di 7 cifre");
       return;
     }
-    const duplicate = atleti.some((a, i) => a.codiceAtleta === codiceAtleta && i !== atleti.findIndex(x => x.id === id));
+    const duplicate = atleti.some((a, i) => a.codiceAtleta === codiceAtleta && a.id !== id);
     if(duplicate) {
       alert("Codice Atleta duplicato, inserisci un codice univoco");
       return;
@@ -217,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function() {
       ruolo: document.getElementById('mod-ruolo').value.toUpperCase(),
       codiceFiscale: document.getElementById('mod-codiceFiscale').value.trim().toUpperCase(),
       cellulare: document.getElementById('mod-cellulare').value.trim(),
-      scadenzaVisita: document.getElementById('mod-scadenzaVisita').value
+      scadenzaVisita: document.getElementById('mod-scadenzaVisita').value,
     };
     salvaAtleti(atleti);
     this.closest('.modal').style.display = 'none';
@@ -309,27 +306,4 @@ document.addEventListener('DOMContentLoaded', function() {
     const reader = new FileReader();
     reader.onload = function(ev) {
       try {
-        const arr = JSON.parse(ev.target.result);
-        if (!Array.isArray(arr)) throw new Error('Formato JSON non valido');
-        const current = caricaAtleti();
-        const all = [...current];
-        arr.forEach(newA => {
-          const idx = all.findIndex(a => a.id === newA.id);
-          if (idx > -1) all[idx] = newA;
-          else all.push(newA);
-        });
-        salvaAtleti(all);
-        mostraAtleti(lastFiltro);
-        aggiornaDashboard();
-        alert('Importazione dati avvenuta con successo!');
-      } catch (err) {
-        alert('Errore importazione dati: ' + err.message);
-      }
-    };
-    reader.readAsText(file);
-    e.target.value = '';
-  });
-
-  mostraAtleti();
-  aggiornaDashboard();
-});
+        const arr =
