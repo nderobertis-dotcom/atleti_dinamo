@@ -5,11 +5,11 @@ body {
   padding: 0;
   text-transform: uppercase;
 }
-
-input[type="text"], input[type="tel"], select {
+input[type="text"],
+input[type="tel"],
+select {
   text-transform: uppercase;
 }
-
 .main-header {
   background: #0080ff;
   color: #fff;
@@ -20,18 +20,15 @@ input[type="text"], input[type="tel"], select {
   justify-content: center;
   gap: 18px;
 }
-
 .logo {
   max-width: 80px;
   height: auto;
   display: block;
 }
-
 .main-header h1 {
   margin: 0;
   font-size: 2rem;
 }
-
 .dashboard-strip {
   width: 100vw;
   display: flex;
@@ -39,7 +36,6 @@ input[type="text"], input[type="tel"], select {
   background: transparent;
   margin-top: 12px;
 }
-
 .dashboard {
   display: flex;
   gap: 16px;
@@ -47,11 +43,10 @@ input[type="text"], input[type="tel"], select {
   align-items: stretch;
   margin: 0 auto 18px auto;
 }
-
 .dash-card {
   border-radius: 14px;
   background: linear-gradient(145deg, #0080ff 75%, #a6d3fd 100%);
-  box-shadow: 0 3px 16px 0 rgba(0,0,0,0.13);
+  box-shadow: 0 3px 16px 0 rgba(0, 0, 0, 0.13);
   min-width: 95px;
   min-height: 65px;
   display: flex;
@@ -61,21 +56,17 @@ input[type="text"], input[type="tel"], select {
   cursor: pointer;
   padding: 0;
 }
-
 .dash-card.dash-scanza-btn {
   background: linear-gradient(145deg, #ffa500 65%, #fffbe6 100%);
 }
-
 .dash-card.dash-scadute-btn {
   background: linear-gradient(145deg, #e63946 65%, #ffcfcf 100%);
 }
-
 .dash-card:hover {
   transform: scale(1.045);
 }
-
 .dash-card-inner {
-  background: rgba(255,255,255,0.88);
+  background: rgba(255, 255, 255, 0.88);
   border-radius: 10px;
   padding: 10px 8px;
   width: 90px;
@@ -84,7 +75,6 @@ input[type="text"], input[type="tel"], select {
   flex-direction: column;
   align-items: center;
 }
-
 .dash-title {
   font-size: 0.91em;
   font-weight: bold;
@@ -92,30 +82,24 @@ input[type="text"], input[type="tel"], select {
   margin-bottom: 5px;
   color: #0080ff;
 }
-
 .dash-card.dash-scanza-btn .dash-title {
   color: #b25e00;
 }
-
 .dash-card.dash-scadute-btn .dash-title {
   color: #aa2434;
 }
-
 .dash-value {
   font-size: 1.4em;
   font-weight: bolder;
   color: #003974;
   margin-bottom: 2px;
 }
-
 .dash-card.dash-scanza-btn .dash-value {
   color: #b25e00;
 }
-
 .dash-card.dash-scadute-btn .dash-value {
   color: #b91b2c;
 }
-
 main {
   max-width: 700px;
   margin: 10px auto 0 auto;
@@ -123,39 +107,38 @@ main {
   padding: 30px;
   border-radius: 12px;
 }
-
 .form-row-condensed {
   display: flex;
   gap: 10px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   margin-bottom: 10px;
 }
-
 .form-row-condensed > * {
   flex-grow: 1;
-  min-width: 80px;
+  min-width: 90px;
 }
-
+@media (max-width: 600px) {
+  .form-row-condensed {
+    flex-wrap: wrap;
+  }
+}
 .form-row {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
   margin-bottom: 10px;
 }
-
 .form-row-due-campi {
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
   margin-bottom: 12px;
 }
-
 .form-col {
   display: flex;
   flex-direction: column;
   flex: 1 1 45%;
 }
-
 @media (max-width: 600px) {
   .form-row,
   .form-row-condensed {
@@ -165,7 +148,6 @@ main {
     flex: 1 1 100%;
   }
 }
-
 input,
 select,
 button {
@@ -173,7 +155,6 @@ button {
   font-size: 1rem;
   font-family: inherit;
 }
-
 button {
   background: #0080ff;
   color: #fff;
@@ -181,12 +162,10 @@ button {
   border-radius: 5px;
   cursor: pointer;
 }
-
 ul {
   list-style: none;
   padding: 0;
 }
-
 li {
   background: #e6e6e6;
   margin-bottom: 8px;
@@ -196,12 +175,10 @@ li {
   align-items: center;
   justify-content: space-between;
 }
-
 .btn-group {
   display: flex;
   gap: 4px;
 }
-
 .btn-small {
   width: 30px;
   height: 30px;
@@ -216,22 +193,18 @@ li {
   justify-content: center;
   text-transform: uppercase;
 }
-
 .btn-visualizza {
   background: #0080ff;
   color: #fff;
 }
-
 .btn-modifica {
   background: #ffe066;
   color: #333;
 }
-
 .btn-cancella {
   background: #e63946;
   color: #fff;
 }
-
 .data-ok {
   background: #45d345;
   color: #fff;
@@ -240,7 +213,6 @@ li {
   font-weight: bold;
   display: inline-block;
 }
-
 .data-scanza {
   background: #ffa500;
   color: #fff;
@@ -249,7 +221,6 @@ li {
   font-weight: bold;
   display: inline-block;
 }
-
 .data-scaduta {
   background: #e63946;
   color: #fff;
@@ -258,7 +229,6 @@ li {
   font-weight: bold;
   display: inline-block;
 }
-
 .visita-label {
   font-size: 0.95rem;
   color: #0080ff;
@@ -266,14 +236,12 @@ li {
   margin: 0 0 2px 1px;
   letter-spacing: 0.5px;
 }
-
 .import-export-bar {
   display: flex;
   gap: 10px;
   margin-bottom: 22px;
   align-items: center;
 }
-
 #import-btn,
 #export-btn,
 #print-btn {
@@ -286,14 +254,12 @@ li {
   cursor: pointer;
   padding: 8px 16px;
 }
-
 #import-btn:hover,
 #export-btn:hover,
 #print-btn:hover {
   background: #0080ff;
   color: #fff;
 }
-
 .modal {
   display: none;
   position: fixed;
@@ -306,7 +272,6 @@ li {
   justify-content: center;
   align-items: center;
 }
-
 .modal-content {
   background: #fff;
   padding: 32px 28px 28px 28px;
@@ -321,7 +286,6 @@ li {
   flex-direction: column;
   align-items: flex-start;
 }
-
 .close-btn,
 .close-btn-modifica {
   position: absolute;
@@ -336,7 +300,6 @@ li {
   border: none;
   z-index: 1002;
 }
-
 #dettaglio-atleta > h2 {
   margin-top: 2px;
 }
