@@ -322,3 +322,27 @@ li {
   font-weight: bold;
   display: inline-block;
 }
+.data-ok {
+  background: #45d345;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  display: inline-block;
+}
+.data-scanza {
+  background: #FFA500;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  display: inline-block;
+}
+.data-scaduta {
+  background: #e63946;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  display: inline-block;
+}
