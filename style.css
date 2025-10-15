@@ -303,3 +303,29 @@ li {
 #dettaglio-atleta > h2 {
   margin-top: 2px;
 }
+/* ... mantieni tutto come nell'ultima versione ... */
+.form-row-condensed {
+  display: flex;
+  gap: 10px;
+  flex-wrap: nowrap; /* mantenuto */
+  margin-bottom: 10px;
+  align-items: center; /* aggiunto per allineare verticalmente selettore */
+}
+
+.form-row-condensed > * {
+  flex-grow: 1;
+  min-width: 90px;
+}
+
+.form-row-condensed select {
+  max-width: 100px; /* limita larghezza select per adattare in riga */
+}
+@media (max-width: 600px) {
+  .form-row-condensed {
+    flex-wrap: wrap;
+  }
+  .form-row-condensed > * {
+    min-width: 100%; /* su piccolo schermo prende tutta la larghezza */
+  }
+}
+/* ... il resto del CSS senza modifiche ... */
