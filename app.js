@@ -1,55 +1,66 @@
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('atleta-form');
-  const list = document.getElementById('atleti-list');
-  let filtro = 'all';
+  let lastFiltro = 'all';
 
-  const caricaAtleti = () => JSON.parse(localStorage.getItem('atleti') || '[]');
-  const salvaAtleti = arr => localStorage.setItem('atleti', JSON.stringify(arr));
-  const generaId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
-
-  const calcolaEta = data => {
-    if (!data) return '';
+  function caricaAtleti() {
+    return JSON.parse(localStorage.getItem('atleti') || '[]');
+  }
+  function salvaAtleti(lista) {
+    localStorage.setItem('atleti', JSON.stringify(lista));
+  }
+  function generaId() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  }
+  function calcolaEta(d) {
+    if (!d) return '';
     const oggi = new Date();
-    const nascita = new Date(data);
+    const nascita = new Date(d);
     let eta = oggi.getFullYear() - nascita.getFullYear();
     const m = oggi.getMonth() - nascita.getMonth();
     if (m < 0 || (m === 0 && oggi.getDate() < nascita.getDate())) eta--;
     return eta;
-  };
-
-  const daysBetween = (a, b) => Math.floor((new Date(a) - new Date(b)) / 86400000);
-  const statoVisita = scad => {
+  }
+  function daysBetween(a, b) {
+    return Math.floor((new Date(a) - new Date(b)) / 86400000);
+  }
+  function statoVisita(scad) {
     if (!scad) return 'ok';
     const oggi = new Date().toISOString().slice(0, 10);
     const diff = daysBetween(scad, oggi);
     return diff < 0 ? 'scaduta' : diff <= 31 ? 'scanza' : 'ok';
-  };
-  const formattaData = d => !d ? '' : d.split('-').reverse().join('/');
+  }
+  function formattaData(d) {
+    if (!d) return '';
+    const [anno, mese, giorno] = d.split('-');
+    return `${giorno}/${mese}/${anno}`;
+  }
 
   function aggiornaDashboard() {
     const a = caricaAtleti(), oggi = new Date().toISOString().slice(0, 10);
     document.getElementById('tot-atleti').textContent = a.length;
     document.getElementById('tot-maschi').textContent = a.filter(x => x.sesso === 'M').length;
     document.getElementById('tot-femmine').textContent = a.filter(x => x.sesso === 'F').length;
-    document.getElementById('tot-in-scadenza').textContent = a.filter(x => daysBetween(x.scadenzaVisita, oggi) >= 0 && daysBetween(x.scadenzaVisita, oggi) <= 31).length;
-    document.getElementById('tot-scadute').textContent = a.filter(x => daysBetween(x.scadenzaVisita, oggi) < 0).length;
+    document.getElementById('tot-in-scadenza').textContent = a.filter(x => x.scadenzaVisita && daysBetween(x.scadenzaVisita, oggi) >= 0 && daysBetween(x.scadenzaVisita, oggi) <= 31).length;
+    document.getElementById('tot-scadute').textContent = a.filter(x => x.scadenzaVisita && daysBetween(x.scadenzaVisita, oggi) < 0).length;
     const totEta = a.reduce((sum, x) => sum + (x.dataNascita ? calcolaEta(x.dataNascita) : 0), 0);
     document.getElementById('eta-media').textContent = a.length ? (totEta / a.length).toFixed(1) : 0;
   }
 
   function mostraAtleti() {
     const a = caricaAtleti().sort((a,b)=>a.cognome.localeCompare(b.cognome)||a.nome.localeCompare(b.nome));
-    aggiornaDashboard(); list.innerHTML = '';
-    if (a.length === 0) {
+    const list = document.getElementById('atleti-list');
+    list.innerHTML = '';
+    aggiornaDashboard();
+    if (!a.length) {
       const li = document.createElement('li'); li.textContent = 'Nessun atleta trovato'; list.appendChild(li); return;
     }
     a.forEach(x => {
-      const li = document.createElement('li');
       const stato = statoVisita(x.scadenzaVisita);
-      const cl = {ok:'data-ok',scan:'data-scanza',scaduta:'data-scaduta'}[stato] || 'data-ok';
+      const cl = {ok:'data-ok', scanza:'data-scanza', scaduta:'data-scaduta'}[stato] || 'data-ok';
+      const li = document.createElement('li');
       li.innerHTML = `<span>
         <strong>${x.codiceAtleta}</strong> - ${x.nome} ${x.cognome} – ${x.sesso} – ${x.ruolo}
-        <br>Nato il ${formattaData(x.dataNascita)} – Età: ${calcolaEta(x.dataNascita)}
+        <br>nato il ${formattaData(x.dataNascita)} – Età: ${calcolaEta(x.dataNascita)}
         <br>CF: ${x.codiceFiscale} – Cell: ${x.cellulare}
         <br><span class="${cl}">SCADENZA VISITA: ${formattaData(x.scadenzaVisita)}</span>
         <br>${x.certificatoMedico ? '(Certificato caricato)' : '(Nessun certificato)'}
@@ -61,25 +72,21 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>`;
       list.appendChild(li);
     });
-
-    document.querySelectorAll('.btn-cancella').forEach(btn => btn.onclick = () => cancella(btn.dataset.id));
-    document.querySelectorAll('.btn-visualizza').forEach(btn => btn.onclick = () => visualizza(btn.dataset.id));
-    document.querySelectorAll('.btn-modifica').forEach(btn => btn.onclick = () => modifica(btn.dataset.id));
+    document.querySelectorAll('.btn-cancella').forEach(btn=>btn.onclick=()=>cancella(btn.dataset.id));
+    document.querySelectorAll('.btn-visualizza').forEach(btn=>btn.onclick=()=>visualizza(btn.dataset.id));
+    document.querySelectorAll('.btn-modifica').forEach(btn=>btn.onclick=()=>modifica(btn.dataset.id));
   }
 
   function cancella(id) {
     let a = caricaAtleti();
     const idx = a.findIndex(x => x.id === id);
     if (idx !== -1 && confirm('Confermi eliminazione atleta?')) {
-      a.splice(idx, 1);
-      salvaAtleti(a);
-      mostraAtleti();
+      a.splice(idx, 1); salvaAtleti(a); mostraAtleti();
     }
   }
 
   function visualizza(id) {
     const a = caricaAtleti().find(x => x.id === id);
-    if (!a) return;
     const c = a.certificatoMedico ? `<p><a href="${a.certificatoMedico}" target="_blank">Visualizza certificato medico</a></p>` : '<p>(Nessun certificato medico caricato)</p>';
     document.getElementById('modal').style.display='flex';
     document.getElementById('dettaglio-atleta').innerHTML = `
@@ -188,5 +195,10 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('close-view').onclick=()=>document.getElementById('modal').style.display='none';
   document.getElementById('close-edit').onclick=()=>document.getElementById('modal-modifica').style.display='none';
 
-  mostraAtleti(); aggiornaDashboard();
+  document.querySelectorAll('.dash-card[data-filter]').forEach(card => card.onclick=()=>{
+    lastFiltro=card.dataset.filter; mostraAtleti();
+  });
+
+  mostraAtleti();
+  aggiornaDashboard();
 });
