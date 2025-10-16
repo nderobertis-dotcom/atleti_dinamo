@@ -298,3 +298,20 @@ li {
 #dettaglio-atleta > h2 {
   margin-top: 2px;
 }
+/* Nessuna modifica, già ottimizzato per larghezza maggiore */
+body {
+  font-family: Arial, sans-serif;
+  background: #f2f2f2;
+  margin: 0;
+  padding: 0;
+  text-transform: uppercase;
+}
+/* ... restante CSS invariato ... */
+main {
+  max-width: 1000px; /* Più larga per distribuzione migliore */
+  margin: 10px auto 0 auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+}
+/* ... restanti stili invariati ... */
