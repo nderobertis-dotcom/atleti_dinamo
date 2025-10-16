@@ -13,24 +13,12 @@
 
 <div class="dashboard-strip">
   <div class="dashboard" id="dashboard">
-    <div class="dash-card dash-normal-btn" data-filter="all">
-      <div class="dash-card-inner"><div class="dash-title">ATLETI</div><div class="dash-value" id="tot-atleti">0</div></div>
-    </div>
-    <div class="dash-card dash-normal-btn" data-filter="maschi">
-      <div class="dash-card-inner"><div class="dash-title">MASCHI</div><div class="dash-value" id="tot-maschi">0</div></div>
-    </div>
-    <div class="dash-card dash-normal-btn" data-filter="femmine">
-      <div class="dash-card-inner"><div class="dash-title">FEMMINE</div><div class="dash-value" id="tot-femmine">0</div></div>
-    </div>
-    <div class="dash-card dash-scanza-btn" data-filter="scadenza">
-      <div class="dash-card-inner"><div class="dash-title">VISITE IN SCADENZA</div><div class="dash-value" id="tot-in-scadenza">0</div></div>
-    </div>
-    <div class="dash-card dash-scadute-btn" data-filter="scadute">
-      <div class="dash-card-inner"><div class="dash-title">VISITE SCADUTE</div><div class="dash-value" id="tot-scadute">0</div></div>
-    </div>
-    <div class="dash-card">
-      <div class="dash-card-inner"><div class="dash-title">ETÀ MEDIA</div><div class="dash-value" id="eta-media">0</div></div>
-    </div>
+    <div class="dash-card dash-normal-btn" data-filter="all"><div class="dash-card-inner"><div class="dash-title">ATLETI</div><div class="dash-value" id="tot-atleti">0</div></div></div>
+    <div class="dash-card dash-normal-btn" data-filter="maschi"><div class="dash-card-inner"><div class="dash-title">MASCHI</div><div class="dash-value" id="tot-maschi">0</div></div></div>
+    <div class="dash-card dash-normal-btn" data-filter="femmine"><div class="dash-card-inner"><div class="dash-title">FEMMINE</div><div class="dash-value" id="tot-femmine">0</div></div></div>
+    <div class="dash-card dash-scanza-btn" data-filter="scadenza"><div class="dash-card-inner"><div class="dash-title">VISITE IN SCADENZA</div><div class="dash-value" id="tot-in-scadenza">0</div></div></div>
+    <div class="dash-card dash-scadute-btn" data-filter="scadute"><div class="dash-card-inner"><div class="dash-title">VISITE SCADUTE</div><div class="dash-value" id="tot-scadute">0</div></div></div>
+    <div class="dash-card"><div class="dash-card-inner"><div class="dash-title">ETÀ MEDIA</div><div class="dash-value" id="eta-media">0</div></div></div>
   </div>
 </div>
 
@@ -49,18 +37,9 @@
       </select>
     </div>
     <div class="form-row-date-pdf">
-      <div class="form-col-small">
-        <label for="dataNascita" class="visita-label">Data di nascita</label>
-        <input type="date" id="dataNascita" required>
-      </div>
-      <div class="form-col-small">
-        <label for="scadenzaVisita" class="visita-label">Scadenza visita</label>
-        <input type="date" id="scadenzaVisita" required>
-      </div>
-      <div class="form-col-pdf-upload">
-        <label for="certificatoMedico" class="visita-label">Certificato medico (PDF)</label>
-        <input type="file" id="certificatoMedico" accept="application/pdf">
-      </div>
+      <div class="form-col-small"><label for="dataNascita" class="visita-label">Data di nascita</label><input type="date" id="dataNascita" required></div>
+      <div class="form-col-small"><label for="scadenzaVisita" class="visita-label">Scadenza visita</label><input type="date" id="scadenzaVisita" required></div>
+      <div class="form-col-pdf-upload"><label for="certificatoMedico" class="visita-label">Certificato medico (PDF)</label><input type="file" id="certificatoMedico" accept="application/pdf"></div>
     </div>
     <div class="form-row">
       <select id="ruolo" required>
@@ -98,6 +77,8 @@
       <th>Età</th>
       <th>CF</th>
       <th>Cell</th>
+      <th>Scadenza Visita</th>
+      <th>Certificato</th>
       <th>Azioni</th>
     </tr>
   </thead>
@@ -138,14 +119,8 @@
       <input id="mod-codiceFiscale" maxlength="16" required>
       <input id="mod-cellulare" required>
       <div class="form-row-date-pdf">
-        <div class="form-col-small">
-          <label for="mod-scadenzaVisita" class="visita-label">Scadenza visita</label>
-          <input type="date" id="mod-scadenzaVisita" required>
-        </div>
-        <div class="form-col-pdf-upload">
-          <label for="mod-certificatoMedico" class="visita-label">Certificato medico (PDF)</label>
-          <input type="file" id="mod-certificatoMedico" accept="application/pdf">
-        </div>
+        <div class="form-col-small"><label for="mod-scadenzaVisita" class="visita-label">Scadenza visita</label><input type="date" id="mod-scadenzaVisita" required></div>
+        <div class="form-col-pdf-upload"><label for="mod-certificatoMedico" class="visita-label">Certificato medico (PDF)</label><input type="file" id="mod-certificatoMedico" accept="application/pdf"></div>
       </div>
       <button type="submit">Salva</button>
     </form>
