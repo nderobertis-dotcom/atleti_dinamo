@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <td>${x.codiceFiscale}</td>
         <td>${x.cellulare}</td>
         <td><span class="${statoCls}">${formattaData(x.scadenzaVisita)}</span></td>
-        <td>${x.certificatoMedico ? '<span style="color:#45d345;">Caricato</span>' : '<span style="color:#e63946;">No</span>'}</td>
+        <td>${x.certificatoMedico ? '<span style="color:#45d345;font-weight:bold;">CARICATO</span>' : '<span style="color:#e63946;">NO</span>'}</td>
         <td>
           <button class="btn-small btn-visualizza" data-id="${x.id}">V</button>
           <button class="btn-small btn-modifica" data-id="${x.id}">M</button>
