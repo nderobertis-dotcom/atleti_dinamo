@@ -14,40 +14,22 @@
 <div class="dashboard-strip">
   <div class="dashboard">
     <div class="dash-card dash-normal-btn" data-filter="all">
-      <div class="dash-card-inner">
-        <div class="dash-title">ATLETI</div>
-        <div class="dash-value" id="tot-atleti">0</div>
-      </div>
+      <div class="dash-card-inner"><div class="dash-title">ATLETI</div><div class="dash-value" id="tot-atleti">0</div></div>
     </div>
     <div class="dash-card dash-normal-btn" data-filter="maschi">
-      <div class="dash-card-inner">
-        <div class="dash-title">MASCHI</div>
-        <div class="dash-value" id="tot-maschi">0</div>
-      </div>
+      <div class="dash-card-inner"><div class="dash-title">MASCHI</div><div class="dash-value" id="tot-maschi">0</div></div>
     </div>
     <div class="dash-card dash-normal-btn" data-filter="femmine">
-      <div class="dash-card-inner">
-        <div class="dash-title">FEMMINE</div>
-        <div class="dash-value" id="tot-femmine">0</div>
-      </div>
+      <div class="dash-card-inner"><div class="dash-title">FEMMINE</div><div class="dash-value" id="tot-femmine">0</div></div>
     </div>
     <div class="dash-card dash-scanza-btn" data-filter="scadenza">
-      <div class="dash-card-inner">
-        <div class="dash-title">VISITE IN SCADENZA</div>
-        <div class="dash-value" id="tot-in-scadenza">0</div>
-      </div>
+      <div class="dash-card-inner"><div class="dash-title">VISITE IN SCADENZA</div><div class="dash-value" id="tot-in-scadenza">0</div></div>
     </div>
     <div class="dash-card dash-scadute-btn" data-filter="scadute">
-      <div class="dash-card-inner">
-        <div class="dash-title">VISITE SCADUTE</div>
-        <div class="dash-value" id="tot-scadute">0</div>
-      </div>
+      <div class="dash-card-inner"><div class="dash-title">VISITE SCADUTE</div><div class="dash-value" id="tot-scadute">0</div></div>
     </div>
     <div class="dash-card">
-      <div class="dash-card-inner">
-        <div class="dash-title">ETÀ MEDIA</div>
-        <div class="dash-value" id="eta-media">0</div>
-      </div>
+      <div class="dash-card-inner"><div class="dash-title">ETÀ MEDIA</div><div class="dash-value" id="eta-media">0</div></div>
     </div>
   </div>
 </div>
@@ -55,11 +37,11 @@
 <main>
 <section id="form-section">
   <h2>Aggiungi Atleta</h2>
-  <form id="atleta-form" autocomplete="off" enctype="multipart/form-data">
+  <form id="atleta-form" autocomplete="off">
     <div class="form-row-condensed">
-      <input type="text" id="codiceAtleta" placeholder="CODICE ATLETA (7 cifre)" pattern="\d{7}" maxlength="7" required title="Inserisci un codice di 7 cifre" />
-      <input type="text" id="nome" placeholder="Nome" required />
-      <input type="text" id="cognome" placeholder="Cognome" required />
+      <input type="text" id="codiceAtleta" placeholder="CODICE ATLETA (7 cifre)" required maxlength="7" pattern="\d{7}">
+      <input type="text" id="nome" placeholder="Nome" required>
+      <input type="text" id="cognome" placeholder="Cognome" required>
       <select id="sesso" required>
         <option value="">Sesso</option>
         <option value="M">MASCHIO</option>
@@ -70,15 +52,15 @@
     <div class="form-row-date-pdf">
       <div class="form-col-small">
         <label for="dataNascita" class="visita-label">Data di nascita</label>
-        <input type="date" id="dataNascita" required />
+        <input type="date" id="dataNascita" required>
       </div>
       <div class="form-col-small">
         <label for="scadenzaVisita" class="visita-label">Scadenza visita</label>
-        <input type="date" id="scadenzaVisita" required />
+        <input type="date" id="scadenzaVisita" required>
       </div>
       <div class="form-col-pdf-upload">
         <label for="certificatoMedico" class="visita-label">Certificato medico (PDF)</label>
-        <input type="file" id="certificatoMedico" accept="application/pdf" />
+        <input type="file" id="certificatoMedico" accept="application/pdf">
       </div>
     </div>
 
@@ -89,42 +71,4 @@
         <option value="SCHIACCIATORE">SCHIACCIATORE</option>
         <option value="CENTRALE">CENTRALE</option>
         <option value="LIBERO">LIBERO</option>
-        <option value="OPPOSTO">OPPOSTO</option>
-      </select>
-      <input type="text" id="codiceFiscale" placeholder="Codice Fiscale" required maxlength="16" />
-      <input type="tel" id="cellulare" placeholder="Cellulare" required />
-    </div>
-
-    <button type="submit">Aggiungi</button>
-  </form>
-</section>
-
-<section id="list-section">
-<h2>Lista Atleti</h2>
-<div class="import-export-bar">
-  <button type="button" id="export-btn">Esporta dati</button>
-  <button type="button" id="import-btn">Importa dati</button>
-  <button type="button" id="print-btn">Stampa</button>
-  <input type="file" id="import-file" accept=".json" style="display:none" />
-</div>
-<ul id="atleti-list"></ul>
-</section>
-</main>
-
-<div id="modal" class="modal">
-  <div class="modal-content">
-    <span class="close-btn" id="close-view">&times;</span>
-    <div id="dettaglio-atleta"></div>
-  </div>
-</div>
-
-<div id="modal-modifica" class="modal">
-  <div class="modal-content">
-    <span class="close-btn-modifica" id="close-edit">&times;</span>
-    <form id="modifica-form" enctype="multipart/form-data">
-      <h2>Modifica Atleta</h2>
-      <input type="text" id="mod-codiceAtleta" placeholder="CODICE ATLETA (7 cifre)" pattern="\d{7}" maxlength="7" required title="Inserisci un codice di 7 cifre" />
-      <input type="text" id="mod-nome" required />
-      <input type="text" id="mod-cognome" required />
-      <select id="mod-sesso" required>
-        <option value
+        <option value="OPPOSTO">OPPOSTO</option
