@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("atleta-form");
-  const list = document.getElementById("atleti-list");
+  const tableBody = document.querySelector("#atleti-list tbody");
   let filtroAttivo = "all";
 
   function caricaAtleti() {
@@ -92,33 +92,34 @@ document.addEventListener("DOMContentLoaded", () => {
   function mostraAtleti(filtro = filtroAttivo) {
     filtroAttivo = filtro;
     const lista = filtraAtleti(filtro);
-    list.innerHTML = "";
+    tableBody.innerHTML = "";
     aggiornaDashboard();
     if (lista.length === 0) {
-      const li = document.createElement("li");
-      li.textContent = "Nessun atleta trovato";
-      list.appendChild(li);
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td colspan="10">Nessun atleta trovato</td>`;
+      tableBody.appendChild(tr);
       return;
     }
     lista.forEach((x) => {
       const statoCls = statoVisita(x.scadenzaVisita);
-      const li = document.createElement("li");
-      li.innerHTML = `
-        <div>${x.codiceAtleta}</div>
-        <div>${x.nome}</div>
-        <div>${x.cognome}</div>
-        <div>${x.sesso}</div>
-        <div>${x.ruolo}</div>
-        <div>${formattaData(x.dataNascita)}</div>
-        <div>${calcolaEta(x.dataNascita)}</div>
-        <div>${x.codiceFiscale}</div>
-        <div>${x.cellulare}</div>
-        <div class="btn-group">
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${x.codiceAtleta}</td>
+        <td>${x.nome}</td>
+        <td>${x.cognome}</td>
+        <td>${x.sesso}</td>
+        <td>${x.ruolo}</td>
+        <td>${formattaData(x.dataNascita)}</td>
+        <td>${calcolaEta(x.dataNascita)}</td>
+        <td>${x.codiceFiscale}</td>
+        <td>${x.cellulare}</td>
+        <td>
           <button class="btn-small btn-visualizza" data-id="${x.id}">V</button>
           <button class="btn-small btn-modifica" data-id="${x.id}">M</button>
           <button class="btn-small btn-cancella" data-id="${x.id}">C</button>
-        </div>`;
-      list.appendChild(li);
+        </td>
+      `;
+      tableBody.appendChild(tr);
     });
     document.querySelectorAll(".btn-cancella").forEach((b) => (b.onclick = () => cancella(b.dataset.id)));
     document.querySelectorAll(".btn-visualizza").forEach((b) => (b.onclick = () => visualizza(b.dataset.id)));
@@ -165,17 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const modifica = (id) => {
     const atleta = caricaAtleti().find((a) => a.id === id);
     if (!atleta) return;
-    [
-      "codiceAtleta",
-      "nome",
-      "cognome",
-      "sesso",
-      "dataNascita",
-      "ruolo",
-      "codiceFiscale",
-      "cellulare",
-      "scadenzaVisita",
-    ].forEach((field) => {
+    ["codiceAtleta","nome","cognome","sesso","dataNascita","ruolo","codiceFiscale","cellulare","scadenzaVisita"].forEach((field) => {
       document.getElementById("mod-" + field).value = atleta[field] || "";
     });
     document.getElementById("modifica-form").dataset.id = id;
@@ -221,17 +212,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const idx = lista.findIndex((a) => a.id === id);
     if (idx === -1) return;
     const pdf = await leggiPdf(document.getElementById("mod-certificatoMedico"));
-    [
-      "codiceAtleta",
-      "nome",
-      "cognome",
-      "sesso",
-      "dataNascita",
-      "ruolo",
-      "codiceFiscale",
-      "cellulare",
-      "scadenzaVisita",
-    ].forEach((field) => {
+    ["codiceAtleta","nome","cognome","sesso","dataNascita","ruolo","codiceFiscale","cellulare","scadenzaVisita"].forEach((field) => {
       lista[idx][field] = document.getElementById("mod-" + field).value.trim();
       if (field !== "sesso") lista[idx][field] = lista[idx][field].toUpperCase();
     });
@@ -278,9 +259,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let html =
       "<h1>Lista Atleti</h1><table border='1' cellspacing='0' cellpadding='6'><thead><tr><th>Codice</th><th>Nome</th><th>Cognome</th><th>Ruolo</th><th>Data Nascita</th><th>Scadenza Visita</th></tr></thead><tbody>";
     lista.forEach((x) => {
-      html += `<tr><td>${x.codiceAtleta}</td><td>${x.nome}</td><td>${x.cognome}</td><td>${x.ruolo}</td><td>${formattaData(
-        x.dataNascita,
-      )}</td><td>${formattaData(x.scadenzaVisita)}</td></tr>`;
+      html += `<tr><td>${x.codiceAtleta}</td><td>${x.nome}</td><td>${x.cognome}</td><td>${x.ruolo}</td><td>${formattaData(x.dataNascita)}</td><td>${formattaData(x.scadenzaVisita)}</td></tr>`;
     });
     html += "</tbody></table>";
     const w = window.open("", "_blank", "width=900,height=700");
