@@ -1,229 +1,300 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const form = document.getElementById('atleta-form');
-  const list = document.getElementById('atleti-list');
-  let filtroAttivo = 'all';
-
-  const caricaAtleti = () => JSON.parse(localStorage.getItem('atleti') || '[]');
-  const salvaAtleti = arr => localStorage.setItem('atleti', JSON.stringify(arr));
-  const generaId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
-
-  const calcolaEta = data => {
-    if (!data) return '';
-    const oggi = new Date();
-    const nascita = new Date(data);
-    let eta = oggi.getFullYear() - nascita.getFullYear();
-    const m = oggi.getMonth() - nascita.getMonth();
-    if (m < 0 || (m === 0 && oggi.getDate() < nascita.getDate())) eta--;
-    return eta;
-  };
-
-  const daysBetween = (a, b) => Math.floor((new Date(a) - new Date(b)) / (1000 * 60 * 60 * 24));
-  const statoVisita = scad => {
-    if (!scad) return 'ok';
-    const oggi = new Date().toISOString().slice(0, 10);
-    const diff = daysBetween(scad, oggi);
-    return diff < 0 ? 'scaduta' : diff <= 31 ? 'scanza' : 'ok';
-  };
-
-  function aggiornaDashboard() {
-    const a = caricaAtleti();
-    const oggi = new Date().toISOString().slice(0, 10);
-    document.getElementById('tot-atleti').textContent = a.length;
-    document.getElementById('tot-maschi').textContent = a.filter(x => x.sesso === 'M').length;
-    document.getElementById('tot-femmine').textContent = a.filter(x => x.sesso === 'F').length;
-    document.getElementById('tot-in-scadenza').textContent = a.filter(x => x.scadenzaVisita && daysBetween(x.scadenzaVisita, oggi) >= 0 && daysBetween(x.scadenzaVisita, oggi) <= 31).length;
-    document.getElementById('tot-scadute').textContent = a.filter(x => x.scadenzaVisita && daysBetween(x.scadenzaVisita, oggi) < 0).length;
-    const totEta = a.reduce((sum, x) => sum + (x.dataNascita ? calcolaEta(x.dataNascita) : 0), 0);
-    document.getElementById('eta-media').textContent = a.length ? (totEta / a.length).toFixed(1) : 0;
+/* Mantieni il CSS precedente, nessuna modifica richiesta */
+body {
+  font-family: Arial, sans-serif;
+  background: #f2f2f2;
+  margin: 0;
+  padding: 0;
+  text-transform: uppercase;
+}
+input[type="text"],
+input[type="tel"],
+select {
+  text-transform: uppercase;
+}
+.main-header {
+  background: #0080ff;
+  color: #fff;
+  padding: 16px 20px 6px 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+}
+.logo {
+  max-width: 80px;
+  height: auto;
+  display: block;
+}
+.main-header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+.dashboard-strip {
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  background: transparent;
+  margin-top: 12px;
+}
+.dashboard {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  align-items: stretch;
+  margin: 0 auto 18px auto;
+}
+.dash-card {
+  border-radius: 14px;
+  background: linear-gradient(145deg, #0080ff 75%, #a6d3fd 100%);
+  box-shadow: 0 3px 16px 0 rgba(0, 0, 0, 0.13);
+  min-width: 95px;
+  min-height: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+  cursor: pointer;
+  padding: 0;
+}
+.dash-card.dash-scanza-btn {
+  background: linear-gradient(145deg, #ffa500 65%, #fffbe6 100%);
+}
+.dash-card.dash-scadute-btn {
+  background: linear-gradient(145deg, #e63946 65%, #ffcfcf 100%);
+}
+.dash-card:hover {
+  transform: scale(1.045);
+}
+.dash-card-inner {
+  background: rgba(255, 255, 255, 0.88);
+  border-radius: 10px;
+  padding: 10px 8px;
+  width: 90px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.dash-title {
+  font-size: 0.91em;
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin-bottom: 5px;
+  color: #0080ff;
+}
+.dash-card.dash-scanza-btn .dash-title {
+  color: #b25e00;
+}
+.dash-card.dash-scadute-btn .dash-title {
+  color: #aa2434;
+}
+.dash-value {
+  font-size: 1.4em;
+  font-weight: bolder;
+  color: #003974;
+  margin-bottom: 2px;
+}
+.dash-card.dash-scanza-btn .dash-value {
+  color: #b25e00;
+}
+.dash-card.dash-scadute-btn .dash-value {
+  color: #b91b2c;
+}
+main {
+  max-width: 1000px;
+  margin: 10px auto 0 auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+}
+.form-row-condensed {
+  display: flex;
+  gap: 10px;
+  flex-wrap: nowrap;
+  margin-bottom: 10px;
+}
+.form-row-condensed > * {
+  flex-grow: 1;
+  min-width: 90px;
+}
+.form-row-date-pdf {
+  display: flex;
+  gap: 12px;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+.form-row-date-pdf .form-col-small {
+  flex: 1 1 48%;
+}
+.form-row-date-pdf .form-col-pdf-upload {
+  flex: 1 1 48%;
+  display: flex;
+  flex-direction: column;
+}
+@media (max-width: 600px) {
+  .form-row-condensed,
+  .form-row-date-pdf {
+    flex-wrap: wrap;
   }
-
-  function filtraAtleti(filtro) {
-    let a = caricaAtleti().sort((a, b) => a.cognome.localeCompare(b.cognome) || a.nome.localeCompare(b.nome));
-    const oggi = new Date().toISOString().slice(0, 10);
-    if (filtro === 'maschi') a = a.filter(x => x.sesso === 'M');
-    else if (filtro === 'femmine') a = a.filter(x => x.sesso === 'F');
-    else if (filtro === 'scadenza') a = a.filter(x => x.scadenzaVisita && daysBetween(x.scadenzaVisita, oggi) >= 0 && daysBetween(x.scadenzaVisita, oggi) <= 31);
-    else if (filtro === 'scadute') a = a.filter(x => x.scadenzaVisita && daysBetween(x.scadenzaVisita, oggi) < 0);
-    return a;
+  .form-row-date-pdf .form-col-small,
+  .form-row-date-pdf .form-col-pdf-upload {
+    flex: 1 1 100%;
   }
-
-  function mostraAtleti(filtro = filtroAttivo) {
-    filtroAttivo = filtro;
-    const atleti = filtraAtleti(filtro);
-    list.innerHTML = '';
-    aggiornaDashboard();
-    if (atleti.length === 0) {
-      const li = document.createElement('li');
-      li.textContent = 'Nessun atleta trovato';
-      list.appendChild(li);
-      return;
-    }
-    atleti.forEach(x => {
-      const stato = statoVisita(x.scadenzaVisita);
-      const cl = { ok: 'data-ok', scanza: 'data-scanza', scaduta: 'data-scaduta' }[stato] || 'data-ok';
-      const li = document.createElement('li');
-      li.innerHTML = `<span>
-        <strong>${x.codiceAtleta}</strong> - ${x.nome} ${x.cognome} – ${x.sesso} – ${x.ruolo}
-        <br>nato il ${x.dataNascita ? formattaData(x.dataNascita) : ''} – Età: ${calcolaEta(x.dataNascita)}
-        <br>CF: ${x.codiceFiscale} – Cell: ${x.cellulare}
-        <br><span class="${cl}">SCADENZA VISITA: ${x.scadenzaVisita ? formattaData(x.scadenzaVisita) : ''}</span>
-        <br>${x.certificatoMedico ? '(Certificato caricato)' : '(Nessun certificato)'}
-      </span>
-      <div class="btn-group">
-        <button class="btn-small btn-visualizza" data-id="${x.id}">V</button>
-        <button class="btn-small btn-modifica" data-id="${x.id}">M</button>
-        <button class="btn-small btn-cancella" data-id="${x.id}">C</button>
-      </div>`;
-      list.appendChild(li);
-    });
-    document.querySelectorAll('.btn-cancella').forEach(b => b.onclick = () => cancella(b.dataset.id));
-    document.querySelectorAll('.btn-visualizza').forEach(b => b.onclick = () => visualizza(b.dataset.id));
-    document.querySelectorAll('.btn-modifica').forEach(b => b.onclick = () => modifica(b.dataset.id));
-  }
-
-  // Event delegation su container dashboard per catturare click sulle cards correttamente
-  document.getElementById('dashboard').addEventListener('click', e => {
-    const card = e.target.closest('.dash-card');
-    if (!card) return;
-    mostraAtleti(card.dataset.filter || 'all');
-  });
-
-  function cancella(id) {
-    let a = caricaAtleti();
-    const idx = a.findIndex(x => x.id === id);
-    if (idx !== -1 && confirm('Confermi eliminazione atleta?')) {
-      a.splice(idx, 1);
-      salvaAtleti(a);
-      mostraAtleti();
-    }
-  }
-
-  function visualizza(id) {
-    const a = caricaAtleti().find(x => x.id === id);
-    if (!a) return;
-    document.getElementById('modal').style.display = 'flex';
-    document.getElementById('dettaglio-atleta').innerHTML = `
-      <h2>${a.codiceAtleta} - ${a.nome} ${a.cognome}</h2>
-      <p>Sesso: ${a.sesso}</p>
-      <p>Ruolo: ${a.ruolo}</p>
-      <p>Data nascita: ${a.dataNascita ? formattaData(a.dataNascita) : ''}</p>
-      <p>Età: ${calcolaEta(a.dataNascita)}</p>
-      <p>CF: ${a.codiceFiscale}</p>
-      <p>Cell: ${a.cellulare}</p>
-      <p><span>SCADENZA VISITA: ${a.scadenzaVisita ? formattaData(a.scadenzaVisita) : ''}</span></p>
-      ${a.certificatoMedico ? `<p><a href="${a.certificatoMedico}" target="_blank">Visualizza certificato medico</a></p>` : '<p>(Nessun certificato medico caricato)</p>'}
-      `;
-  }
-
-  function modifica(id) {
-    const a = caricaAtleti().find(x => x.id === id);
-    if (!a) return;
-    ['codiceAtleta', 'nome', 'cognome', 'sesso', 'dataNascita', 'ruolo', 'codiceFiscale', 'cellulare', 'scadenzaVisita'].forEach(f => {
-      document.getElementById('mod-' + f).value = a[f] || '';
-    });
-    document.getElementById('modifica-form').dataset.id = id;
-    document.getElementById('modal-modifica').style.display = 'flex';
-  }
-
-  async function leggiPdf(input) {
-    return new Promise(resolve => {
-      const file = input.files[0];
-      if (!file) return resolve(null);
-      const reader = new FileReader();
-      reader.onload = e => resolve(e.target.result);
-      reader.readAsDataURL(file);
-    });
-  }
-
-  form.onsubmit = async e => {
-    e.preventDefault();
-    let a = caricaAtleti();
-    const pdf = await leggiPdf(document.getElementById('certificatoMedico'));
-
-    const nuovo = {
-      id: generaId(),
-      codiceAtleta: form.codiceAtleta.value.trim(),
-      nome: form.nome.value.trim().toUpperCase(),
-      cognome: form.cognome.value.trim().toUpperCase(),
-      sesso: form.sesso.value,
-      dataNascita: form.dataNascita.value,
-      ruolo: form.ruolo.value.toUpperCase(),
-      codiceFiscale: form.codiceFiscale.value.trim().toUpperCase(),
-      cellulare: form.cellulare.value.trim(),
-      scadenzaVisita: form.scadenzaVisita.value,
-      certificatoMedico: pdf || null
-    };
-
-    a.push(nuovo);
-    salvaAtleti(a);
-    form.reset();
-    mostraAtleti();
-  };
-
-  document.getElementById('modifica-form').onsubmit = async e => {
-    e.preventDefault();
-    const id = e.target.dataset.id;
-    let a = caricaAtleti();
-    const i = a.findIndex(x => x.id === id);
-    if (i === -1) return;
-
-    const pdf = await leggiPdf(document.getElementById('mod-certificatoMedico'));
-
-    ['codiceAtleta', 'nome', 'cognome', 'sesso', 'dataNascita', 'ruolo', 'codiceFiscale', 'cellulare', 'scadenzaVisita'].forEach(f => {
-      a[i][f] = document.getElementById('mod-' + f).value.trim().toUpperCase();
-    });
-
-    if (pdf) a[i].certificatoMedico = pdf;
-    salvaAtleti(a);
-    document.getElementById('modal-modifica').style.display = 'none';
-    mostraAtleti();
-  };
-
-  document.getElementById('export-btn').onclick = () => {
-    const data = JSON.stringify(caricaAtleti(), null, 2);
-    const blob = new Blob([data], { type: 'application/json' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'atleti-backup.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  };
-
-  document.getElementById('import-btn').onclick = () => document.getElementById('import-file').click();
-
-  document.getElementById('import-file').addEventListener('change', function () {
-    const file = this.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = e => {
-      try {
-        const arr = JSON.parse(e.target.result);
-        salvaAtleti(arr);
-        mostraAtleti();
-      } catch {
-        alert('Errore nel file importato');
-      }
-    };
-    reader.readAsText(file);
-  });
-
-  document.getElementById('print-btn').onclick = () => {
-    const atleti = filtraAtleti(filtroAttivo);
-    let html = '<h1>Lista Atleti</h1><table border="1" cellspacing="0" cellpadding="6"><thead><tr><th>Codice</th><th>Nome</th><th>Cognome</th><th>Ruolo</th><th>Data Nascita</th><th>Scadenza Visita</th></tr></thead><tbody>';
-    atleti.forEach(x => {
-      html += `<tr><td>${x.codiceAtleta}</td><td>${x.nome}</td><td>${x.cognome}</td><td>${x.ruolo}</td><td>${formattaData(x.dataNascita)}</td><td>${formattaData(x.scadenzaVisita)}</td></tr>`;
-    });
-    html += '</tbody></table>';
-    const w = window.open('', '_blank');
-    w.document.write(html);
-    w.print();
-    w.close();
-  };
-
-  document.getElementById('close-view').onclick = () => document.getElementById('modal').style.display = 'none';
-  document.getElementById('close-edit').onclick = () => document.getElementById('modal-modifica').style.display = 'none';
-
-  mostraAtleti();
-  aggiornaDashboard();
-});
+}
+input,
+select,
+button {
+  padding: 10px;
+  font-size: 1rem;
+  font-family: inherit;
+}
+button {
+  background: #0080ff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+ul {
+  list-style: none;
+  padding: 0;
+}
+li {
+  background: #e6e6e6;
+  margin-bottom: 8px;
+  padding: 10px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.btn-group {
+  display: flex;
+  gap: 4px;
+}
+.btn-small {
+  width: 30px;
+  height: 30px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+}
+.btn-visualizza {
+  background: #0080ff;
+  color: #fff;
+}
+.btn-modifica {
+  background: #ffe066;
+  color: #333;
+}
+.btn-cancella {
+  background: #e63946;
+  color: #fff;
+}
+.data-ok {
+  background: #45d345;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  display: inline-block;
+}
+.data-scanza {
+  background: #ffa500;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  display: inline-block;
+}
+.data-scaduta {
+  background: #e63946;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  display: inline-block;
+}
+.visita-label {
+  font-size: 0.95rem;
+  color: #0080ff;
+  font-weight: bold;
+  margin: 0 0 2px 1px;
+  letter-spacing: 0.5px;
+}
+.import-export-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 22px;
+  align-items: center;
+}
+#import-btn,
+#export-btn,
+#print-btn {
+  background: #45d345;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1em;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 8px 16px;
+}
+#import-btn:hover,
+#export-btn:hover,
+#print-btn:hover {
+  background: #0080ff;
+  color: #fff;
+}
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.5);
+  justify-content: center;
+  align-items: center;
+}
+.modal-content {
+  background: #fff;
+  padding: 32px 28px 28px 28px;
+  border-radius: 14px;
+  min-width: 285px;
+  max-width: 95vw;
+  max-height: 90vh;
+  margin: auto;
+  box-shadow: 0 8px 44px 0 rgba(0,0,0,0.18);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.close-btn,
+.close-btn-modifica {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  color: #e63946;
+  font-size: 2.1rem;
+  font-weight: bold;
+  line-height: 1;
+  cursor: pointer;
+  background: none;
+  border: none;
+  z-index: 1002;
+}
+#dettaglio-atleta > h2 {
+  margin-top: 2px;
+}
