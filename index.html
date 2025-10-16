@@ -26,6 +26,7 @@
 <section id="form-section">
   <h2>Aggiungi Atleta</h2>
   <form id="atleta-form" autocomplete="off">
+
     <div class="form-row-condensed">
       <input type="text" id="codiceAtleta" placeholder="CODICE ATLETA (7 cifre)" maxlength="7" pattern="\d{7}" required>
       <input type="text" id="nome" placeholder="Nome" required>
@@ -68,18 +69,7 @@
 <table id="atleti-list">
   <thead>
     <tr>
-      <th>Codice</th>
-      <th>Nome</th>
-      <th>Cognome</th>
-      <th>Sesso</th>
-      <th>Ruolo</th>
-      <th>Data Nascita</th>
-      <th>Età</th>
-      <th>CF</th>
-      <th>Cell</th>
-      <th>Scadenza Visita</th>
-      <th>Certificato</th>
-      <th>Azioni</th>
+      <th>Codice</th><th>Nome</th><th>Cognome</th><th>Sesso</th><th>Ruolo</th><th>Data Nascita</th><th>Età</th><th>CF</th><th>Cell</th>
     </tr>
   </thead>
   <tbody></tbody>
@@ -93,7 +83,6 @@
     <div id="dettaglio-atleta"></div>
   </div>
 </div>
-
 <div id="modal-modifica" class="modal">
   <div class="modal-content">
     <button class="close-btn-modifica" id="close-edit" aria-label="Chiudi modifica">&times;</button>
