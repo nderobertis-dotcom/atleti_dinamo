@@ -5,7 +5,9 @@ body {
   padding: 0;
   text-transform: uppercase;
 }
-input[type="text"], input[type="tel"], select {
+input[type="text"],
+input[type="tel"],
+select {
   text-transform: uppercase;
 }
 .main-header {
@@ -166,6 +168,7 @@ li {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 .btn-group {
   display: flex;
@@ -233,6 +236,7 @@ li {
   gap: 10px;
   margin-bottom: 22px;
   align-items: center;
+  flex-wrap: wrap;
 }
 #import-btn,
 #export-btn,
@@ -294,20 +298,4 @@ li {
 }
 #dettaglio-atleta > h2 {
   margin-top: 2px;
-}
-/* Questo è invariato, già ottimizzato e in linea con le richieste. */
-body {
-  font-family: Arial, sans-serif;
-  background: #f2f2f2;
-  margin: 0;
-  padding: 0;
-  text-transform: uppercase;
-}
-/* restanti stili invariati... */
-main {
-  max-width: 1000px; /* più largo per la lista */
-  margin: 10px auto 0 auto;
-  background: #fff;
-  padding: 30px;
-  border-radius: 12px;
 }
