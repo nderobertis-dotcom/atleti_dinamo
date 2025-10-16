@@ -39,7 +39,7 @@
   <h2>Aggiungi Atleta</h2>
   <form id="atleta-form" autocomplete="off">
     <div class="form-row-condensed">
-      <input type="text" id="codiceAtleta" placeholder="CODICE ATLETA (7 cifre)" required maxlength="7" pattern="\d{7}">
+      <input type="text" id="codiceAtleta" placeholder="CODICE ATLETA (7 cifre)" maxlength="7" pattern="\d{7}" required>
       <input type="text" id="nome" placeholder="Nome" required>
       <input type="text" id="cognome" placeholder="Cognome" required>
       <select id="sesso" required>
@@ -83,10 +83,10 @@
 <section id="list-section">
 <h2>Lista Atleti</h2>
 <div class="import-export-bar">
-  <button id="export-btn">Esporta dati</button>
-  <button id="import-btn">Importa dati</button>
-  <button id="print-btn">Stampa</button>
-  <input type="file" id="import-file" accept=".json" style="display:none;">
+  <button id="export-btn" type="button">Esporta dati</button>
+  <button id="import-btn" type="button">Importa dati</button>
+  <button id="print-btn" type="button">Stampa</button>
+  <input type="file" id="import-file" accept=".json" style="display:none">
 </div>
 <ul id="atleti-list"></ul>
 </section>
@@ -94,20 +94,24 @@
 
 <div id="modal" class="modal">
   <div class="modal-content">
-    <span class="close-btn" id="close-view">&times;</span>
+    <span class="close-btn" id="close-view" role="button" tabindex="0">&times;</span>
     <div id="dettaglio-atleta"></div>
   </div>
 </div>
 
 <div id="modal-modifica" class="modal">
   <div class="modal-content">
-    <span class="close-btn-modifica" id="close-edit">&times;</span>
+    <span class="close-btn-modifica" id="close-edit" role="button" tabindex="0">&times;</span>
     <form id="modifica-form">
       <h2>Modifica Atleta</h2>
-      <input id="mod-codiceAtleta" required maxlength="7" pattern="\d{7}">
+      <input id="mod-codiceAtleta" maxlength="7" pattern="\d{7}" required>
       <input id="mod-nome" required>
       <input id="mod-cognome" required>
-      <select id="mod-sesso"><option value="">Sesso</option><option value="M">MASCHIO</option><option value="F">FEMMINA</option></select>
+      <select id="mod-sesso" required>
+        <option value="">Sesso</option>
+        <option value="M">MASCHIO</option>
+        <option value="F">FEMMINA</option>
+      </select>
       <input type="date" id="mod-dataNascita" required>
       <select id="mod-ruolo" required>
         <option value="">Ruolo</option>
@@ -120,8 +124,14 @@
       <input id="mod-codiceFiscale" maxlength="16" required>
       <input id="mod-cellulare" required>
       <div class="form-row-date-pdf">
-        <div class="form-col-small"><label for="mod-scadenzaVisita" class="visita-label">Scadenza visita</label><input type="date" id="mod-scadenzaVisita" required></div>
-        <div class="form-col-pdf-upload"><label class="visita-label">Certificato medico (PDF)</label><input type="file" id="mod-certificatoMedico" accept="application/pdf"></div>
+        <div class="form-col-small">
+          <label for="mod-scadenzaVisita" class="visita-label">Scadenza visita</label>
+          <input type="date" id="mod-scadenzaVisita" required>
+        </div>
+        <div class="form-col-pdf-upload">
+          <label for="mod-certificatoMedico" class="visita-label">Certificato medico (PDF)</label>
+          <input type="file" id="mod-certificatoMedico" accept="application/pdf">
+        </div>
       </div>
       <button type="submit">Salva</button>
     </form>
