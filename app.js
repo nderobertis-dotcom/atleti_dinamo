@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
     aggiornaDashboard();
     if (lista.length === 0) {
       const tr = document.createElement("tr");
-      tr.innerHTML = `<td colspan="10">Nessun atleta trovato</td>`;
+      tr.innerHTML = `<td colspan="12">Nessun atleta trovato</td>`;
       tableBody.appendChild(tr);
       return;
     }
@@ -113,6 +113,8 @@ document.addEventListener("DOMContentLoaded", () => {
         <td>${calcolaEta(x.dataNascita)}</td>
         <td>${x.codiceFiscale}</td>
         <td>${x.cellulare}</td>
+        <td><span class="${statoCls}">${formattaData(x.scadenzaVisita)}</span></td>
+        <td>${x.certificatoMedico ? '<span style="color:#45d345;">Caricato</span>' : '<span style="color:#e63946;">No</span>'}</td>
         <td>
           <button class="btn-small btn-visualizza" data-id="${x.id}">V</button>
           <button class="btn-small btn-modifica" data-id="${x.id}">M</button>
@@ -257,9 +259,9 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("print-btn").addEventListener("click", () => {
     const lista = filtraAtleti(filtroAttivo);
     let html =
-      "<h1>Lista Atleti</h1><table border='1' cellspacing='0' cellpadding='6'><thead><tr><th>Codice</th><th>Nome</th><th>Cognome</th><th>Ruolo</th><th>Data Nascita</th><th>Scadenza Visita</th></tr></thead><tbody>";
+      "<h1>Lista Atleti</h1><table border='1' cellspacing='0' cellpadding='6'><thead><tr><th>Codice</th><th>Nome</th><th>Cognome</th><th>Ruolo</th><th>Data Nascita</th><th>Scadenza Visita</th><th>Certificato</th></tr></thead><tbody>";
     lista.forEach((x) => {
-      html += `<tr><td>${x.codiceAtleta}</td><td>${x.nome}</td><td>${x.cognome}</td><td>${x.ruolo}</td><td>${formattaData(x.dataNascita)}</td><td>${formattaData(x.scadenzaVisita)}</td></tr>`;
+      html += `<tr><td>${x.codiceAtleta}</td><td>${x.nome}</td><td>${x.cognome}</td><td>${x.ruolo}</td><td>${formattaData(x.dataNascita)}</td><td>${formattaData(x.scadenzaVisita)}</td><td>${x.certificatoMedico ? 'SI' : 'NO'}</td></tr>`;
     });
     html += "</tbody></table>";
     const w = window.open("", "_blank", "width=900,height=700");
