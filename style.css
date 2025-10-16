@@ -178,29 +178,50 @@ button {
 #import-file {
   margin-top: 8px;
 }
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  grid-template-columns: 90px 1fr 1fr 50px 90px 150px 60px 140px 140px 90px;
-  gap: 8px 10px;
-  align-items: center;
-}
 #list-header {
-  display: grid;
-  grid-template-columns: 90px 1fr 1fr 50px 90px 150px 60px 140px 140px 90px;
-  gap: 8px 10px;
-  font-weight: bold;
+  display: table;
+  width: 100%;
+  table-layout: fixed;
   border-bottom: 2px solid #0080ff;
-  padding-bottom: 6px;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
+  font-weight: bold;
 }
-li > div,
-li > span {
+#list-header div {
+  display: table-cell;
+  padding: 6px 8px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+#atleti-list {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+}
+#atleti-list li {
+  display: table-row;
+  background: #e6e6e6;
+  border-radius: 6px;
+  cursor: default;
+}
+#atleti-list li:hover {
+  background: #d0e6ff;
+}
+#atleti-list li div {
+  display: table-cell;
+  padding: 8px 10px;
+  vertical-align: middle;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#atleti-list li .btn-group {
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
 }
 .btn-group {
   display: flex;
@@ -255,6 +276,13 @@ li > span {
   border-radius: 8px;
   font-weight: bold;
   display: inline-block;
+}
+.visita-label {
+  font-size: 0.95rem;
+  color: #0080ff;
+  font-weight: bold;
+  margin: 0 0 2px 1px;
+  letter-spacing: 0.5px;
 }
 .modal {
   display: none;
