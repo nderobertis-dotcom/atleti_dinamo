@@ -53,12 +53,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const oggi = new Date().toISOString().slice(0, 10);
     if (filtro === "maschi") lista = lista.filter((a) => a.sesso === "M");
     else if (filtro === "femmine") lista = lista.filter((a) => a.sesso === "F");
-    else if (filtro === "scadenza")
-      lista = lista.filter(
+    else if (filtro === "scadenza") lista = lista.filter(
         (a) =>
-          a.scadenzaVisita &&
-          daysBetween(a.scadenzaVisita, oggi) >= 0 &&
-          daysBetween(a.scadenzaVisita, oggi) <= 31
+        a.scadenzaVisita &&
+        daysBetween(a.scadenzaVisita, oggi) >= 0 &&
+        daysBetween(a.scadenzaVisita, oggi) <= 31
       );
     else if (filtro === "scadute")
       lista = lista.filter((a) => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) < 0);
@@ -96,14 +95,14 @@ document.addEventListener("DOMContentLoaded", () => {
     aggiornaDashboard();
     if (lista.length === 0) {
       const tr = document.createElement("tr");
-      tr.innerHTML = `<td colspan="12">Nessun atleta trovato</td>`;
+      tr.innerHTML = `<td colspan="9">Nessun atleta trovato</td>`;
       tableBody.appendChild(tr);
       return;
     }
     lista.forEach((x) => {
       const statoCls = statoVisita(x.scadenzaVisita);
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
+      const tr1 = document.createElement("tr");
+      tr1.innerHTML = `
         <td>${x.codiceAtleta}</td>
         <td>${x.nome}</td>
         <td>${x.cognome}</td>
@@ -113,15 +112,21 @@ document.addEventListener("DOMContentLoaded", () => {
         <td>${calcolaEta(x.dataNascita)}</td>
         <td>${x.codiceFiscale}</td>
         <td>${x.cellulare}</td>
-        <td><span class="${statoCls}">${formattaData(x.scadenzaVisita)}</span></td>
-        <td>${x.certificatoMedico ? '<span style="color:#45d345;font-weight:bold;">CARICATO</span>' : '<span style="color:#e63946;">NO</span>'}</td>
-        <td>
+      `;
+      // Riga aggiuntiva: scadenza colorata, certificato, azioni (merge celle precedenti con colspan)
+      const tr2 = document.createElement("tr");
+      tr2.innerHTML = `
+        <td colspan="6"></td>
+        <td colspan="1"><span class="${statoCls}">${formattaData(x.scadenzaVisita)}</span></td>
+        <td colspan="1">${x.certificatoMedico ? '<span style="color:#45d345;font-weight:bold;">CARICATO</span>' : '<span style="color:#e63946;">NO</span>'}</td>
+        <td colspan="1">
           <button class="btn-small btn-visualizza" data-id="${x.id}">V</button>
           <button class="btn-small btn-modifica" data-id="${x.id}">M</button>
           <button class="btn-small btn-cancella" data-id="${x.id}">C</button>
         </td>
       `;
-      tableBody.appendChild(tr);
+      tableBody.appendChild(tr1);
+      tableBody.appendChild(tr2);
     });
     document.querySelectorAll(".btn-cancella").forEach((b) => (b.onclick = () => cancella(b.dataset.id)));
     document.querySelectorAll(".btn-visualizza").forEach((b) => (b.onclick = () => visualizza(b.dataset.id)));
