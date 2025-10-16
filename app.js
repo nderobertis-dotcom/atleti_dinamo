@@ -3,16 +3,23 @@ document.addEventListener("DOMContentLoaded", () => {
   const list = document.getElementById("atleti-list");
   let filtroAttivo = "all";
 
-  const caricaAtleti = () =>
-    JSON.parse(localStorage.getItem("atleti") || "[]");
+  function caricaAtleti() {
+    try {
+      return JSON.parse(localStorage.getItem("atleti")) || [];
+    } catch {
+      return [];
+    }
+  }
 
-  const salvaAtleti = (lista) =>
+  function salvaAtleti(lista) {
     localStorage.setItem("atleti", JSON.stringify(lista));
+  }
 
-  const generaId = () =>
-    Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  function generaId() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  }
 
-  const calcolaEta = (data) => {
+  function calcolaEta(data) {
     if (!data) return "";
     const oggi = new Date();
     const nascita = new Date(data);
@@ -20,45 +27,47 @@ document.addEventListener("DOMContentLoaded", () => {
     const m = oggi.getMonth() - nascita.getMonth();
     if (m < 0 || (m === 0 && oggi.getDate() < nascita.getDate())) eta--;
     return eta;
-  };
+  }
 
-  const daysBetween = (a, b) =>
-    Math.floor((new Date(a) - new Date(b)) / (1000 * 60 * 60 * 24));
+  function daysBetween(a, b) {
+    return Math.floor((new Date(a) - new Date(b)) / (1000 * 60 * 60 * 24));
+  }
 
-  const statoVisita = (data) => {
+  function statoVisita(data) {
     if (!data) return "data-ok";
     const oggi = new Date().toISOString().slice(0, 10);
     const diff = daysBetween(data, oggi);
     if (diff < 0) return "data-scaduta";
     if (diff <= 31) return "data-scanza";
     return "data-ok";
-  };
+  }
 
-  const formattaData = (data) => {
+  function formattaData(data) {
     if (!data) return "";
     const [a, m, g] = data.split("-");
     return `${g}/${m}/${a}`;
-  };
+  }
 
   function filtraAtleti(filtro) {
-    let a = caricaAtleti();
+    let lista = caricaAtleti();
     const oggi = new Date().toISOString().slice(0, 10);
-    if (filtro === "maschi") a = a.filter((x) => x.sesso === "M");
-    else if (filtro === "femmine") a = a.filter((x) => x.sesso === "F");
+    if (filtro === "maschi") lista = lista.filter((a) => a.sesso === "M");
+    else if (filtro === "femmine") lista = lista.filter((a) => a.sesso === "F");
     else if (filtro === "scadenza")
-      a = a.filter(
-        (x) =>
-          x.scadenzaVisita &&
-          daysBetween(x.scadenzaVisita, oggi) >= 0 &&
-          daysBetween(x.scadenzaVisita, oggi) <= 31,
+      lista = lista.filter(
+        (a) =>
+          a.scadenzaVisita &&
+          daysBetween(a.scadenzaVisita, oggi) >= 0 &&
+          daysBetween(a.scadenzaVisita, oggi) <= 31
       );
-    else if (filtro === "scadute") a = a.filter((x) => x.scadenzaVisita && daysBetween(x.scadenzaVisita, oggi) < 0);
-    a.sort(
+    else if (filtro === "scadute")
+      lista = lista.filter((a) => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) < 0);
+    lista.sort(
       (a, b) =>
         (a.cognome || "").localeCompare(b.cognome || "") ||
-        (a.nome || "").localeCompare(b.nome || ""),
+        (a.nome || "").localeCompare(b.nome || "")
     );
-    return a;
+    return lista;
   }
 
   function aggiornaDashboard() {
@@ -71,12 +80,12 @@ document.addEventListener("DOMContentLoaded", () => {
       (a) =>
         a.scadenzaVisita &&
         daysBetween(a.scadenzaVisita, oggi) >= 0 &&
-        daysBetween(a.scadenzaVisita, oggi) <= 31,
+        daysBetween(a.scadenzaVisita, oggi) <= 31
     ).length;
     document.getElementById("tot-scadute").textContent = lista.filter(
-      (a) => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) < 0,
+      (a) => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) < 0
     ).length;
-    const totEta = lista.reduce((acc, val) => acc + (val.dataNascita ? calcolaEta(val.dataNascita) : 0), 0);
+    const totEta = lista.reduce((sum, a) => sum + (a.dataNascita ? calcolaEta(a.dataNascita) : 0), 0);
     document.getElementById("eta-media").textContent = lista.length ? (totEta / lista.length).toFixed(1) : 0;
   }
 
