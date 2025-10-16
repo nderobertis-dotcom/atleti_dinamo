@@ -166,9 +166,17 @@ li {
   padding: 10px;
   border-radius: 6px;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
+}
+.list-info {
+  flex-grow: 1;
+}
+.list-info div {
+  display: inline-block;
+  margin-right: 18px;
+  font-weight: bold;
 }
 .btn-group {
   display: flex;
