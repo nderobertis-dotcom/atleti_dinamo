@@ -77,24 +77,16 @@ body {
   margin-bottom: 5px;
   color: #0080ff;
 }
-.dash-card.dash-scanza-btn .dash-title {
-  color: #b25e00;
-}
-.dash-card.dash-scadute-btn .dash-title {
-  color: #aa2434;
-}
+.dash-card.dash-scanza-btn .dash-title { color: #b25e00; }
+.dash-card.dash-scadute-btn .dash-title { color: #aa2434; }
 .dash-value {
   font-size: 1.4em;
   font-weight: bolder;
   color: #003974;
   margin-bottom: 2px;
 }
-.dash-card.dash-scanza-btn .dash-value {
-  color: #b25e00;
-}
-.dash-card.dash-scadute-btn .dash-value {
-  color: #b91b2c;
-}
+.dash-card.dash-scanza-btn .dash-value { color: #b25e00; }
+.dash-card.dash-scadute-btn .dash-value { color: #b91b2c; }
 main {
   max-width: 1000px;
   margin: 10px auto 0 auto;
@@ -127,19 +119,7 @@ main {
   display: flex;
   flex-direction: column;
 }
-@media (max-width: 600px) {
-  .form-row-condensed,
-  .form-row-date-pdf {
-    flex-wrap: wrap;
-  }
-  .form-row-date-pdf .form-col-small,
-  .form-row-date-pdf .form-col-pdf-upload {
-    flex: 1 1 100%;
-  }
-}
-input,
-select,
-button {
+input,select,button {
   padding: 10px;
   font-size: 1rem;
   font-family: inherit;
@@ -170,7 +150,6 @@ button {
   background: #0080ff;
   color: #fff;
 }
-
 table#atleti-list {
   width: 100%;
   border-collapse: separate;
@@ -178,7 +157,8 @@ table#atleti-list {
   margin-bottom: 20px;
 }
 #atleti-list th, #atleti-list td {
-  padding: 7px 7px 7px 7px;
+  padding: 7px 4px;
+  font-size: 0.99em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -197,7 +177,6 @@ table#atleti-list {
 #atleti-list tbody tr:hover td {
   background: #d0e6ff;
 }
-
 .btn-group {
   display: inline-flex;
   gap: 4px;
@@ -216,7 +195,6 @@ table#atleti-list {
   justify-content: center;
   text-transform: uppercase;
 }
-
 .btn-visualizza {
   background: #0080ff;
   color: #fff;
