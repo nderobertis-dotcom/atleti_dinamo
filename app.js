@@ -1,24 +1,19 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const form = document.getElementById('atleta-form');
-  const list = document.getElementById('atleti-list');
-  let filtroAttivo = 'all';
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("atleta-form");
+  const list = document.getElementById("atleti-list");
+  let filtroAttivo = "all";
 
-  const caricaAtleti = () => {
-    try {
-      return JSON.parse(localStorage.getItem('atleti')) || [];
-    } catch {
-      return [];
-    }
-  };
+  const caricaAtleti = () =>
+    JSON.parse(localStorage.getItem("atleti") || "[]");
 
-  const salvaAtleti = (lista) => {
-    localStorage.setItem('atleti', JSON.stringify(lista));
-  };
+  const salvaAtleti = (lista) =>
+    localStorage.setItem("atleti", JSON.stringify(lista));
 
-  const generaId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  const generaId = () =>
+    Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 
   const calcolaEta = (data) => {
-    if (!data) return '';
+    if (!data) return "";
     const oggi = new Date();
     const nascita = new Date(data);
     let eta = oggi.getFullYear() - nascita.getFullYear();
@@ -27,103 +22,121 @@ document.addEventListener('DOMContentLoaded', () => {
     return eta;
   };
 
-  const daysBetween = (a, b) => Math.floor((new Date(a) - new Date(b)) / (1000 * 60 * 60 * 24));
+  const daysBetween = (a, b) =>
+    Math.floor((new Date(a) - new Date(b)) / (1000 * 60 * 60 * 24));
 
   const statoVisita = (data) => {
-    if (!data) return 'data-ok';
+    if (!data) return "data-ok";
     const oggi = new Date().toISOString().slice(0, 10);
     const diff = daysBetween(data, oggi);
-    if (diff < 0) return 'data-scaduta';
-    if (diff <= 31) return 'data-scanza';
-    return 'data-ok';
+    if (diff < 0) return "data-scaduta";
+    if (diff <= 31) return "data-scanza";
+    return "data-ok";
   };
 
   const formattaData = (data) => {
-    if (!data) return '';
-    const [anno, mese, giorno] = data.split('-');
-    return `${giorno}/${mese}/${anno}`;
+    if (!data) return "";
+    const [a, m, g] = data.split("-");
+    return `${g}/${m}/${a}`;
   };
 
-  const aggiornaDashboard = () => {
+  function filtraAtleti(filtro) {
+    let a = caricaAtleti();
+    const oggi = new Date().toISOString().slice(0, 10);
+    if (filtro === "maschi") a = a.filter((x) => x.sesso === "M");
+    else if (filtro === "femmine") a = a.filter((x) => x.sesso === "F");
+    else if (filtro === "scadenza")
+      a = a.filter(
+        (x) =>
+          x.scadenzaVisita &&
+          daysBetween(x.scadenzaVisita, oggi) >= 0 &&
+          daysBetween(x.scadenzaVisita, oggi) <= 31,
+      );
+    else if (filtro === "scadute") a = a.filter((x) => x.scadenzaVisita && daysBetween(x.scadenzaVisita, oggi) < 0);
+    a.sort(
+      (a, b) =>
+        (a.cognome || "").localeCompare(b.cognome || "") ||
+        (a.nome || "").localeCompare(b.nome || ""),
+    );
+    return a;
+  }
+
+  function aggiornaDashboard() {
     const lista = caricaAtleti();
     const oggi = new Date().toISOString().slice(0, 10);
-    document.getElementById('tot-atleti').textContent = lista.length;
-    document.getElementById('tot-maschi').textContent = lista.filter(a => a.sesso === 'M').length;
-    document.getElementById('tot-femmine').textContent = lista.filter(a => a.sesso === 'F').length;
-    document.getElementById('tot-in-scadenza').textContent = lista.filter(a =>
-      a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) >= 0 && daysBetween(a.scadenzaVisita, oggi) <= 31
+    document.getElementById("tot-atleti").textContent = lista.length;
+    document.getElementById("tot-maschi").textContent = lista.filter((a) => a.sesso === "M").length;
+    document.getElementById("tot-femmine").textContent = lista.filter((a) => a.sesso === "F").length;
+    document.getElementById("tot-in-scadenza").textContent = lista.filter(
+      (a) =>
+        a.scadenzaVisita &&
+        daysBetween(a.scadenzaVisita, oggi) >= 0 &&
+        daysBetween(a.scadenzaVisita, oggi) <= 31,
     ).length;
-    document.getElementById('tot-scadute').textContent = lista.filter(a => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) < 0).length;
-    const totEta = lista.reduce((sum, a) => sum + (a.dataNascita ? calcolaEta(a.dataNascita) : 0), 0);
-    document.getElementById('eta-media').textContent = lista.length ? (totEta / lista.length).toFixed(1) : 0;
-  };
+    document.getElementById("tot-scadute").textContent = lista.filter(
+      (a) => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) < 0,
+    ).length;
+    const totEta = lista.reduce((acc, val) => acc + (val.dataNascita ? calcolaEta(val.dataNascita) : 0), 0);
+    document.getElementById("eta-media").textContent = lista.length ? (totEta / lista.length).toFixed(1) : 0;
+  }
 
-  const filtraAtleti = (filtro) => {
-    let lista = caricaAtleti();
-    const oggi = new Date().toISOString().slice(0, 10);
-    if (filtro === 'maschi') lista = lista.filter(a => a.sesso === 'M');
-    else if (filtro === 'femmine') lista = lista.filter(a => a.sesso === 'F');
-    else if (filtro === 'scadenza') lista = lista.filter(a =>
-      a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) >= 0 && daysBetween(a.scadenzaVisita, oggi) <= 31
-    );
-    else if (filtro === 'scadute') lista = lista.filter(a => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) < 0);
-    lista.sort((a, b) => (a.cognome || '').localeCompare(b.cognome || '') || (a.nome || '').localeCompare(b.nome || ''));
-    return lista;
-  };
-
-  const mostraAtleti = (filtro = filtroAttivo) => {
+  function mostraAtleti(filtro = filtroAttivo) {
     filtroAttivo = filtro;
     const lista = filtraAtleti(filtro);
-    list.innerHTML = '';
+    list.innerHTML = "";
     aggiornaDashboard();
     if (lista.length === 0) {
-      const li = document.createElement('li');
-      li.textContent = 'Nessun atleta trovato';
+      const li = document.createElement("li");
+      li.textContent = "Nessun atleta trovato";
       list.appendChild(li);
       return;
     }
-    lista.forEach(atleta => {
-      const statoClass = statoVisita(atleta.scadenzaVisita);
-      const li = document.createElement('li');
+    lista.forEach((x) => {
+      const statoCls = statoVisita(x.scadenzaVisita);
+      const li = document.createElement("li");
       li.innerHTML = `
-        <span class="list-info">
-          <strong>${atleta.codiceAtleta}</strong> - ${atleta.nome} ${atleta.cognome} – ${atleta.sesso} – ${atleta.ruolo}
-          <div>
-            <span>Nato il ${formattaData(atleta.dataNascita)}</span>
-            <span>Età: ${calcolaEta(atleta.dataNascita)}</span>
-            <span>CF: ${atleta.codiceFiscale}</span>
-            <span>Cell: ${atleta.cellulare}</span>
-          </div>
-          <div><span class="${statoClass}">SCADENZA VISITA: ${formattaData(atleta.scadenzaVisita)}</span></div>
-          <div>${atleta.certificatoMedico ? '(Certificato caricato)' : '(Nessun certificato)'}</div>
-        </span>
+        <div>${x.codiceAtleta}</div>
+        <div>${x.nome}</div>
+        <div>${x.cognome}</div>
+        <div>${x.sesso}</div>
+        <div>${x.ruolo}</div>
+        <div>${formattaData(x.dataNascita)}</div>
+        <div>${calcolaEta(x.dataNascita)}</div>
+        <div>${x.codiceFiscale}</div>
+        <div>${x.cellulare}</div>
         <div class="btn-group">
-          <button class="btn-small btn-visualizza" data-id="${atleta.id}">V</button>
-          <button class="btn-small btn-modifica" data-id="${atleta.id}">M</button>
-          <button class="btn-small btn-cancella" data-id="${atleta.id}">C</button>
+          <button class="btn-small btn-visualizza" data-id="${x.id}">V</button>
+          <button class="btn-small btn-modifica" data-id="${x.id}">M</button>
+          <button class="btn-small btn-cancella" data-id="${x.id}">C</button>
         </div>`;
       list.appendChild(li);
     });
-    document.querySelectorAll('.btn-cancella').forEach(btn => btn.onclick = () => cancella(btn.dataset.id));
-    document.querySelectorAll('.btn-visualizza').forEach(btn => btn.onclick = () => visualizza(btn.dataset.id));
-    document.querySelectorAll('.btn-modifica').forEach(btn => btn.onclick = () => modifica(btn.dataset.id));
-  };
+    document.querySelectorAll(".btn-cancella").forEach((b) => (b.onclick = () => cancella(b.dataset.id)));
+    document.querySelectorAll(".btn-visualizza").forEach((b) => (b.onclick = () => visualizza(b.dataset.id)));
+    document.querySelectorAll(".btn-modifica").forEach((b) => (b.onclick = () => modifica(b.dataset.id)));
+  }
+
+  document.getElementById("dashboard").addEventListener("click", (e) => {
+    const card = e.target.closest(".dash-card");
+    if (!card) return;
+    mostraAtleti(card.dataset.filter || "all");
+  });
 
   const cancella = (id) => {
     let lista = caricaAtleti();
-    if (confirm("Vuoi davvero cancellare questo atleta?")) {
-      lista = lista.filter(a => a.id !== id);
+    if (confirm("Confermi eliminazione atleta?")) {
+      lista = lista.filter((a) => a.id !== id);
       salvaAtleti(lista);
       mostraAtleti();
     }
   };
 
   const visualizza = (id) => {
-    const atleta = caricaAtleti().find(a => a.id === id);
+    const atleta = caricaAtleti().find((a) => a.id === id);
     if (!atleta) return;
-    const statoClass = statoVisita(atleta.scadenzaVisita);
-    document.getElementById('modal').style.display = 'flex';
-    document.getElementById('dettaglio-atleta').innerHTML = `
+    const statoCls = statoVisita(atleta.scadenzaVisita);
+    document.getElementById("modal").style.display = "flex";
+    document.getElementById("dettaglio-atleta").innerHTML = `
       <h2>${atleta.codiceAtleta} - ${atleta.nome} ${atleta.cognome}</h2>
       <p><strong>Sesso:</strong> ${atleta.sesso}</p>
       <p><strong>Ruolo:</strong> ${atleta.ruolo}</p>
@@ -131,27 +144,41 @@ document.addEventListener('DOMContentLoaded', () => {
       <p><strong>Età:</strong> ${calcolaEta(atleta.dataNascita)}</p>
       <p><strong>Codice Fiscale:</strong> ${atleta.codiceFiscale}</p>
       <p><strong>Cellulare:</strong> ${atleta.cellulare}</p>
-      <p><span class="${statoClass}">SCADENZA VISITA: ${formattaData(atleta.scadenzaVisita)}</span></p>
-      ${atleta.certificatoMedico ? `<p><a href="${atleta.certificatoMedico}" target="_blank" rel="noopener noreferrer">Visualizza certificato medico</a></p>` : '<p>(Nessun certificato medico caricato)</p>'}
+      <p><span class="${statoCls}">SCADENZA VISITA: ${formattaData(atleta.scadenzaVisita)}</span></p>
+      ${
+        atleta.certificatoMedico
+          ? `<p><a href="${atleta.certificatoMedico}" target="_blank" rel="noopener noreferrer">Visualizza certificato medico</a></p>`
+          : "<p>(Nessun certificato medico caricato)</p>"
+      }
     `;
   };
 
   const modifica = (id) => {
-    const atleta = caricaAtleti().find(a => a.id === id);
+    const atleta = caricaAtleti().find((a) => a.id === id);
     if (!atleta) return;
-    ['codiceAtleta', 'nome', 'cognome', 'sesso', 'dataNascita', 'ruolo', 'codiceFiscale', 'cellulare', 'scadenzaVisita'].forEach(field => {
-      document.getElementById('mod-' + field).value = atleta[field] || "";
+    [
+      "codiceAtleta",
+      "nome",
+      "cognome",
+      "sesso",
+      "dataNascita",
+      "ruolo",
+      "codiceFiscale",
+      "cellulare",
+      "scadenzaVisita",
+    ].forEach((field) => {
+      document.getElementById("mod-" + field).value = atleta[field] || "";
     });
-    document.getElementById('modifica-form').dataset.id = id;
-    document.getElementById('modal-modifica').style.display = 'flex';
+    document.getElementById("modifica-form").dataset.id = id;
+    document.getElementById("modal-modifica").style.display = "flex";
   };
 
   async function leggiPdf(input) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       const file = input.files[0];
       if (!file) return resolve(null);
       const reader = new FileReader();
-      reader.onload = e => resolve(e.target.result);
+      reader.onload = (e) => resolve(e.target.result);
       reader.readAsDataURL(file);
     });
   }
@@ -159,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
   form.onsubmit = async (e) => {
     e.preventDefault();
     const lista = caricaAtleti();
-    const pdf = await leggiPdf(document.getElementById('certificatoMedico'));
+    const pdf = await leggiPdf(document.getElementById("certificatoMedico"));
     lista.push({
       id: generaId(),
       codiceAtleta: form.codiceAtleta.value.trim(),
@@ -176,31 +203,39 @@ document.addEventListener('DOMContentLoaded', () => {
     salvaAtleti(lista);
     form.reset();
     mostraAtleti();
-    aggiornaDashboard();
   };
 
-  document.getElementById('modifica-form').onsubmit = async (e) => {
+  document.getElementById("modifica-form").onsubmit = async (e) => {
     e.preventDefault();
     const id = e.target.dataset.id;
     let lista = caricaAtleti();
-    const idx = lista.findIndex(a => a.id === id);
+    const idx = lista.findIndex((a) => a.id === id);
     if (idx === -1) return;
-    const pdf = await leggiPdf(document.getElementById('mod-certificatoMedico'));
-    ['codiceAtleta', 'nome', 'cognome', 'sesso', 'dataNascita', 'ruolo', 'codiceFiscale', 'cellulare', 'scadenzaVisita'].forEach(field => {
-      lista[idx][field] = document.getElementById('mod-' + field).value.trim();
-      if (field !== 'sesso') lista[idx][field] = lista[idx][field].toUpperCase();
+    const pdf = await leggiPdf(document.getElementById("mod-certificatoMedico"));
+    [
+      "codiceAtleta",
+      "nome",
+      "cognome",
+      "sesso",
+      "dataNascita",
+      "ruolo",
+      "codiceFiscale",
+      "cellulare",
+      "scadenzaVisita",
+    ].forEach((field) => {
+      lista[idx][field] = document.getElementById("mod-" + field).value.trim();
+      if (field !== "sesso") lista[idx][field] = lista[idx][field].toUpperCase();
     });
     if (pdf) lista[idx].certificatoMedico = pdf;
     salvaAtleti(lista);
-    document.getElementById('modal-modifica').style.display = 'none';
+    document.getElementById("modal-modifica").style.display = "none";
     mostraAtleti();
-    aggiornaDashboard();
   };
 
-  document.getElementById('export-btn').addEventListener('click', () => {
+  document.getElementById("export-btn").addEventListener("click", () => {
     const dati = caricaAtleti();
-    const blob = new Blob([JSON.stringify(dati, null, 2)], { type: 'application/json' });
-    const a = document.createElement('a');
+    const blob = new Blob([JSON.stringify(dati, null, 2)], { type: "application/json" });
+    const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
     a.download = "atleti-backup.json";
     document.body.appendChild(a);
@@ -209,48 +244,50 @@ document.addEventListener('DOMContentLoaded', () => {
     URL.revokeObjectURL(a.href);
   });
 
-  document.getElementById('import-btn').addEventListener('click', () => {
-    document.getElementById('import-file').click();
+  document.getElementById("import-btn").addEventListener("click", () => {
+    document.getElementById("import-file").click();
   });
 
-  document.getElementById('import-file').addEventListener('change', event => {
-    const file = event.target.files[0];
+  document.getElementById("import-file").addEventListener("change", (e) => {
+    const file = e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = e => {
+    reader.onload = (ev) => {
       try {
-        const arr = JSON.parse(e.target.result);
+        const arr = JSON.parse(ev.target.result);
         salvaAtleti(arr);
         mostraAtleti();
-        aggiornaDashboard();
       } catch {
-        alert('Errore nel file importato');
+        alert("Errore nel file importato");
       }
     };
     reader.readAsText(file);
   });
 
-  document.getElementById('print-btn').addEventListener('click', () => {
+  document.getElementById("print-btn").addEventListener("click", () => {
     const lista = filtraAtleti(filtroAttivo);
-    let html = `<h1>Lista Atleti</h1><table border="1" cellspacing="0" cellpadding="6"><thead><tr><th>Codice</th><th>Nome</th><th>Cognome</th><th>Ruolo</th><th>Data Nascita</th><th>Scadenza Visita</th></tr></thead><tbody>`;
-    lista.forEach(x => {
-      html += `<tr><td>${x.codiceAtleta}</td><td>${x.nome}</td><td>${x.cognome}</td><td>${x.ruolo}</td><td>${formattaData(x.dataNascita)}</td><td>${formattaData(x.scadenzaVisita)}</td></tr>`;
+    let html =
+      "<h1>Lista Atleti</h1><table border='1' cellspacing='0' cellpadding='6'><thead><tr><th>Codice</th><th>Nome</th><th>Cognome</th><th>Ruolo</th><th>Data Nascita</th><th>Scadenza Visita</th></tr></thead><tbody>";
+    lista.forEach((x) => {
+      html += `<tr><td>${x.codiceAtleta}</td><td>${x.nome}</td><td>${x.cognome}</td><td>${x.ruolo}</td><td>${formattaData(
+        x.dataNascita,
+      )}</td><td>${formattaData(x.scadenzaVisita)}</td></tr>`;
     });
-    html += '</tbody></table>';
-    const win = window.open('', '_blank', 'width=900,height=700');
-    win.document.write('<html><head><title>Stampa Atleti</title></head><body>' + html + '</body></html>');
-    win.document.close();
-    win.focus();
-    win.print();
-    win.close();
+    html += "</tbody></table>";
+    const w = window.open("", "_blank", "width=900,height=700");
+    w.document.write("<html><head><title>Stampa Atleti</title></head><body>" + html + "</body></html>");
+    w.document.close();
+    w.focus();
+    w.print();
+    w.close();
   });
 
-  document.getElementById('close-view').onclick = () => {
-    document.getElementById('modal').style.display = 'none';
+  document.getElementById("close-view").onclick = () => {
+    document.getElementById("modal").style.display = "none";
   };
 
-  document.getElementById('close-edit').onclick = () => {
-    document.getElementById('modal-modifica').style.display = 'none';
+  document.getElementById("close-edit").onclick = () => {
+    document.getElementById("modal-modifica").style.display = "none";
   };
 
   mostraAtleti();
