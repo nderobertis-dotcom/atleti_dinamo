@@ -381,3 +381,51 @@ table#atleti-list {
 #dettaglio-atleta > h2 {
   margin-top: 2px;
 }
+.main-header {
+  background: #0080ff;
+  color: #fff;
+  padding: 12px 0 6px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.header-bar {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.logo {
+  max-height: 48px;
+  margin-left: 10px;
+  margin-right: 26px;
+  width: auto;
+}
+.main-header h1 {
+  font-size: 2em;
+  margin: 0;
+}
+.dashboard-strip { width: 100vw; display: flex; justify-content: center; margin-top: 8px;}
+.dashboard { display: flex; gap: 11px; justify-content: center; align-items: stretch; margin: 0 0 12px 0;}
+.dash-card, .dash-card-inner { min-width: 75px; min-height: 49px; padding: 0;}
+.dash-title { font-size: 0.90em; font-weight: bold; letter-spacing: 1px; margin-bottom: 5px; color: #0080ff;}
+.dash-value { font-size: 1.2em; font-weight: bolder; color: #003974; margin-bottom: 2px;}
+.dash-card.dash-scanza-btn .dash-title { color: #b25e00; }
+.dash-card.dash-scadute-btn .dash-title { color: #aa2434; }
+.dash-card.dash-scanza-btn .dash-value { color: #b25e00; }
+.dash-card.dash-scadute-btn .dash-value { color: #b91b2c; }
+/* Form */
+.form-row select#ruolo { max-width: 15ch;}
+.form-row input#codiceFiscale { max-width: 16ch;}
+.form-row input#cellulare { max-width: 10ch;}
+input.iban-field { width: 28ch; min-width: 20ch; }
+/* Tabella atleti */
+table#atleti-list { width: 100%; table-layout: fixed; font-size: 0.86em;}
+#atleti-list th, #atleti-list td { padding: 4px 4px; text-align: left; font-size: 0.86em; overflow: visible; }
+#atleti-list td.cognome-nome { font-weight: bold; color: #0080ff; white-space: normal; overflow: visible;}
+#atleti-list td:nth-child(6), #atleti-list th:nth-child(6) { white-space: normal; overflow: auto; text-overflow: unset; }
+#atleti-list th { font-weight: bold; background: #f8faff; border-bottom: 2px solid #0080ff;}
+/* ...resto invariato... */
