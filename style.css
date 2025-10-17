@@ -33,6 +33,31 @@
   box-shadow: 0 1px 4px 0 #e2eaff70 inset;
   padding: 13px 11px 12px 11px;
 }
+#atleti-list td.td-code {
+  background: #fafeef;
+  color: #47612d;
+}
+#atleti-list td.td-cell {
+  background: #e1f0dc;
+  color: #2d5113;
+}
+.info-extra .label-iban, .info-extra .label-iban + span {
+  display: inline-block;
+  font-size: 1.14em;
+}
+.info-extra .label-iban {
+  font-weight: bold;
+  margin-right: 10px;
+  color: #0080ff;
+}
+.info-extra div.iban-row {
+  margin-top: 8px;
+  border-top: 1.1px solid #e3e3ed;
+  padding-top: 7px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
 .btn-group {
   display: flex;
   gap: 14px;
@@ -49,4 +74,19 @@
   justify-content: center;
   cursor: pointer;
   box-shadow: 0 3px 8px #cddbee33;
+}
+.btn-visualizza {
+  background: #188df9;
+  color: #fff;
+}
+.btn-modifica {
+  background: #ffe066;
+  color: #283628;
+}
+.btn-cancella {
+  background: #e63946;
+  color: #fff;
+}
+.btn-round:active, .btn-round:focus {
+  outline: 2px solid #0080ff;
 }
