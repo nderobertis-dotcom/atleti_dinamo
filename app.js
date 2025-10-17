@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("atleta-form");
   const tableBody = document.querySelector("#atleti-list tbody");
   let filtroAttivo = "all";
+
   function caricaAtleti() {
     try {
       return JSON.parse(localStorage.getItem("atleti")) || [];
@@ -9,12 +10,15 @@ document.addEventListener("DOMContentLoaded", () => {
       return [];
     }
   }
+
   function salvaAtleti(lista) {
     localStorage.setItem("atleti", JSON.stringify(lista));
   }
+
   function generaId() {
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
   }
+
   function calcolaEta(data) {
     if (!data) return "";
     const oggi = new Date();
@@ -24,9 +28,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (m < 0 || (m === 0 && oggi.getDate() < nascita.getDate())) eta--;
     return eta;
   }
+
   function daysBetween(a, b) {
     return Math.floor((new Date(a) - new Date(b)) / (1000 * 60 * 60 * 24));
   }
+
   function statoVisita(data) {
     if (!data) return "data-ok";
     const oggi = new Date().toISOString().slice(0, 10);
@@ -35,11 +41,13 @@ document.addEventListener("DOMContentLoaded", () => {
     if (diff <= 31) return "data-scanza";
     return "data-ok";
   }
+
   function formattaData(data) {
     if (!data) return "";
     const [a, m, g] = data.split("-");
     return `${g}/${m}/${a}`;
   }
+
   function filtraAtleti(filtro) {
     let lista = caricaAtleti();
     lista.sort((a, b) =>
@@ -49,15 +57,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const oggi = new Date().toISOString().slice(0, 10);
     if (filtro === "maschi") lista = lista.filter((a) => a.sesso === "M");
     else if (filtro === "femmine") lista = lista.filter((a) => a.sesso === "F");
-    else if (filtro === "scadenza") lista = lista.filter(
-      (a) =>
-        a.scadenzaVisita &&
-        daysBetween(a.scadenzaVisita, oggi) >= 0 &&
-        daysBetween(a.scadenzaVisita, oggi) <= 31
+    else if (filtro === "scadenza")
+      lista = lista.filter(
+        (a) =>
+          a.scadenzaVisita &&
+          daysBetween(a.scadenzaVisita, oggi) >= 0 &&
+          daysBetween(a.scadenzaVisita, oggi) <= 31
       );
-    else if (filtro === "scadute") lista = lista.filter((a) => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) < 0);
+    else if (filtro === "scadute")
+      lista = lista.filter((a) => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) < 0);
     return lista;
   }
+
   function aggiornaDashboard() {
     const lista = caricaAtleti();
     const oggi = new Date().toISOString().slice(0, 10);
@@ -76,6 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const totEta = lista.reduce((sum, a) => sum + (a.dataNascita ? calcolaEta(a.dataNascita) : 0), 0);
     document.getElementById("eta-media").textContent = lista.length ? (totEta / lista.length).toFixed(1) : 0;
   }
+
   function mostraAtleti(filtro = filtroAttivo) {
     filtroAttivo = filtro;
     const lista = filtraAtleti(filtro);
@@ -92,25 +104,22 @@ document.addEventListener("DOMContentLoaded", () => {
       const tr1 = document.createElement("tr");
       tr1.innerHTML = `
         <td class="cognome-nome"><strong>${x.cognome} ${x.nome}</strong></td>
-        <td>${x.codiceAtleta}</td>
         <td>${x.sesso}</td>
         <td>${x.ruolo}</td>
         <td>${formattaData(x.dataNascita)}</td>
         <td>${calcolaEta(x.dataNascita)}</td>
         <td>${x.codiceFiscale}</td>
+        <td>${x.codiceAtleta}</td>
         <td>${x.cellulare}</td>
       `;
       const tr2 = document.createElement("tr");
       tr2.className = "info-extra";
       tr2.innerHTML =
-      `<td colspan="7">
+        `<td colspan="7">
           <span class="label-scadenza">Scadenza Visita:</span>
           <span class="${statoCls}">${formattaData(x.scadenzaVisita)}</span>
           <span class="label-certificato">Certificato:</span>
-          ${x.certificatoMedico
-            ? '<span style="color:#45d345;font-weight:bold;">CARICATO</span>'
-            : '<span style="color:#e63946;font-weight:bold;">NON PRESENTE</span>'
-          }
+          ${x.certificatoMedico ? '<span style="color:#45d345;font-weight:bold;">CARICATO</span>' : '<span style="color:#e63946;font-weight:bold;">NON PRESENTE</span>'}
           <span class="label-iban">IBAN:</span>
           <span>${x.iban ? x.iban : '<span style="color:#e63946;">NON PRESENTE</span>'}</span>
         </td>
@@ -124,9 +133,15 @@ document.addEventListener("DOMContentLoaded", () => {
       tableBody.appendChild(tr1);
       tableBody.appendChild(tr2);
     });
-    document.querySelectorAll(".btn-cancella").forEach((b) => (b.onclick = () => cancella(b.dataset.id)));
-    document.querySelectorAll(".btn-visualizza").forEach((b) => (b.onclick = () => visualizza(b.dataset.id)));
-    document.querySelectorAll(".btn-modifica").forEach((b) => (b.onclick = () => modifica(b.dataset.id)));
+    document.querySelectorAll(".btn-cancella").forEach(
+      (b) => (b.onclick = () => cancella(b.dataset.id))
+    );
+    document.querySelectorAll(".btn-visualizza").forEach(
+      (b) => (b.onclick = () => visualizza(b.dataset.id))
+    );
+    document.querySelectorAll(".btn-modifica").forEach(
+      (b) => (b.onclick = () => modifica(b.dataset.id))
+    );
   }
 
   document.getElementById("dashboard").addEventListener("click", (e) => {
@@ -171,7 +186,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const modifica = (id) => {
     const atleta = caricaAtleti().find((a) => a.id === id);
     if (!atleta) return;
-    ["codiceAtleta","nome","cognome","sesso","dataNascita","ruolo","codiceFiscale","cellulare","scadenzaVisita","iban"].forEach((field) => {
+    [
+      "codiceAtleta", "nome", "cognome", "sesso", "dataNascita", "ruolo",
+      "codiceFiscale", "cellulare", "scadenzaVisita", "iban"
+    ].forEach((field) => {
       document.getElementById("mod-" + field).value = atleta[field] || "";
     });
     document.getElementById("modifica-form").dataset.id = id;
@@ -218,7 +236,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const idx = lista.findIndex((a) => a.id === id);
     if (idx === -1) return;
     const pdf = await leggiPdf(document.getElementById("mod-certificatoMedico"));
-    ["codiceAtleta","nome","cognome","sesso","dataNascita","ruolo","codiceFiscale","cellulare","scadenzaVisita","iban"].forEach((field) => {
+    [
+      "codiceAtleta", "nome", "cognome", "sesso", "dataNascita", "ruolo",
+      "codiceFiscale", "cellulare", "scadenzaVisita", "iban"
+    ].forEach((field) => {
       lista[idx][field] = document.getElementById("mod-" + field).value.trim();
       if (field !== "sesso") lista[idx][field] = lista[idx][field].toUpperCase();
     });
@@ -263,17 +284,17 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("print-btn").addEventListener("click", () => {
     const lista = filtraAtleti(filtroAttivo);
     let html =
-      "<h1>Lista Atleti</h1><table border='1' cellspacing='0' cellpadding='6'><thead><tr><th>Cognome Nome</th><th>Codice</th><th>Ruolo</th><th>Data Nascita</th><th>Cell</th><th>Scadenza Visita</th><th>Certificato</th><th>IBAN</th></tr></thead><tbody>";
+      "<h1>Lista Atleti</h1><table border='1' cellspacing='0' cellpadding='6'><thead><tr><th>Cognome Nome</th><th>Sesso</th><th>Ruolo</th><th>Data Nascita</th><th>Età</th><th>CF</th><th>Codice</th><th>Cell</th></tr></thead><tbody>";
     lista.forEach((x) => {
       html += `<tr>
         <td>${x.cognome} ${x.nome}</td>
-        <td>${x.codiceAtleta}</td>
+        <td>${x.sesso}</td>
         <td>${x.ruolo}</td>
         <td>${formattaData(x.dataNascita)}</td>
+        <td>${calcolaEta(x.dataNascita)}</td>
+        <td>${x.codiceFiscale}</td>
+        <td>${x.codiceAtleta}</td>
         <td>${x.cellulare}</td>
-        <td>${formattaData(x.scadenzaVisita)}</td>
-        <td>${x.certificatoMedico ? 'CARICATO' : 'NON PRESENTE'}</td>
-        <td>${x.iban ? x.iban : "NON PRESENTE"}</td>
       </tr>`;
     });
     html += "</tbody></table>";
@@ -296,13 +317,3 @@ document.addEventListener("DOMContentLoaded", () => {
   mostraAtleti();
   aggiornaDashboard();
 });
-tr1.innerHTML = `
-  <td class="cognome-nome"><strong>${x.cognome} ${x.nome}</strong></td>
-  <td>${x.sesso}</td>
-  <td>${x.ruolo}</td>
-  <td>${formattaData(x.dataNascita)}</td>
-  <td>${calcolaEta(x.dataNascita)}</td>
-  <td>${x.codiceFiscale}</td>
-  <td>${x.codiceAtleta}</td>
-  <td>${x.cellulare}</td>
-`;
