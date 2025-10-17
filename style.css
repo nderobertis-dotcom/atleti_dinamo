@@ -125,12 +125,12 @@ main {
   min-width: 0;
 }
 input.iban-field {
-  flex-basis: 12%;
-  max-width: 12%;
+  flex-basis: 27ch;
+  max-width: 27ch;
 }
 input.mod-iban-field {
-  flex-basis: 12%;
-  max-width: 12%;
+  flex-basis: 27ch;
+  max-width: 27ch;
 }
 input,
 select,
