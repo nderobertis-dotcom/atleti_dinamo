@@ -1,3 +1,6 @@
+function splitName(cognome, nome) {
+  return `<b>${cognome}</b>${nome ? "<br>" + nome.trim().replace(/\s+/g, " ") : ""}`;
+}
 function mostraAtleti(filtro = filtroAttivo) {
   filtroAttivo = filtro;
   const lista = filtraAtleti(filtro);
@@ -11,7 +14,7 @@ function mostraAtleti(filtro = filtroAttivo) {
   }
   lista.forEach((x) => {
     const statoCls = statoVisita(x.scadenzaVisita);
-    // Riga principale atleta con bottoni azione
+    // Riga principale
     const tr1 = document.createElement("tr");
     tr1.innerHTML = `
       <td class="cognome-nome"><strong>${splitName(x.cognome, x.nome)}</strong></td>
@@ -30,7 +33,7 @@ function mostraAtleti(filtro = filtroAttivo) {
         </div>
       </td>
     `;
-    // Riga info-extra sotto
+    // Riga info-extra
     const tr2 = document.createElement("tr");
     tr2.className = "info-extra";
     tr2.innerHTML = `
