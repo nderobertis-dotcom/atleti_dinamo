@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("atleta-form");
   const tableBody = document.querySelector("#atleti-list tbody");
   let filtroAttivo = "all";
-
   function caricaAtleti() {
     try {
       return JSON.parse(localStorage.getItem("atleti")) || [];
@@ -41,7 +40,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const [a, m, g] = data.split("-");
     return `${g}/${m}/${a}`;
   }
-
   function filtraAtleti(filtro) {
     let lista = caricaAtleti();
     lista.sort((a, b) =>
@@ -60,7 +58,6 @@ document.addEventListener("DOMContentLoaded", () => {
     else if (filtro === "scadute") lista = lista.filter((a) => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) < 0);
     return lista;
   }
-
   function aggiornaDashboard() {
     const lista = caricaAtleti();
     const oggi = new Date().toISOString().slice(0, 10);
@@ -79,7 +76,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const totEta = lista.reduce((sum, a) => sum + (a.dataNascita ? calcolaEta(a.dataNascita) : 0), 0);
     document.getElementById("eta-media").textContent = lista.length ? (totEta / lista.length).toFixed(1) : 0;
   }
-
   function mostraAtleti(filtro = filtroAttivo) {
     filtroAttivo = filtro;
     const lista = filtraAtleti(filtro);
@@ -95,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const statoCls = statoVisita(x.scadenzaVisita);
       const tr1 = document.createElement("tr");
       tr1.innerHTML = `
-        <td><strong>${x.cognome} ${x.nome}</strong></td>
+        <td class="cognome-nome"><strong>${x.cognome} ${x.nome}</strong></td>
         <td>${x.codiceAtleta}</td>
         <td>${x.sesso}</td>
         <td>${x.ruolo}</td>
@@ -115,6 +111,8 @@ document.addEventListener("DOMContentLoaded", () => {
             ? '<span style="color:#45d345;font-weight:bold;">CARICATO</span>'
             : '<span style="color:#e63946;font-weight:bold;">NON PRESENTE</span>'
           }
+          <span class="label-iban">IBAN:</span>
+          <span>${x.iban ? x.iban : '<span style="color:#e63946;">NON PRESENTE</span>'}</span>
         </td>
         <td class="actions-cell">
           <div class="btn-group">
@@ -165,13 +163,14 @@ document.addEventListener("DOMContentLoaded", () => {
           ? `<p><a href="${atleta.certificatoMedico}" target="_blank" rel="noopener noreferrer">Visualizza certificato medico</a></p>`
           : "<p>(Nessun certificato medico caricato)</p>"
       }
+      <p><strong>IBAN:</strong> ${atleta.iban ? atleta.iban : "NON PRESENTE"}</p>
     `;
   };
 
   const modifica = (id) => {
     const atleta = caricaAtleti().find((a) => a.id === id);
     if (!atleta) return;
-    ["codiceAtleta","nome","cognome","sesso","dataNascita","ruolo","codiceFiscale","cellulare","scadenzaVisita"].forEach((field) => {
+    ["codiceAtleta","nome","cognome","sesso","dataNascita","ruolo","codiceFiscale","cellulare","scadenzaVisita","iban"].forEach((field) => {
       document.getElementById("mod-" + field).value = atleta[field] || "";
     });
     document.getElementById("modifica-form").dataset.id = id;
@@ -204,6 +203,7 @@ document.addEventListener("DOMContentLoaded", () => {
       cellulare: form.cellulare.value.trim(),
       scadenzaVisita: form.scadenzaVisita.value,
       certificatoMedico: pdf || null,
+      iban: form.iban.value.trim().toUpperCase(),
     });
     salvaAtleti(lista);
     form.reset();
@@ -217,7 +217,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const idx = lista.findIndex((a) => a.id === id);
     if (idx === -1) return;
     const pdf = await leggiPdf(document.getElementById("mod-certificatoMedico"));
-    ["codiceAtleta","nome","cognome","sesso","dataNascita","ruolo","codiceFiscale","cellulare","scadenzaVisita"].forEach((field) => {
+    ["codiceAtleta","nome","cognome","sesso","dataNascita","ruolo","codiceFiscale","cellulare","scadenzaVisita","iban"].forEach((field) => {
       lista[idx][field] = document.getElementById("mod-" + field).value.trim();
       if (field !== "sesso") lista[idx][field] = lista[idx][field].toUpperCase();
     });
@@ -262,7 +262,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("print-btn").addEventListener("click", () => {
     const lista = filtraAtleti(filtroAttivo);
     let html =
-      "<h1>Lista Atleti</h1><table border='1' cellspacing='0' cellpadding='6'><thead><tr><th>Cognome Nome</th><th>Codice</th><th>Ruolo</th><th>Data Nascita</th><th>Cell</th><th>Scadenza Visita</th><th>Certificato</th></tr></thead><tbody>";
+      "<h1>Lista Atleti</h1><table border='1' cellspacing='0' cellpadding='6'><thead><tr><th>Cognome Nome</th><th>Codice</th><th>Ruolo</th><th>Data Nascita</th><th>Cell</th><th>Scadenza Visita</th><th>Certificato</th><th>IBAN</th></tr></thead><tbody>";
     lista.forEach((x) => {
       html += `<tr>
         <td>${x.cognome} ${x.nome}</td>
@@ -272,6 +272,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <td>${x.cellulare}</td>
         <td>${formattaData(x.scadenzaVisita)}</td>
         <td>${x.certificatoMedico ? 'CARICATO' : 'NON PRESENTE'}</td>
+        <td>${x.iban ? x.iban : "NON PRESENTE"}</td>
       </tr>`;
     });
     html += "</tbody></table>";
