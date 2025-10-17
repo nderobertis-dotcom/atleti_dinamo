@@ -44,7 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function filtraAtleti(filtro) {
     let lista = caricaAtleti();
-    // Ordinamento: prima per cognome, poi per nome, entrambi MAIUSCOLI
     lista.sort((a, b) =>
       (a.cognome || "").localeCompare(b.cognome || "") ||
       (a.nome || "").localeCompare(b.nome || "")
@@ -88,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
     aggiornaDashboard();
     if (lista.length === 0) {
       const tr = document.createElement("tr");
-      tr.innerHTML = `<td colspan="9">Nessun atleta trovato</td>`;
+      tr.innerHTML = `<td colspan="8">Nessun atleta trovato</td>`;
       tableBody.appendChild(tr);
       return;
     }
@@ -104,16 +103,13 @@ document.addEventListener("DOMContentLoaded", () => {
         <td>${calcolaEta(x.dataNascita)}</td>
         <td>${x.codiceFiscale}</td>
         <td>${x.cellulare}</td>
-        <td></td>
       `;
-      // Riga aggiuntiva: scadenza visita, certificato, e azioni
       const tr2 = document.createElement("tr");
       tr2.className = "info-extra";
       tr2.innerHTML =
-      `<td colspan="8">
+      `<td colspan="7">
           <span class="label-scadenza">Scadenza Visita:</span>
           <span class="${statoCls}">${formattaData(x.scadenzaVisita)}</span>
-          &nbsp; &nbsp;
           <span class="label-certificato">Certificato:</span>
           ${x.certificatoMedico
             ? '<span style="color:#45d345;font-weight:bold;">CARICATO</span>'
