@@ -44,10 +44,22 @@ table#atleti-list { width: 100%; table-layout: fixed; font-size: 1.13em; border-
 #atleti-list tr + tr:not(.info-extra) td { border-top: 20px solid transparent;}
 #atleti-list td.cognome-nome { font-weight: bold; color: #0080ff; font-size: 1.12em; white-space: normal; text-align: left;}
 #atleti-list td.cognome-nome strong { display: block; line-height: 1.1;}
-#atleti-list td.cognome-nome b { display: block;}
-#atleti-list td.td-cf { background: #e7f0fe; color: #22345a; font-family: monospace;}
-#atleti-list td.td-code { background: #f4efe7; color: #574230; font-family: monospace;}
-#atleti-list td.td-cell { background: #e7fee6; color: #26752e; font-family: monospace;}
+#atleti-list td.cognome-nome b { display: block; }
+/* CF, codice, cell: monospace, spezzati, max-width */
+#atleti-list td.td-cf, #atleti-list td.td-code, #atleti-list td.td-cell {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.06em;
+  white-space: pre-line;
+  word-break: break-all;
+  max-width: 19ch;
+  overflow: auto;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  border-radius: 6px;
+}
+#atleti-list td.td-cf { background: #e7f0fe; color: #22345a; }
+#atleti-list td.td-code { background: #f4efe7; color: #574230; }
+#atleti-list td.td-cell { background: #e7fee6; color: #26752e; }
 .btn-group { display: flex; gap: 14px; justify-content: flex-end;}
 .btn-round { width: 44px; height: 44px; font-size: 1.45em; font-weight: bold; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer;}
 .btn-visualizza { background: #188df9; color: #fff;}
