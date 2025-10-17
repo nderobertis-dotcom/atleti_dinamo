@@ -48,14 +48,14 @@ table#atleti-list { width: 100%; table-layout: fixed; font-size: 1.13em; border-
 /* CF, codice, cell: monospace, spezzati, max-width */
 #atleti-list td.td-cf, #atleti-list td.td-code, #atleti-list td.td-cell {
   font-family: 'Courier New', Courier, monospace;
-  font-size: 1.06em;
-  white-space: pre-line;
-  word-break: break-all;
-  max-width: 19ch;
-  overflow: auto;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  border-radius: 6px;
+  font-size: 1.20em;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-width: 24ch;
+  overflow-wrap: break-word;
+  padding: 12px 10px;
+  border-radius: 8px;
+  background: #f7f7fe;
 }
 #atleti-list td.td-cf { background: #e7f0fe; color: #22345a; }
 #atleti-list td.td-code { background: #f4efe7; color: #574230; }
@@ -74,27 +74,3 @@ table#atleti-list { width: 100%; table-layout: fixed; font-size: 1.13em; border-
 .label-iban { font-weight: bold; margin-left: 20px; margin-right: 4px; color: #0080ff;}
 @media (max-width: 1130px) { .container-1000 { padding: 4vw; } }
 @media (max-width: 860px) { .container-1000 { padding: 5px 2vw; } table#atleti-list { font-size: 0.97em; } #atleti-list th, #atleti-list td { padding: 8px 2px; } .dashboard { gap: 7px; } }
-#atleti-list td.td-cf, #atleti-list td.td-code, #atleti-list td.td-cell {
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 1.20em;
-  white-space: pre-line;
-  word-break: break-all;
-  max-width: 19ch;
-  overflow: auto;
-  border-radius: 6px;
-  padding: 10px 7px;
-  background: #f7f7fe;
-}
-#atleti-list td.td-cf { background: #e7f0fe; color: #22345a; }
-#atleti-list td.td-code { background: #f4efe7; color: #574230; }
-#atleti-list td.td-cell { background: #e7fee6; color: #26752e; }
-.info-extra .label-iban,.info-extra .label-iban + span {
-  display: inline-block;
-  margin-top: 6px;
-  font-size: 1.09em;
-}
-.info-extra .label-iban {
-  margin-bottom: 6px;
-  font-weight: bold;
-  color: #0080ff;
-}
