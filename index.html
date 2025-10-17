@@ -23,10 +23,11 @@
   </div>
 </div>
 <main>
+<div class="container-1000">
 <section id="form-section">
   <h2>Aggiungi Atleta</h2>
   <form id="atleta-form" autocomplete="off">
-    <div class="form-row-condensed">
+    <div class="form-row-condensed big-form">
       <input type="text" id="codiceAtleta" placeholder="CODICE ATLETA (7 cifre)" maxlength="7" pattern="\d{7}" required>
       <input type="text" id="nome" placeholder="Nome" required>
       <input type="text" id="cognome" placeholder="Cognome" required>
@@ -36,7 +37,7 @@
         <option value="F">FEMMINA</option>
       </select>
     </div>
-    <div class="form-row-date-pdf">
+    <div class="form-row-date-pdf big-form">
       <div class="form-col-small">
         <label for="dataNascita" class="visita-label">Data di nascita</label>
         <input type="date" id="dataNascita" required>
@@ -50,7 +51,7 @@
         <input type="file" id="certificatoMedico" accept="application/pdf">
       </div>
     </div>
-    <div class="form-row">
+    <div class="form-row big-form">
       <select id="ruolo" maxlength="15" required style="max-width:15ch;">
         <option value="">Ruolo</option>
         <option value="PALLEGGIATORE">PALLEGGIATORE</option>
@@ -63,45 +64,46 @@
       <input type="tel" id="cellulare" placeholder="Cellulare" maxlength="10" required style="max-width:10ch;">
       <input type="text" id="iban" placeholder="IBAN" maxlength="34" class="iban-field" autocomplete="off">
     </div>
-    <button type="submit">Aggiungi</button>
+    <button type="submit" class="btn-add">Aggiungi</button>
   </form>
 </section>
 <section id="list-section">
 <h2>Lista Atleti</h2>
 <div class="import-export-bar">
-  <button id="export-btn" type="button">Esporta dati</button>
-  <button id="import-btn" type="button">Importa dati</button>
-  <button id="print-btn" type="button">Stampa</button>
+  <button id="export-btn" type="button" class="modern-action">Esporta</button>
+  <button id="import-btn" type="button" class="modern-action">Importa</button>
+  <button id="print-btn" type="button" class="modern-action">Stampa</button>
   <input type="file" id="import-file" accept=".json" style="display:none;">
 </div>
 <table id="atleti-list">
   <colgroup>
-    ol style="="width:16ch;">
-    ol style="="width:3ch;">
+    ol style="="width:19ch;">
+    ol style="="width:4ch;">
     ol style="="width:15ch;">
-    ol style="="width:12ch;">
-    ol style="="width:2ch;">
-    ol style="="width:18ch;">
+    ol style="="width:13ch;">
+    ol style="="width:3ch;">
+    ol style="="width:19ch;">
     ol style="="width:7ch;">
-    ol style="="width:10ch;">
+    ol style="="width:11ch;">
   </colgroup>
   <thead>
     <tr>
-      <th>COGNOME NOME</th>
-      <th>SESSO</th>
-      <th>RUOLO</th>
-      <th>DATA NASCITA</th>
-      <th>ETÀ</th>
+      <th>Cognome Nome</th>
+      <th>Sesso</th>
+      <th>Ruolo</th>
+      <th>Data Nascita</th>
+      <th>Età</th>
       <th>CF</th>
-      <th>CODICE</th>
-      <th>CELL</th>
+      <th>Codice</th>
+      <th>Cell</th>
     </tr>
   </thead>
   <tbody></tbody>
 </table>
 </section>
+</div>
 </main>
-<!-- Modals (resta invariato) -->
+<!-- Modals (come prima, invariati) -->
 <script src="app.js"></script>
 </body>
 </html>
