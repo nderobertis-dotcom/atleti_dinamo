@@ -53,7 +53,7 @@
       </select>
       <input type="text" id="codiceFiscale" placeholder="Codice Fiscale" maxlength="16" required>
       <input type="tel" id="cellulare" placeholder="Cellulare" required>
-      <input type="text" id="iban" placeholder="IBAN" maxlength="34" style="width: 120%;">
+      <input type="text" id="iban" placeholder="IBAN" maxlength="34" class="iban-field" autocomplete="off">
     </div>
     <button type="submit">Aggiungi</button>
   </form>
@@ -115,7 +115,8 @@
       </select>
       <input id="mod-codiceFiscale" maxlength="16" required>
       <input id="mod-cellulare" required>
-      <input type="text" id="mod-iban" maxlength="34" style="width: 120%;">
+      <label class="visita-label" for="mod-iban" style="margin-top:10px;">IBAN</label>
+      <input type="text" id="mod-iban" maxlength="34" class="mod-iban-field">
       <div class="form-row-date-pdf">
         <div class="form-col-small"><label for="mod-scadenzaVisita" class="visita-label">Scadenza visita</label><input type="date" id="mod-scadenzaVisita" required></div>
         <div class="form-col-pdf-upload"><label for="mod-certificatoMedico" class="visita-label">Certificato medico (PDF)</label><input type="file" id="mod-certificatoMedico" accept="application/pdf"></div>
