@@ -27,7 +27,7 @@
 <section id="form-section">
   <h2>Aggiungi Atleta</h2>
   <form id="atleta-form" autocomplete="off">
-    <div class="form-row-condensed big-form">
+    <div class="form-row-condensed">
       <input type="text" id="codiceAtleta" placeholder="CODICE ATLETA (7 cifre)" maxlength="7" pattern="\d{7}" required>
       <input type="text" id="nome" placeholder="Nome" required>
       <input type="text" id="cognome" placeholder="Cognome" required>
@@ -37,7 +37,7 @@
         <option value="F">FEMMINA</option>
       </select>
     </div>
-    <div class="form-row-date-pdf big-form">
+    <div class="form-row-date-pdf">
       <div class="form-col-small">
         <label for="dataNascita" class="visita-label">Data di nascita</label>
         <input type="date" id="dataNascita" required>
@@ -51,7 +51,7 @@
         <input type="file" id="certificatoMedico" accept="application/pdf">
       </div>
     </div>
-    <div class="form-row big-form">
+    <div class="form-row">
       <select id="ruolo" maxlength="15" required style="max-width:15ch;">
         <option value="">Ruolo</option>
         <option value="PALLEGGIATORE">PALLEGGIATORE</option>
@@ -77,14 +77,14 @@
 </div>
 <table id="atleti-list">
   <colgroup>
-    ol style="="width:19ch;">
-    ol style="="width:4ch;">
-    ol style="="width:15ch;">
-    ol style="="width:13ch;">
-    ol style="="width:3ch;">
-    ol style="="width:19ch;">
-    ol style="="width:7ch;">
-    ol style="="width:11ch;">
+    <col style="width:19ch;">
+    <col style="width:4ch;">
+    <col style="width:15ch;">
+    <col style="width:13ch;">
+    <col style="width:3ch;">
+    <col style="width:19ch;">
+    <col style="width:7ch;">
+    <col style="width:11ch;">
   </colgroup>
   <thead>
     <tr>
