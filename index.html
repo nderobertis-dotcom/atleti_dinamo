@@ -53,7 +53,7 @@
       </div>
     </div>
     <div class="form-row">
-      <select id="ruolo" maxlength="15" required style="max-width:13ch;">
+      <select id="ruolo" maxlength="15" required style="max-width:15ch;">
         <option value="">Ruolo</option>
         <option value="PALLEGGIATORE">PALLEGGIATORE</option>
         <option value="SCHIACCIATORE">SCHIACCIATORE</option>
@@ -61,8 +61,8 @@
         <option value="LIBERO">LIBERO</option>
         <option value="OPPOSTO">OPPOSTO</option>
       </select>
-      <input type="text" id="codiceFiscale" placeholder="Codice Fiscale" maxlength="16" required style="max-width:12ch;">
-      <input type="tel" id="cellulare" placeholder="Cellulare" maxlength="10" required style="max-width:8ch;">
+      <input type="text" id="codiceFiscale" placeholder="Codice Fiscale" maxlength="16" required style="max-width:16ch;">
+      <input type="tel" id="cellulare" placeholder="Cellulare" maxlength="10" required style="max-width:10ch;">
       <input type="text" id="iban" placeholder="IBAN" maxlength="34" class="iban-field" autocomplete="off">
     </div>
     <button type="submit">Aggiungi</button>
@@ -78,6 +78,16 @@
   <input type="file" id="import-file" accept=".json" style="display:none;">
 </div>
 <table id="atleti-list">
+  <colgroup>
+    <col style="width:16ch;">
+    <col style="width:3ch;">
+    <col style="width:15ch;">
+    <col style="width:12ch;">
+    <col style="width:2ch;">
+    <col style="width:18ch;">
+    <col style="width:7ch;">
+    <col style="width:10ch;">
+  </colgroup>
   <thead>
     <tr>
       <th>COGNOME NOME</th>
@@ -115,7 +125,7 @@
         <option value="F">FEMMINA</option>
       </select>
       <input type="date" id="mod-dataNascita" required>
-      <select id="mod-ruolo" maxlength="15" required style="max-width:13ch;">
+      <select id="mod-ruolo" maxlength="15" required style="max-width:15ch;">
         <option value="">Ruolo</option>
         <option value="PALLEGGIATORE">PALLEGGIATORE</option>
         <option value="SCHIACCIATORE">SCHIACCIATORE</option>
@@ -123,8 +133,8 @@
         <option value="LIBERO">LIBERO</option>
         <option value="OPPOSTO">OPPOSTO</option>
       </select>
-      <input id="mod-codiceFiscale" maxlength="16" required style="max-width:12ch;">
-      <input id="mod-cellulare" maxlength="10" required style="max-width:8ch;">
+      <input id="mod-codiceFiscale" maxlength="16" required style="max-width:16ch;">
+      <input id="mod-cellulare" maxlength="10" required style="max-width:10ch;">
       <label class="visita-label" for="mod-iban" style="margin-top:10px;">IBAN</label>
       <input type="text" id="mod-iban" maxlength="34" class="mod-iban-field">
       <div class="form-row-date-pdf">
