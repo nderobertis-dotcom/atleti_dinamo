@@ -19,10 +19,7 @@ body {
   width: auto;
   margin: 7px 20px 7px 10px;
 }
-.main-header h1 {
-  margin: 0;
-  font-size: 2rem;
-}
+.main-header h1 {margin: 0;font-size: 2rem;}
 .dashboard-strip {width: 100vw;display: flex;justify-content: center;margin-top: 10px;}
 .dashboard {display: flex;gap: 16px;justify-content: center;align-items: stretch;margin: 0 auto 18px auto;}
 .dash-card {...}
@@ -42,16 +39,21 @@ main { max-width: 1000px; margin: 10px auto 0 auto; background: #fff; padding: 3
 .form-row-date-pdf { display: flex; gap: 12px; flex-wrap: nowrap; align-items: flex-start; margin-bottom: 12px;}
 .form-row-date-pdf .form-col-small { flex: 1 1 48%;}
 .form-row-date-pdf .form-col-pdf-upload { flex: 1 1 48%; display: flex; flex-direction: column;}
+.form-row input, .form-row select {
+  flex: 1 1 21%;
+  box-sizing: border-box;
+}
+
 input,select,button { padding: 10px; font-size: 1rem; font-family: inherit;}
-input[type="text"]#iban,
-input[type="text"]#mod-iban { width: 120%; }
+input[type="text"].iban-field { min-width: 0; width: 23%; }
+input[type="text"].mod-iban-field { min-width: 0; width: 25%; }
 button { background: #0080ff; color: #fff; border: none; border-radius: 5px; cursor: pointer;}
 #import-btn,#export-btn,#print-btn { background: #45d345; color: #fff; font-weight: bold; font-size: 1em; border: none; border-radius: 5px; cursor: pointer; padding: 8px 16px; margin-right: 6px;}
 #import-btn:hover,#export-btn:hover,#print-btn:hover { background: #0080ff; color: #fff;}
 table#atleti-list {width: 100%;border-collapse: separate;border-spacing: 0 4px;margin-bottom: 20px;}
 #atleti-list th, #atleti-list td {padding: 8px 7px;font-size: 0.99em;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;text-align: left;background: #e6e6e6;border: none;}
 #atleti-list th {background: #f8faff;border-bottom: 2px solid #0080ff;font-weight: bold;}
-#atleti-list td.cognome-nome { font-weight: bold; color: #0080ff; }
+#atleti-list td.cognome-nome { font-weight: bold; color: #0080ff;}
 #atleti-list tbody tr.info-extra td {background: #fff;font-size: 1em;border-top: none;text-align: left;vertical-align: middle;}
 #atleti-list tbody tr.info-extra td.actions-cell {text-align: right;}
 .btn-group {display: inline-flex;gap: 4px;}
