@@ -1,52 +1,7 @@
-.form-row select,
-.form-row input {
-  flex: 1 1 auto;
-  min-width: 0;
-  box-sizing: border-box;
-}
-
-#ruolo,
-#mod-ruolo {
-  max-length: 15;
-  flex-basis: 13ch;
-  max-width: 13ch;
-}
-
-#codiceFiscale,
-#mod-codiceFiscale {
-  max-length: 16;
-  flex-basis: 12ch;
-  max-width: 12ch;
-}
-
-#cellulare,
-#mod-cellulare {
-  max-length: 10;
-  flex-basis: 8ch;
-  max-width: 8ch;
-}
-
-input.iban-field,
-input.mod-iban-field {
-  width: 28ch;
-  min-width: 20ch;
-  max-width: 100%;
-  flex: 0 0 auto;
-}
-
-/* Lista atleti */
-table#atleti-list {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0 4px;
-  margin-bottom: 20px;
-  table-layout: fixed;
-  font-size: 0.85em;
-}
-
 #atleti-list th,
 #atleti-list td {
   padding: 4px 5px;
+  font-size: 0.84em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -55,53 +10,55 @@ table#atleti-list {
   border: none;
 }
 
-#atleti-list th {
-  background: #f8faff;
-  border-bottom: 2px solid #0080ff;
-  font-weight: bold;
-}
+#atleti-list th { font-weight: bold; background: #f8faff; border-bottom: 2px solid #0080ff; }
 
-/* Cognome Nome senza troncamento, più largo */
-#atleti-list td.cognome-nome {
+/* Cognome Nome: nessun troncamento */
+#atleti-list td.cognome-nome, #atleti-list th:first-child {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
   font-weight: bold;
   color: #0080ff;
   max-width: none;
+  min-width: 14ch;
+}
+
+/* Codice Fiscale: mai troncato */
+#atleti-list td:nth-child(7), #atleti-list th:nth-child(7) {
   white-space: normal;
   overflow: visible;
   text-overflow: unset;
-  word-break: normal;
+  min-width: 17ch;
+  max-width: none;
+  font-size: 0.83em;
 }
 
-/* Campo sesso stretto (1 carattere) */
-#atleti-list td:nth-child(3) {
-  max-width: 2ch;
-  white-space: nowrap; /* evita va a capo */
+/* Sesso: max 1 carattere, font ridotto */
+#atleti-list td:nth-child(3), #atleti-list th:nth-child(3) {
+  max-width: 1.7ch;
+  font-size: 0.76em;
   text-align: center;
 }
 
-/* Campo età stretto (2 caratteri) */
-#atleti-list td:nth-child(6) {
-  max-width: 3ch;
-  white-space: nowrap;
+/* Età: max 2 caratteri, font ridotto */
+#atleti-list td:nth-child(6), #atleti-list th:nth-child(6) {
+  max-width: 2ch;
+  font-size: 0.76em;
+  text-align: center;
 }
 
-/* Codice fiscale senza troncamento */
-#atleti-list td:nth-child(7) {
-  max-width: none;
-  white-space: normal;
-  overflow: visible;
-  text-overflow: unset;
-  word-break: break-word;
-}
+#atleti-list td:nth-child(2) { max-width: 7ch; }
+#atleti-list td:nth-child(4) { max-width: 9ch; }
+#atleti-list td:nth-child(5) { max-width: 10ch; }
+#atleti-list td:nth-child(8) { max-width: 10ch; }
 
 #atleti-list tbody tr.info-extra td {
   background: #fff;
-  font-size: 0.9em;
+  font-size: 0.93em;
   border-top: none;
   text-align: left;
   vertical-align: middle;
-  max-width: 12ch;
-  padding: 6px 5px;
+  padding: 7px 5px 7px 8px;
   word-break: break-word;
 }
 
@@ -110,56 +67,4 @@ table#atleti-list {
   white-space: nowrap;
   max-width: 5ch;
   padding-right: 10px;
-}
-
-#atleti-list td:nth-child(2) {
-  max-width: 6ch;
-}
-
-#atleti-list td:nth-child(4) {
-  max-width: 8ch;
-}
-
-#atleti-list td:nth-child(5) {
-  max-width: 10ch;
-}
-
-#atleti-list td:nth-child(8) {
-  max-width: 10ch;
-  word-break: break-word;
-}
-
-.btn-group {
-  display: inline-flex;
-  gap: 4px;
-}
-
-.btn-small {
-  width: 30px;
-  height: 30px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  text-transform: uppercase;
-}
-
-.btn-visualizza {
-  background: #0080ff;
-  color: #fff;
-}
-
-.btn-modifica {
-  background: #ffe066;
-  color: #333;
-}
-
-.btn-cancella {
-  background: #e63946;
-  color: #fff;
 }
