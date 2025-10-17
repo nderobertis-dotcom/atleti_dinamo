@@ -327,3 +327,13 @@ tr1.innerHTML = `
   <td>${x.codiceAtleta}</td>
   <td>${x.cellulare}</td>
 `;
+tr1.innerHTML = `
+  <td class="cognome-nome"><strong>${x.cognome} ${x.nome}</strong></td>
+  <td>${x.sesso}</td>
+  <td>${x.ruolo}</td>
+  <td>${formattaData(x.dataNascita)}</td>
+  <td>${calcolaEta(x.dataNascita)}</td>
+  <td>${x.codiceFiscale}</td>
+  <td>${x.codiceAtleta}</td>
+  <td>${x.cellulare}</td>
+`;
