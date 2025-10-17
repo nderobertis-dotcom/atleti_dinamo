@@ -88,12 +88,16 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("eta-media").textContent = lista.length ? (totEta / lista.length).toFixed(1) : 0;
   }
 
+  function splitName(cognome, nome) {
+    return `<b>${cognome}</b>${nome ? "<br>" + nome.trim().replace(/\s+/g, " ") : ""}`;
+  }
+
   function mostraAtleti(filtro = filtroAttivo) {
     filtroAttivo = filtro;
     const lista = filtraAtleti(filtro);
     tableBody.innerHTML = "";
     aggiornaDashboard();
-    if (lista.length === 0) {
+    if (!lista.length) {
       const tr = document.createElement("tr");
       tr.innerHTML = `<td colspan="8">Nessun atleta trovato</td>`;
       tableBody.appendChild(tr);
@@ -103,7 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const statoCls = statoVisita(x.scadenzaVisita);
       const tr1 = document.createElement("tr");
       tr1.innerHTML = `
-        <td class="cognome-nome"><strong>${x.cognome} ${x.nome}</strong></td>
+        <td class="cognome-nome"><strong>${splitName(x.cognome, x.nome)}</strong></td>
         <td>${x.sesso}</td>
         <td>${x.ruolo}</td>
         <td>${formattaData(x.dataNascita)}</td>
@@ -114,34 +118,28 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
       const tr2 = document.createElement("tr");
       tr2.className = "info-extra";
-      tr2.innerHTML =
-        `<td colspan="7">
+      tr2.innerHTML = `
+        <td colspan="7">
           <span class="label-scadenza">Scadenza Visita:</span>
           <span class="${statoCls}">${formattaData(x.scadenzaVisita)}</span>
           <span class="label-certificato">Certificato:</span>
-          ${x.certificatoMedico ? '<span style="color:#45d345;font-weight:bold;">CARICATO</span>' : '<span style="color:#e63946;font-weight:bold;">NON PRESENTE</span>'}
+          ${x.certificatoMedico ? '<span style="color:#45d345; font-weight:bold;">CARICATO</span>' : '<span style="color:#e63946;font-weight:bold;">NON PRESENTE</span>'}
           <span class="label-iban">IBAN:</span>
           <span>${x.iban ? x.iban : '<span style="color:#e63946;">NON PRESENTE</span>'}</span>
         </td>
         <td class="actions-cell">
           <div class="btn-group">
-            <button class="btn-small btn-visualizza" data-id="${x.id}">V</button>
-            <button class="btn-small btn-modifica" data-id="${x.id}">M</button>
-            <button class="btn-small btn-cancella" data-id="${x.id}">C</button>
+            <button class="btn-big btn-visualizza" data-id="${x.id}">VISUALIZZA</button>
+            <button class="btn-big btn-modifica" data-id="${x.id}">MODIFICA</button>
+            <button class="btn-big btn-cancella" data-id="${x.id}">CANCELLA</button>
           </div>
         </td>`;
       tableBody.appendChild(tr1);
       tableBody.appendChild(tr2);
     });
-    document.querySelectorAll(".btn-cancella").forEach(
-      (b) => (b.onclick = () => cancella(b.dataset.id))
-    );
-    document.querySelectorAll(".btn-visualizza").forEach(
-      (b) => (b.onclick = () => visualizza(b.dataset.id))
-    );
-    document.querySelectorAll(".btn-modifica").forEach(
-      (b) => (b.onclick = () => modifica(b.dataset.id))
-    );
+    document.querySelectorAll(".btn-cancella").forEach((b) => (b.onclick = () => cancella(b.dataset.id)));
+    document.querySelectorAll(".btn-visualizza").forEach((b) => (b.onclick = () => visualizza(b.dataset.id)));
+    document.querySelectorAll(".btn-modifica").forEach((b) => (b.onclick = () => modifica(b.dataset.id)));
   }
 
   document.getElementById("dashboard").addEventListener("click", (e) => {
@@ -317,23 +315,3 @@ document.addEventListener("DOMContentLoaded", () => {
   mostraAtleti();
   aggiornaDashboard();
 });
-tr1.innerHTML = `
-  <td class="cognome-nome"><strong>${x.cognome} ${x.nome}</strong></td>
-  <td>${x.sesso}</td>
-  <td>${x.ruolo}</td>
-  <td>${formattaData(x.dataNascita)}</td>
-  <td>${calcolaEta(x.dataNascita)}</td>
-  <td>${x.codiceFiscale}</td>
-  <td>${x.codiceAtleta}</td>
-  <td>${x.cellulare}</td>
-`;
-tr1.innerHTML = `
-  <td class="cognome-nome"><strong>${x.cognome} ${x.nome}</strong></td>
-  <td>${x.sesso}</td>
-  <td>${x.ruolo}</td>
-  <td>${formattaData(x.dataNascita)}</td>
-  <td>${calcolaEta(x.dataNascita)}</td>
-  <td>${x.codiceFiscale}</td>
-  <td>${x.codiceAtleta}</td>
-  <td>${x.cellulare}</td>
-`;
