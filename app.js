@@ -89,6 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function splitName(cognome, nome) {
+    // cognome maiuscolo prima riga, nomi seconda riga
     return `<b>${cognome}</b>${nome ? "<br>" + nome.trim().replace(/\s+/g, " ") : ""}`;
   }
 
@@ -248,8 +249,9 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   document.getElementById("export-btn").addEventListener("click", () => {
-    const dati = caricaAtleti();
-    const blob = new Blob([JSON.stringify(dati, null, 2)], { type: "application/json" });
+    const lista = caricaAtleti();
+    if (!lista.length) return alert("Nessun atleta da esportare!");
+    const blob = new Blob([JSON.stringify(lista, null, 2)], { type: "application/json" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
     a.download = "atleti-backup.json";
@@ -262,7 +264,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("import-btn").addEventListener("click", () => {
     document.getElementById("import-file").click();
   });
-
   document.getElementById("import-file").addEventListener("change", (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -272,15 +273,16 @@ document.addEventListener("DOMContentLoaded", () => {
         const arr = JSON.parse(ev.target.result);
         salvaAtleti(arr);
         mostraAtleti();
+        alert("Import eseguito con successo");
       } catch {
         alert("Errore nel file importato");
       }
     };
     reader.readAsText(file);
   });
-
   document.getElementById("print-btn").addEventListener("click", () => {
     const lista = filtraAtleti(filtroAttivo);
+    if (!lista.length) return alert("Nessun atleta da stampare!");
     let html =
       "<h1>Lista Atleti</h1><table border='1' cellspacing='0' cellpadding='6'><thead><tr><th>Cognome Nome</th><th>Sesso</th><th>Ruolo</th><th>Data Nascita</th><th>Età</th><th>CF</th><th>Codice</th><th>Cell</th></tr></thead><tbody>";
     lista.forEach((x) => {
