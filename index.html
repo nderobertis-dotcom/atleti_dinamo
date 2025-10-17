@@ -8,19 +8,64 @@
 <body>
 <header class="main-header">
   <div class="header-bar">
-    <img src="logo.png" alt="Logo Dinamo Molfetta" class="logo" />
+    <img src="logo.png" alt="Logo Dinamo Molfetta" class="logo"/>
     <h1>POLISPORTIVA DINAMO MOLFETTA</h1>
   </div>
 </header>
 <div class="dashboard-strip">
   <div class="dashboard" id="dashboard">
-    <!-- ...dashboard cards... -->
+    <div class="dash-card dash-normal-btn" data-filter="all"><div class="dash-card-inner"><div class="dash-title">ATLETI</div><div class="dash-value" id="tot-atleti">0</div></div></div>
+    <div class="dash-card dash-normal-btn" data-filter="maschi"><div class="dash-card-inner"><div class="dash-title">MASCHI</div><div class="dash-value" id="tot-maschi">0</div></div></div>
+    <div class="dash-card dash-normal-btn" data-filter="femmine"><div class="dash-card-inner"><div class="dash-title">FEMMINE</div><div class="dash-value" id="tot-femmine">0</div></div></div>
+    <div class="dash-card dash-scanza-btn" data-filter="scadenza"><div class="dash-card-inner"><div class="dash-title">VISITE IN SCADENZA</div><div class="dash-value" id="tot-in-scadenza">0</div></div></div>
+    <div class="dash-card dash-scadute-btn" data-filter="scadute"><div class="dash-card-inner"><div class="dash-title">VISITE SCADUTE</div><div class="dash-value" id="tot-scadute">0</div></div></div>
+    <div class="dash-card"><div class="dash-card-inner"><div class="dash-title">ETÀ MEDIA</div><div class="dash-value" id="eta-media">0</div></div></div>
   </div>
 </div>
 <main>
 <div class="container-1000">
 <section id="form-section">
-  <!-- ...form atleti... -->
+  <h2>Aggiungi Atleta</h2>
+  <form id="atleta-form" autocomplete="off">
+    <div class="form-row-condensed">
+      <input type="text" id="codiceAtleta" placeholder="CODICE ATLETA (7 cifre)" maxlength="7" pattern="\d{7}" required>
+      <input type="text" id="nome" placeholder="Nome" required>
+      <input type="text" id="cognome" placeholder="Cognome" required>
+      <select id="sesso" required>
+        <option value="">Sesso</option>
+        <option value="M">MASCHIO</option>
+        <option value="F">FEMMINA</option>
+      </select>
+    </div>
+    <div class="form-row-date-pdf">
+      <div class="form-col-small">
+        <label for="dataNascita" class="visita-label">Data di nascita</label>
+        <input type="date" id="dataNascita" required>
+      </div>
+      <div class="form-col-small">
+        <label for="scadenzaVisita" class="visita-label">Scadenza visita</label>
+        <input type="date" id="scadenzaVisita" required>
+      </div>
+      <div class="form-col-pdf-upload">
+        <label for="certificatoMedico" class="visita-label">Certificato medico (PDF)</label>
+        <input type="file" id="certificatoMedico" accept="application/pdf">
+      </div>
+    </div>
+    <div class="form-row">
+      <select id="ruolo" maxlength="15" required style="max-width:15ch;">
+        <option value="">Ruolo</option>
+        <option value="PALLEGGIATORE">PALLEGGIATORE</option>
+        <option value="SCHIACCIATORE">SCHIACCIATORE</option>
+        <option value="CENTRALE">CENTRALE</option>
+        <option value="LIBERO">LIBERO</option>
+        <option value="OPPOSTO">OPPOSTO</option>
+      </select>
+      <input type="text" id="codiceFiscale" placeholder="Codice Fiscale" maxlength="16" required style="max-width:16ch;">
+      <input type="tel" id="cellulare" placeholder="Cellulare" maxlength="10" required style="max-width:10ch;">
+      <input type="text" id="iban" placeholder="IBAN" maxlength="34" class="iban-field" autocomplete="off">
+      <button type="submit" class="btn-add">Aggiungi</button>
+    </div>
+  </form>
 </section>
 <section id="list-section">
 <h2>Lista Atleti</h2>
@@ -40,7 +85,7 @@
     <col style="width:24ch;">
     <col style="width:8ch;">
     <col style="width:12ch;">
-    <col style="width:70px;"> <!-- colonna AZIONI -->
+    <col style="width:70px;">
   </colgroup>
   <thead>
     <tr>
@@ -72,7 +117,7 @@
   <div class="modal-content">
     <button class="close-btn-modifica" id="close-edit" aria-label="Chiudi modifica">&times;</button>
     <form id="modifica-form">
-      <!-- ...campi modifica... -->
+      <!-- ...campi modifica come sopra... -->
       <button type="submit">Salva</button>
     </form>
   </div>
