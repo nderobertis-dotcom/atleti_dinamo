@@ -150,20 +150,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const statoCls = statoVisita(atleta.scadenzaVisita);
     document.getElementById("modal").style.display = "flex";
     document.getElementById("dettaglio-atleta").innerHTML = `
-      <h2>${atleta.codiceAtleta} - ${atleta.nome} ${atleta.cognome}</h2>
+      <h2><span style='color:#0080ff'>${atleta.cognome} ${atleta.nome}</span></h2>
+      <p><strong>Codice:</strong> ${atleta.codiceAtleta}</p>
       <p><strong>Sesso:</strong> ${atleta.sesso}</p>
       <p><strong>Ruolo:</strong> ${atleta.ruolo}</p>
       <p><strong>Data di Nascita:</strong> ${formattaData(atleta.dataNascita)}</p>
       <p><strong>Età:</strong> ${calcolaEta(atleta.dataNascita)}</p>
       <p><strong>Codice Fiscale:</strong> ${atleta.codiceFiscale}</p>
       <p><strong>Cellulare:</strong> ${atleta.cellulare}</p>
-      <p><span class="${statoCls}">SCADENZA VISITA: ${formattaData(atleta.scadenzaVisita)}</span></p>
-      ${
+      <p><span class="label-scadenza">Scadenza Visita:</span><span class="${statoCls}">${formattaData(atleta.scadenzaVisita)}</span></p>
+      <p><span class="label-certificato">Certificato:</span> ${
         atleta.certificatoMedico
-          ? `<p><a href="${atleta.certificatoMedico}" target="_blank" rel="noopener noreferrer">Visualizza certificato medico</a></p>`
-          : "<p>(Nessun certificato medico caricato)</p>"
-      }
-      <p><strong>IBAN:</strong> ${atleta.iban ? atleta.iban : "NON PRESENTE"}</p>
+          ? `<span style="color:#45d345;font-weight:bold;">CARICATO</span>`
+          : `<span style="color:#e63946;font-weight:bold;">NON PRESENTE</span>`
+      }</p>
+      <p><span class="label-iban">IBAN:</span> <span>${atleta.iban ? atleta.iban : "<span style='color:#e63946;'>NON PRESENTE</span>"}</span></p>
     `;
   };
 
