@@ -1,170 +1,40 @@
-body {
-  font-family: Arial, sans-serif;
-  background: #f2f2f2;
-  margin: 0;
-  padding: 0;
-  text-transform: uppercase;
-}
-.main-header {
-  background: #0080ff;
-  color: #fff;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 78px;
-}
-.logo {
-  max-height: 62px;
-  width: auto;
-  margin: 7px 20px 7px 10px;
-}
-.main-header h1 {margin: 0;font-size: 2rem;}
-.dashboard-strip {width: 100vw;display: flex;justify-content: center;margin-top: 10px;}
-.dashboard {display: flex;gap: 16px;justify-content: center;align-items: stretch;margin: 0 auto 18px auto;}
-.dash-card {
-  border-radius: 14px;
-  background: linear-gradient(145deg, #0080ff 75%, #a6d3fd 100%);
-  box-shadow: 0 3px 16px 0 rgba(0,0,0,0.13);
-  min-width: 95px;
-  min-height: 65px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s;
-  cursor: pointer;
-  padding: 0;
-}
-.dash-card.dash-scanza-btn {
-  background: linear-gradient(145deg, #ffa500 65%, #fffbe6 100%);
-}
-.dash-card.dash-scadute-btn {
-  background: linear-gradient(145deg, #e63946 65%, #ffcfcf 100%);
-}
-.dash-card:hover {
-  transform: scale(1.045);
-}
-.dash-card-inner {
-  background: rgba(255,255,255,0.88);
-  border-radius: 10px;
-  padding: 10px 8px;
-  width: 90px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.dash-title {
-  font-size: 0.91em;
-  font-weight: bold;
-  letter-spacing: 1px;
-  margin-bottom: 5px;
-  color: #0080ff;
-}
-.dash-card.dash-scanza-btn .dash-title {
-  color: #b25e00;
-}
-.dash-card.dash-scadute-btn .dash-title {
-  color: #aa2434;
-}
-.dash-value {
-  font-size: 1.4em;
-  font-weight: bolder;
-  color: #003974;
-  margin-bottom: 2px;
-}
-.dash-card.dash-scanza-btn .dash-value {
-  color: #b25e00;
-}
-.dash-card.dash-scadute-btn .dash-value {
-  color: #b91b2c;
-}
-main {
-  max-width: 1000px;
-  margin: 10px auto 0 auto;
-  background: #fff;
-  padding: 30px;
-  border-radius: 12px;
-}
-.form-row-condensed {
-  display: flex;
-  gap: 10px;
-  flex-wrap: nowrap;
-  margin-bottom: 10px;
-}
-.form-row-condensed > * {
-  flex-grow: 1;
-  min-width: 90px;
-}
-.form-row-date-pdf {
-  display: flex;
-  gap: 12px;
-  flex-wrap: nowrap;
-  align-items: flex-start;
-  margin-bottom: 12px;
-}
-.form-row-date-pdf .form-col-small {
-  flex: 1 1 48%;
-}
-.form-row-date-pdf .form-col-pdf-upload {
-  flex: 1 1 48%;
-  display: flex;
-  flex-direction: column;
-}
-.form-row {
-  display: flex;
-  gap: 12px;
-  flex-wrap: nowrap;
-  margin-bottom: 10px;
-  align-items: center;
-}
 .form-row select,
 .form-row input {
-  flex: 1 1 18%;
-  box-sizing: border-box;
+  flex: 1 1 auto;
   min-width: 0;
+  box-sizing: border-box;
 }
-input.iban-field {
-  flex-basis: 27ch;
-  max-width: 27ch;
+
+#ruolo,
+#mod-ruolo {
+  max-length: 15;
+  flex-basis: 13ch;
+  max-width: 13ch;
 }
+
+#codiceFiscale,
+#mod-codiceFiscale {
+  max-length: 16;
+  flex-basis: 12ch;
+  max-width: 12ch;
+}
+
+#cellulare,
+#mod-cellulare {
+  max-length: 10;
+  flex-basis: 8ch;
+  max-width: 8ch;
+}
+
+input.iban-field,
 input.mod-iban-field {
-  flex-basis: 27ch;
-  max-width: 27ch;
+  width: 28ch;
+  min-width: 20ch;
+  max-width: 100%;
+  flex: 0 0 auto;
 }
-input,
-select,
-button {
-  padding: 10px;
-  font-size: 1rem;
-  font-family: inherit;
-}
-button {
-  background: #0080ff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-#import-btn,
-#export-btn,
-#print-btn {
-  background: #45d345;
-  color: #fff;
-  font-weight: bold;
-  font-size: 1em;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  padding: 8px 16px;
-  margin-right: 6px;
-}
-#import-btn:hover,
-#export-btn:hover,
-#print-btn:hover {
-  background: #0080ff;
-  color: #fff;
-}
+
+/* Lista atleti */
 table#atleti-list {
   width: 100%;
   border-collapse: separate;
@@ -173,6 +43,7 @@ table#atleti-list {
   table-layout: fixed;
   font-size: 0.85em;
 }
+
 #atleti-list th,
 #atleti-list td {
   padding: 4px 5px;
@@ -183,17 +54,46 @@ table#atleti-list {
   background: #e6e6e6;
   border: none;
 }
+
 #atleti-list th {
   background: #f8faff;
   border-bottom: 2px solid #0080ff;
   font-weight: bold;
 }
+
+/* Cognome Nome senza troncamento, più largo */
 #atleti-list td.cognome-nome {
   font-weight: bold;
   color: #0080ff;
-  max-width: 12ch;
+  max-width: none;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  word-break: normal;
+}
+
+/* Campo sesso stretto (1 carattere) */
+#atleti-list td:nth-child(3) {
+  max-width: 2ch;
+  white-space: nowrap; /* evita va a capo */
+  text-align: center;
+}
+
+/* Campo età stretto (2 caratteri) */
+#atleti-list td:nth-child(6) {
+  max-width: 3ch;
+  white-space: nowrap;
+}
+
+/* Codice fiscale senza troncamento */
+#atleti-list td:nth-child(7) {
+  max-width: none;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
   word-break: break-word;
 }
+
 #atleti-list tbody tr.info-extra td {
   background: #fff;
   font-size: 0.9em;
@@ -204,39 +104,36 @@ table#atleti-list {
   padding: 6px 5px;
   word-break: break-word;
 }
+
 #atleti-list tbody tr.info-extra td.actions-cell {
   text-align: right;
   white-space: nowrap;
   max-width: 5ch;
   padding-right: 10px;
 }
+
 #atleti-list td:nth-child(2) {
   max-width: 6ch;
 }
-#atleti-list td:nth-child(3) {
-  max-width: 3ch;
-  text-align: center;
-}
+
 #atleti-list td:nth-child(4) {
   max-width: 8ch;
 }
+
 #atleti-list td:nth-child(5) {
   max-width: 10ch;
 }
-#atleti-list td:nth-child(6) {
-  max-width: 3ch;
-}
-#atleti-list td:nth-child(7) {
-  max-width: 10ch;
-}
+
 #atleti-list td:nth-child(8) {
   max-width: 10ch;
   word-break: break-word;
 }
+
 .btn-group {
   display: inline-flex;
   gap: 4px;
 }
+
 .btn-small {
   width: 30px;
   height: 30px;
@@ -251,97 +148,18 @@ table#atleti-list {
   justify-content: center;
   text-transform: uppercase;
 }
+
 .btn-visualizza {
   background: #0080ff;
   color: #fff;
 }
+
 .btn-modifica {
   background: #ffe066;
   color: #333;
 }
+
 .btn-cancella {
   background: #e63946;
   color: #fff;
-}
-.data-ok {
-  background: #45d345;
-  color: #fff;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-weight: bold;
-  display: inline-block;
-}
-.data-scanza {
-  background: #ffa500;
-  color: #fff;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-weight: bold;
-  display: inline-block;
-}
-.data-scaduta {
-  background: #e63946;
-  color: #fff;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-weight: bold;
-  display: inline-block;
-}
-.label-scadenza {
-  font-weight: bold;
-  margin-right: 6px;
-}
-.label-certificato {
-  font-weight: bold;
-  margin-left: 18px;
-  margin-right: 4px;
-}
-.label-iban {
-  font-weight: bold;
-  margin-left: 18px;
-  margin-right: 4px;
-  color: #0080ff;
-}
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0,0,0,0.5);
-  justify-content: center;
-  align-items: center;
-}
-.modal-content {
-  background: #fff;
-  padding: 32px 28px 28px 28px;
-  border-radius: 14px;
-  min-width: 285px;
-  max-width: 95vw;
-  max-height: 90vh;
-  margin: auto;
-  box-shadow: 0 8px 44px 0 rgba(0,0,0,0.18);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-.close-btn,
-.close-btn-modifica {
-  position: absolute;
-  top: 12px;
-  right: 18px;
-  color: #e63946;
-  font-size: 2.1rem;
-  font-weight: bold;
-  line-height: 1;
-  cursor: pointer;
-  background: none;
-  border: none;
-  z-index: 1002;
-}
-#dettaglio-atleta > h2 {
-  margin-top: 2px;
 }
