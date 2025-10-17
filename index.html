@@ -2,102 +2,157 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8" />
-<title>POLISPORTIVA DINAMO MOLFETTA</title>
-<link rel="stylesheet" href="style.css" />
+<title>Test Modali Atleti</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 20px; }
+  table { border-collapse: collapse; width: 100%; font-family: monospace; }
+  th, td { border: 1px solid #ccc; padding: 12px; text-align: left; }
+  th { background-color: #f0f0f0; }
+  .btn { padding: 6px 12px; margin-right: 6px; cursor: pointer; border-radius: 4px; border: none; font-weight: bold; }
+  .btn-vis { background-color: #188df9; color: white; }
+  .btn-mod { background-color: #ffcc33; color: black; }
+  .modal {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center;
+  }
+  .modal-content {
+    background-color: white; padding: 20px; border-radius: 8px; width: 320px; position: relative;
+  }
+  .modal-close {
+    position: absolute; top: 10px; right: 12px; cursor: pointer; font-size: 18px;
+  }
+  label { font-weight: bold; }
+  input { width: 100%; padding: 6px; margin-bottom: 12px; box-sizing: border-box; }
+</style>
 </head>
 <body>
-<header class="main-header">
-  <div class="header-bar">
-    <img src="logo.png" alt="Logo Dinamo Molfetta" class="logo"/>
-    <h1>POLISPORTIVA DINAMO MOLFETTA</h1>
+
+<h1>Test Modali Atleti</h1>
+
+<table id="table-atleti">
+  <thead>
+    <tr>
+      <th>Cognome Nome</th>
+      <th>Ruolo</th>
+      <th>CF</th>
+      <th>Codice</th>
+      <th>Cellulare</th>
+      <th>Azioni</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<!-- Modal Visualizza -->
+<div id="modal-visualizza" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" id="close-vis">&times;</span>
+    <h2>Dettaglio Atleta</h2>
+    <div id="vis-content"></div>
   </div>
-</header>
-<div class="dashboard-strip">
-<div class="dashboard" id="dashboard">
-<!-- dashboard cards -->
-</div></div>
-<main>
-<div class="container-1000">
-<section id="form-section">
-<h2>Aggiungi Atleta</h2>
-<form id="atleta-form" autocomplete="off">
-<div class="form-row-condensed">
-<input type="text" id="codiceAtleta" placeholder="CODICE ATLETA (7 cifre)" maxlength="7" pattern="\d{7}" required>
-<input type="text" id="nome" placeholder="Nome" required>
-<input type="text" id="cognome" placeholder="Cognome" required>
-<select id="sesso" required>
-  <option value="">Sesso</option>
-  <option value="M">MASCHIO</option>
-  <option value="F">FEMMINA</option>
-</select></div>
-<div class="form-row-date-pdf">
-<div class="form-col-small">
-<label for="dataNascita" class="visita-label">Data di nascita</label>
-<input type="date" id="dataNascita" required></div>
-<div class="form-col-small">
-<label for="scadenzaVisita" class="visita-label">Scadenza visita</label>
-<input type="date" id="scadenzaVisita" required></div>
-<div class="form-col-pdf-upload">
-<label for="certificatoMedico" class="visita-label">Certificato medico (PDF)</label>
-<input type="file" id="certificatoMedico" accept="application/pdf"></div></div>
-<div class="form-row">
-<select id="ruolo" maxlength="15" required style="max-width:15ch;">
-  <option value="">Ruolo</option>
-  <option value="PALLEGGIATORE">PALLEGGIATORE</option>
-  <option value="SCHIACCIATORE">SCHIACCIATORE</option>
-  <option value="CENTRALE">CENTRALE</option>
-  <option value="LIBERO">LIBERO</option>
-  <option value="OPPOSTO">OPPOSTO</option>
-</select>
-<input type="text" id="codiceFiscale" placeholder="Codice Fiscale" maxlength="16" required style="max-width:16ch;">
-<input type="tel" id="cellulare" placeholder="Cellulare" maxlength="10" required style="max-width:10ch;">
-<input type="text" id="iban" placeholder="IBAN" maxlength="34" class="iban-field" autocomplete="off">
-<button type="submit" class="btn-add">Aggiungi</button></div>
-</form></section>
-<section id="list-section">
-<h2>Lista Atleti</h2>
-<div class="import-export-bar">
-<button id="export-btn" type="button" class="modern-action">Esporta</button>
-<button id="import-btn" type="button" class="modern-action">Importa</button>
-<button id="print-btn" type="button" class="modern-action">Stampa</button>
-<input type="file" id="import-file" accept=".json" style="display:none;">
 </div>
-<table id="atleti-list">
-<colgroup>
-<col style="width:19ch;">
-<col style="width:4ch;">
-<col style="width:15ch;">
-<col style="width:13ch;">
-<col style="width:3ch;">
-<col style="width:24ch;">
-<col style="width:8ch;">
-<col style="width:12ch;">
-<col style="width:70px;">
-</colgroup>
-<thead>
-<tr>
-<th>Cognome Nome</th>
-<th>Sesso</th>
-<th>Ruolo</th>
-<th>Data Nascita</th>
-<th>Età</th>
-<th>CF</th>
-<th>Codice</th>
-<th>Cell</th>
-<th></th></tr></thead><tbody></tbody></table>
-</section></div></main>
-<!-- Modal visualizza -->
-<div id="modal" class="modal">
-<div class="modal-content">
-<button class="close-btn" id="close-view" aria-label="Chiudi visualizzazione">&times;</button>
-<div id="dettaglio-atleta"></div></div></div>
-<!-- Modal modifica -->
+
+<!-- Modal Modifica -->
 <div id="modal-modifica" class="modal">
-<div class="modal-content">
-<button class="close-btn-modifica" id="close-edit" aria-label="Chiudi modifica">&times;</button>
-<form id="modifica-form">
-<h2>Modifica Atleta</h2>
-<!-- campi come sopra -->
-<button type="submit">Salva</button></form></div></div>
-<script src="app.js"></script>
-</body></html>
+  <div class="modal-content">
+    <span class="modal-close" id="close-mod">&times;</span>
+    <h2>Modifica Atleta</h2>
+    <form id="mod-form">
+      <label for="mod-cognome">Cognome:</label>
+      <input type="text" id="mod-cognome" required>
+      <label for="mod-nome">Nome:</label>
+      <input type="text" id="mod-nome" required>
+      <label for="mod-ruolo">Ruolo:</label>
+      <input type="text" id="mod-ruolo" required>
+      <label for="mod-cf">Codice Fiscale:</label>
+      <input type="text" id="mod-cf" required>
+      <label for="mod-codice">Codice:</label>
+      <input type="text" id="mod-codice" required>
+      <label for="mod-cellulare">Cellulare:</label>
+      <input type="text" id="mod-cellulare" required>
+      <button type="submit" class="btn btn-mod">Salva</button>
+    </form>
+  </div>
+</div>
+
+<script>
+const atleti = [
+  {id:1, cognome:"Rossi", nome:"Mario", ruolo:"Libero", cf:"RSSMRA80A01H501I", codice:"1234567", cellulare:"3331234567"},
+  {id:2, cognome:"Bianchi", nome:"Luca", ruolo:"Palleggiatore", cf:"BNCLCU85B22L219P", codice:"7654321", cellulare:"3357654321"}
+];
+const tbody = document.querySelector("#table-atleti tbody");
+const modalVis = document.getElementById("modal-visualizza");
+const modalMod = document.getElementById("modal-modifica");
+const visContent = document.getElementById("vis-content");
+const modForm = document.getElementById("mod-form");
+let currentModId = null;
+
+function renderTable() {
+  tbody.innerHTML = "";
+  atleti.forEach(a => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${a.cognome} ${a.nome}</td>
+      <td>${a.ruolo}</td>
+      <td>${a.cf}</td>
+      <td>${a.codice}</td>
+      <td>${a.cellulare}</td>
+      <td>
+        <button class="btn btn-vis" data-id="${a.id}">V</button>
+        <button class="btn btn-mod" data-id="${a.id}">M</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+  document.querySelectorAll(".btn-vis").forEach(btn => {
+    btn.onclick = () => {
+      const id = parseInt(btn.dataset.id);
+      const atleta = atleti.find(a => a.id === id);
+      visContent.innerHTML = `
+        <p><strong>Cognome e Nome:</strong> ${atleta.cognome} ${atleta.nome}</p>
+        <p><strong>Ruolo:</strong> ${atleta.ruolo}</p>
+        <p><strong>Codice Fiscale:</strong> ${atleta.cf}</p>
+        <p><strong>Codice:</strong> ${atleta.codice}</p>
+        <p><strong>Cellulare:</strong> ${atleta.cellulare}</p>
+      `;
+      modalVis.style.display = "flex";
+    };
+  });
+  document.querySelectorAll(".btn-mod").forEach(btn => {
+    btn.onclick = () => {
+      const id = parseInt(btn.dataset.id);
+      currentModId = id;
+      const atleta = atleti.find(a => a.id === id);
+      modForm["mod-cognome"].value = atleta.cognome;
+      modForm["mod-nome"].value = atleta.nome;
+      modForm["mod-ruolo"].value = atleta.ruolo;
+      modForm["mod-cf"].value = atleta.cf;
+      modForm["mod-codice"].value = atleta.codice;
+      modForm["mod-cellulare"].value = atleta.cellulare;
+      modalMod.style.display = "flex";
+    };
+  });
+}
+document.getElementById("close-vis").onclick = () => modalVis.style.display = "none";
+document.getElementById("close-mod").onclick = () => modalMod.style.display = "none";
+
+modForm.onsubmit = e => {
+  e.preventDefault();
+  const atleta = atleti.find(a => a.id === currentModId);
+  atleta.cognome = modForm["mod-cognome"].value.trim();
+  atleta.nome = modForm["mod-nome"].value.trim();
+  atleta.ruolo = modForm["mod-ruolo"].value.trim();
+  atleta.cf = modForm["mod-cf"].value.trim();
+  atleta.codice = modForm["mod-codice"].value.trim();
+  atleta.cellulare = modForm["mod-cellulare"].value.trim();
+  modalMod.style.display = "none";
+  renderTable();
+};
+
+window.onload = () => {
+  renderTable();
+};
+</script>
+
+</body>
+</html>
