@@ -90,3 +90,96 @@ table#atleti-list { width: 100%; border-collapse: separate; border-spacing: 0 4p
 .modal-content { background: #fff; padding: 32px 28px 28px 28px; border-radius: 14px; min-width: 285px; max-width: 95vw; max-height: 90vh; margin: auto; box-shadow: 0 8px 44px 0 rgba(0,0,0,0.18); position: relative; display: flex; flex-direction: column; align-items: flex-start;}
 .close-btn,.close-btn-modifica { position: absolute; top: 12px; right: 18px; color: #e63946; font-size: 2.1rem; font-weight: bold; line-height: 1; cursor: pointer; background: none; border: none; z-index: 1002;}
 #dettaglio-atleta > h2 { margin-top: 2px; }
+.main-header {
+  background: #0080ff;
+  color: #fff;
+  padding: 12px 0 6px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-bar {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.logo {
+  max-height: 62px;
+  width: auto;
+  margin-left: 16px;
+  margin-right: 32px;
+}
+
+.main-header h1 {
+  font-size: 2.2em;
+  margin: 0 0 0 10px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.dashboard-strip {
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  background: transparent;
+  margin-top: 10px;
+}
+.dashboard {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  align-items: stretch;
+  margin: 0 auto 20px auto;
+}
+
+.dash-card {
+  border-radius: 15px;
+  background: linear-gradient(145deg, #0080ff 70%, #afdafc 100%);
+  box-shadow: 0 3px 16px 0 rgba(0,0,0,0.13);
+  min-width: 85px;
+  min-height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+  cursor: pointer;
+  padding: 0;
+}
+
+.dash-card.dash-scanza-btn {
+  background: linear-gradient(145deg, #ffa500 70%, #fffbe6 100%);
+}
+.dash-card.dash-scadute-btn {
+  background: linear-gradient(145deg, #e63946 70%, #ffcfcf 100%);
+}
+.dash-card:hover {
+  transform: scale(1.07);
+}
+.dash-card-inner {
+  background: rgba(255,255,255,0.85);
+  border-radius: 10px;
+  padding: 10px 8px;
+  width: 82px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.dash-title {
+  font-size: 0.90em;
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin-bottom: 5px;
+  color: #0080ff;
+}
+.dash-card.dash-scanza-btn .dash-title { color: #b25e00; }
+.dash-card.dash-scadute-btn .dash-title { color: #aa2434; }
+.dash-value { font-size: 1.4em; font-weight: bolder; color: #003974; margin-bottom: 2px;}
+.dash-card.dash-scanza-btn .dash-value { color: #b25e00; }
+.dash-card.dash-scadute-btn .dash-value { color: #b91b2c; }
