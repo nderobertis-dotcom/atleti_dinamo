@@ -10,15 +10,12 @@ document.addEventListener("DOMContentLoaded", () => {
       return [];
     }
   }
-
   function salvaAtleti(lista) {
     localStorage.setItem("atleti", JSON.stringify(lista));
   }
-
   function generaId() {
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
   }
-
   function calcolaEta(data) {
     if (!data) return "";
     const oggi = new Date();
@@ -28,11 +25,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (m < 0 || (m === 0 && oggi.getDate() < nascita.getDate())) eta--;
     return eta;
   }
-
   function daysBetween(a, b) {
     return Math.floor((new Date(a) - new Date(b)) / (1000 * 60 * 60 * 24));
   }
-
   function statoVisita(data) {
     if (!data) return "data-ok";
     const oggi = new Date().toISOString().slice(0, 10);
@@ -41,7 +36,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (diff <= 31) return "data-scanza";
     return "data-ok";
   }
-
   function formattaData(data) {
     if (!data) return "";
     const [a, m, g] = data.split("-");
@@ -50,22 +44,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function filtraAtleti(filtro) {
     let lista = caricaAtleti();
+    // Ordinamento: prima per cognome, poi per nome, entrambi MAIUSCOLI
+    lista.sort((a, b) =>
+      (a.cognome || "").localeCompare(b.cognome || "") ||
+      (a.nome || "").localeCompare(b.nome || "")
+    );
     const oggi = new Date().toISOString().slice(0, 10);
     if (filtro === "maschi") lista = lista.filter((a) => a.sesso === "M");
     else if (filtro === "femmine") lista = lista.filter((a) => a.sesso === "F");
     else if (filtro === "scadenza") lista = lista.filter(
-        (a) =>
+      (a) =>
         a.scadenzaVisita &&
         daysBetween(a.scadenzaVisita, oggi) >= 0 &&
         daysBetween(a.scadenzaVisita, oggi) <= 31
       );
-    else if (filtro === "scadute")
-      lista = lista.filter((a) => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) < 0);
-    lista.sort(
-      (a, b) =>
-        (a.cognome || "").localeCompare(b.cognome || "") ||
-        (a.nome || "").localeCompare(b.nome || "")
-    );
+    else if (filtro === "scadute") lista = lista.filter((a) => a.scadenzaVisita && daysBetween(a.scadenzaVisita, oggi) < 0);
     return lista;
   }
 
@@ -103,28 +96,37 @@ document.addEventListener("DOMContentLoaded", () => {
       const statoCls = statoVisita(x.scadenzaVisita);
       const tr1 = document.createElement("tr");
       tr1.innerHTML = `
+        <td><strong>${x.cognome} ${x.nome}</strong></td>
         <td>${x.codiceAtleta}</td>
-        <td>${x.nome}</td>
-        <td>${x.cognome}</td>
         <td>${x.sesso}</td>
         <td>${x.ruolo}</td>
         <td>${formattaData(x.dataNascita)}</td>
         <td>${calcolaEta(x.dataNascita)}</td>
         <td>${x.codiceFiscale}</td>
         <td>${x.cellulare}</td>
+        <td></td>
       `;
-      // Riga aggiuntiva: scadenza colorata, certificato, azioni (merge celle precedenti con colspan)
+      // Riga aggiuntiva: scadenza visita, certificato, e azioni
       const tr2 = document.createElement("tr");
-      tr2.innerHTML = `
-        <td colspan="6"></td>
-        <td colspan="1"><span class="${statoCls}">${formattaData(x.scadenzaVisita)}</span></td>
-        <td colspan="1">${x.certificatoMedico ? '<span style="color:#45d345;font-weight:bold;">CARICATO</span>' : '<span style="color:#e63946;">NO</span>'}</td>
-        <td colspan="1">
-          <button class="btn-small btn-visualizza" data-id="${x.id}">V</button>
-          <button class="btn-small btn-modifica" data-id="${x.id}">M</button>
-          <button class="btn-small btn-cancella" data-id="${x.id}">C</button>
+      tr2.className = "info-extra";
+      tr2.innerHTML =
+      `<td colspan="8">
+          <span class="label-scadenza">Scadenza Visita:</span>
+          <span class="${statoCls}">${formattaData(x.scadenzaVisita)}</span>
+          &nbsp; &nbsp;
+          <span class="label-certificato">Certificato:</span>
+          ${x.certificatoMedico
+            ? '<span style="color:#45d345;font-weight:bold;">CARICATO</span>'
+            : '<span style="color:#e63946;font-weight:bold;">NON PRESENTE</span>'
+          }
         </td>
-      `;
+        <td class="actions-cell">
+          <div class="btn-group">
+            <button class="btn-small btn-visualizza" data-id="${x.id}">V</button>
+            <button class="btn-small btn-modifica" data-id="${x.id}">M</button>
+            <button class="btn-small btn-cancella" data-id="${x.id}">C</button>
+          </div>
+        </td>`;
       tableBody.appendChild(tr1);
       tableBody.appendChild(tr2);
     });
@@ -264,9 +266,17 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("print-btn").addEventListener("click", () => {
     const lista = filtraAtleti(filtroAttivo);
     let html =
-      "<h1>Lista Atleti</h1><table border='1' cellspacing='0' cellpadding='6'><thead><tr><th>Codice</th><th>Nome</th><th>Cognome</th><th>Ruolo</th><th>Data Nascita</th><th>Scadenza Visita</th><th>Certificato</th></tr></thead><tbody>";
+      "<h1>Lista Atleti</h1><table border='1' cellspacing='0' cellpadding='6'><thead><tr><th>Cognome Nome</th><th>Codice</th><th>Ruolo</th><th>Data Nascita</th><th>Cell</th><th>Scadenza Visita</th><th>Certificato</th></tr></thead><tbody>";
     lista.forEach((x) => {
-      html += `<tr><td>${x.codiceAtleta}</td><td>${x.nome}</td><td>${x.cognome}</td><td>${x.ruolo}</td><td>${formattaData(x.dataNascita)}</td><td>${formattaData(x.scadenzaVisita)}</td><td>${x.certificatoMedico ? 'SI' : 'NO'}</td></tr>`;
+      html += `<tr>
+        <td>${x.cognome} ${x.nome}</td>
+        <td>${x.codiceAtleta}</td>
+        <td>${x.ruolo}</td>
+        <td>${formattaData(x.dataNascita)}</td>
+        <td>${x.cellulare}</td>
+        <td>${formattaData(x.scadenzaVisita)}</td>
+        <td>${x.certificatoMedico ? 'CARICATO' : 'NON PRESENTE'}</td>
+      </tr>`;
     });
     html += "</tbody></table>";
     const w = window.open("", "_blank", "width=900,height=700");
